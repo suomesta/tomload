@@ -3,9 +3,21 @@
 #include "toml_r.hpp"
 
 
-TEST_CASE("testing the factorial function") {
-    CHECK(factorial(1) == 1);
-    CHECK(factorial(2) == 2);
-    CHECK(factorial(3) == 6);
-    CHECK(factorial(10) == 3628800);
+TEST_CASE("testing parse_item(bool)") {
+    {
+        view_t src = "true";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_BOOL);
+        CHECK(result.b == true);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "false";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_BOOL);
+        CHECK(result.b == false);
+        CHECK(src.empty());
+    }
 }
