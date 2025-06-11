@@ -1,9 +1,11 @@
+#include <iostream>
 
 #ifndef TOML_R_HPP
 #define TOML_R_HPP
 
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -12,7 +14,11 @@ using u64 = uint64_t;
 using view_t = std::string_view;
 
 bool starts_with(view_t view, view_t x) {
-    return view.find(x) == 0;
+    return view.substr(0, x.size()) == x;
+}
+
+bool ends_with(view_t view, view_t x) {
+    return view.size() >= x.size() && view.compare(view.size() - x.size(), view_t::npos, x) == 0;
 }
 
 static_assert(sizeof(long long) == sizeof(i64), "sizeof(long long) must be 8");
@@ -24,12 +30,38 @@ struct item_t {
         TYPE_BOOL,
         TYPE_UINT,
         TYPE_VECTOR,
-    } type;
+    } type = TYPE_VOID;
 
     bool b;
     u64 u;
     std::unique_ptr<std::vector<item_t>> v;
 };
+
+view_t::size_type get_radix_length(view_t view, view_t allowed) {
+    view_t::size_type pos = view.find_first_not_of(allowed, 2);
+    if (pos == view_t::npos) {
+        pos = view.size() - 2;
+    }
+    return pos + 2;
+}
+
+u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
+    view_t sub(view.data() + 2, length - 2);
+    if ((starts_with(sub, "_")) ||
+        (ends_with(sub, "_")) ||
+        (sub.find("__") != view_t::npos)) {
+        return 0;
+    }
+
+    std::string str;
+    for (char c : sub) {
+        if (c != '_') {
+            str.push_back(c);
+        }
+    }
+
+    return std::stoull(str.c_str(), nullptr, base);
+}
 
 item_t parse_item(view_t& view) {
     item_t ret = {item_t::TYPE_VOID};
@@ -49,6 +81,27 @@ item_t parse_item(view_t& view) {
         ret.type = item_t::TYPE_BOOL;
         ret.b = false;
         view.remove_prefix(5);
+    } else if (starts_with(view, "0x")) {
+        view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
+        u64 u = parse_radix_value(view, length, 16);
+
+        ret.type = item_t::TYPE_UINT;
+        ret.u = u;
+        view.remove_prefix(length);
+    } else if (starts_with(view, "0o")) {
+        view_t::size_type length = get_radix_length(view, "01234567_");
+        u64 u = parse_radix_value(view, length, 8);
+
+        ret.type = item_t::TYPE_UINT;
+        ret.u = u;
+        view.remove_prefix(length);
+    } else if (starts_with(view, "0b")) {
+        view_t::size_type length = get_radix_length(view, "01_");
+        u64 u = parse_radix_value(view, length, 2);
+
+        ret.type = item_t::TYPE_UINT;
+        ret.u = u;
+        view.remove_prefix(length);
     }
 
     return ret;
