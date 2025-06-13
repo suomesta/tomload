@@ -3,26 +3,11 @@
 #ifndef TOML_R_HPP
 #define TOML_R_HPP
 
-#include <cstdint>
 #include <memory>
 #include <string>
-#include <string_view>
 #include <vector>
-
-using i64 = int64_t;
-using u64 = uint64_t;
-using view_t = std::string_view;
-
-bool starts_with(view_t view, view_t x) {
-    return view.substr(0, x.size()) == x;
-}
-
-bool ends_with(view_t view, view_t x) {
-    return view.size() >= x.size() && view.compare(view.size() - x.size(), view_t::npos, x) == 0;
-}
-
-static_assert(sizeof(long long) == sizeof(i64), "sizeof(long long) must be 8");
-static_assert(sizeof(unsigned long long) == sizeof(u64), "sizeof(unsigned long long) must be 8");
+#include "integers.hpp"
+#include "view_t.hpp"
 
 struct item_t {
     enum type_t {
