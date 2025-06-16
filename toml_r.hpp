@@ -22,12 +22,15 @@ struct item_t {
     std::unique_ptr<std::vector<item_t>> v;
 };
 
+item_t parse_array(view_t& view);
+item_t parse_item(view_t& view);
+
 view_t::size_type get_radix_length(view_t view, view_t allowed) {
     view_t::size_type pos = view.find_first_not_of(allowed, 2);
     if (pos == view_t::npos) {
-        pos = view.size() - 2;
+        pos = view.size();
     }
-    return pos + 2;
+    return pos;
 }
 
 u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
@@ -46,6 +49,50 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     }
 
     return std::stoull(str.c_str(), nullptr, base);
+}
+
+item_t parse_array(view_t& view) {
+    view_t backup(view);
+
+    view.remove_prefix(1);
+
+    item_t tmp_vector = {item_t::TYPE_VECTOR};
+    tmp_vector.v = std::make_unique<std::vector<item_t>>();
+
+    enum {
+        wait_item,
+        wait_comma,
+    } status = wait_item;
+
+    while (not starts_with(view, "]")) {
+        bool skip = false;
+        while (starts_with(view, " ") ||
+               starts_with(view, "\t") ||
+               starts_with(view, "\r") ||
+               starts_with(view, "\n")) {
+            view.remove_prefix(1);
+            skip = true;
+        }
+        if (skip) {
+            continue;
+        }
+
+        if (status == wait_item) {
+            tmp_vector.v->push_back(parse_item(view));
+            status = wait_comma;
+        } else {
+            if (starts_with(view, ",")) {
+                view.remove_prefix(1);
+                status = wait_item;
+            } else {
+                view = backup;
+                return {};
+            }
+        }
+    }
+
+    view.remove_prefix(1);
+    return tmp_vector;
 }
 
 item_t parse_item(view_t& view) {
@@ -87,6 +134,8 @@ item_t parse_item(view_t& view) {
         ret.type = item_t::TYPE_UINT;
         ret.u = u;
         view.remove_prefix(length);
+    } else if (starts_with(view, "[")) {
+        ret = parse_array(view);
     }
 
     return ret;
