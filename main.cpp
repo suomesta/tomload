@@ -32,6 +32,11 @@ TEST_CASE("testing parse_item(uint)") {
         CHECK(src.empty());
     }
     {
+        view_t src = "0xF_FFFF_FFFF_FFFF_FFFF";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
         view_t src = "0o77_7";
         item_t result = parse_item(src);
 

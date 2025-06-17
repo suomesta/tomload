@@ -3,11 +3,20 @@
 #ifndef TOML_R_HPP
 #define TOML_R_HPP
 
+#include <exception>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "integers.hpp"
 #include "view_t.hpp"
+
+class parse_error : public std::runtime_error {
+ public:     //元々std::runtime_errorにある文字列↓   ↓追加の情報
+    parse_error(const char* msg) :
+        runtime_error(msg) {
+    }
+};
 
 struct item_t {
     enum type_t {
@@ -48,7 +57,15 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
         }
     }
 
-    return std::stoull(str.c_str(), nullptr, base);
+    u64 ret = 0;
+    try {
+        ret = std::stoull(str, nullptr, base);
+    } catch (std::out_of_range& err) {
+        throw parse_error("out_of_range");
+    } catch (std::invalid_argument& err) {
+        throw parse_error("invalid_argument");
+    }
+    return ret;
 }
 
 item_t parse_array(view_t& view) {
