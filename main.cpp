@@ -3,6 +3,19 @@
 #include "toml_r.hpp"
 
 
+TEST_CASE("testing parse_item(invalid)") {
+    {
+        view_t src = "";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "True";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
 TEST_CASE("testing parse_item(bool)") {
     {
         view_t src = "true";
@@ -32,11 +45,6 @@ TEST_CASE("testing parse_item(uint)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "0xF_FFFF_FFFF_FFFF_FFFF";
-
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
-    }
-    {
         view_t src = "0o77_7";
         item_t result = parse_item(src);
 
@@ -51,6 +59,26 @@ TEST_CASE("testing parse_item(uint)") {
         CHECK(result.type == item_t::TYPE_UINT);
         CHECK(result.u == 240UL);
         CHECK(src.empty());
+    }
+    {
+        view_t src = "0xF_FFFF_FFFF_FFFF_FFFF";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x_F_F";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x_F_F";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
     }
 }
 

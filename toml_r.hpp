@@ -47,7 +47,7 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     if ((starts_with(sub, "_")) ||
         (ends_with(sub, "_")) ||
         (sub.find("__") != view_t::npos)) {
-        return 0;
+        throw parse_error("invalid `_`");
     }
 
     std::string str;
@@ -153,6 +153,8 @@ item_t parse_item(view_t& view) {
         view.remove_prefix(length);
     } else if (starts_with(view, "[")) {
         ret = parse_array(view);
+    } else {
+        throw parse_error("not hit item");
     }
 
     return ret;
