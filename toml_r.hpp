@@ -79,22 +79,21 @@ item_t parse_array(view_t& view) {
     enum {
         wait_item,
         wait_comma,
+        closed,
     } status = wait_item;
 
-    while (not starts_with(view, "]")) {
-        bool skip = false;
+    while (status != closed) {
         while (starts_with(view, " ") ||
                starts_with(view, "\t") ||
                starts_with(view, "\r") ||
                starts_with(view, "\n")) {
             view.remove_prefix(1);
-            skip = true;
-        }
-        if (skip) {
-            continue;
         }
 
-        if (status == wait_item) {
+        if (starts_with(view, "]")) {
+            view.remove_prefix(1);
+            status = closed;
+        } else if (status == wait_item) {
             tmp_vector.v->push_back(parse_item(view));
             status = wait_comma;
         } else {
@@ -108,7 +107,6 @@ item_t parse_array(view_t& view) {
         }
     }
 
-    view.remove_prefix(1);
     return tmp_vector;
 }
 
