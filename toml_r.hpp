@@ -68,6 +68,34 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     return ret;
 }
 
+void skip_space(view_t& view, view_t spaces, bool skip_comment) {
+    bool go_recurrsive = false;
+
+    view_t::size_type pos = view.find_first_not_of(spaces);
+    if (pos == view_t::npos) {
+        view = view_t{};
+    } else if (pos > 0) {
+        view.remove_prefix(pos);
+        go_recurrsive = true;
+    }
+
+    if (skip_comment) {
+        if (starts_with(view, "#")) {
+            view_t::size_type lf_pos = view.find('\n');
+            if (lf_pos == view_t::npos) {
+                view = view_t{};
+            } else if (lf_pos > 1) {
+                view.remove_prefix(lf_pos);
+                go_recurrsive = true;
+            }
+        }
+    }
+
+    if (go_recurrsive) {
+        skip_space(view, spaces, skip_comment);
+    }
+}
+
 item_t parse_array(view_t& view) {
     view_t backup(view);
 
@@ -83,12 +111,7 @@ item_t parse_array(view_t& view) {
     } status = wait_item;
 
     while (status != closed) {
-        while (starts_with(view, " ") ||
-               starts_with(view, "\t") ||
-               starts_with(view, "\r") ||
-               starts_with(view, "\n")) {
-            view.remove_prefix(1);
-        }
+        skip_space(view, " \t\r\n", false);
 
         if (starts_with(view, "]")) {
             view.remove_prefix(1);
@@ -113,12 +136,7 @@ item_t parse_array(view_t& view) {
 item_t parse_item(view_t& view) {
     item_t ret = {item_t::TYPE_VOID};
 
-    while (starts_with(view, " ") ||
-           starts_with(view, "\t") ||
-           starts_with(view, "\r") ||
-           starts_with(view, "\n")) {
-        view.remove_prefix(1);
-    }
+    skip_space(view, " \t\r\n", false);
 
     if (starts_with(view, "true")) {
         ret.type = item_t::TYPE_BOOL;

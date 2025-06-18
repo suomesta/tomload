@@ -2,6 +2,38 @@
 #include "doctest/doctest.h"
 #include "toml_r.hpp"
 
+TEST_CASE("testing skip_space()") {
+    {
+        view_t src = "true";
+        skip_space(src, " \t\r\n", false);
+
+        CHECK(src == "true");
+    }
+    {
+        view_t src = "\n\r\t true";
+        skip_space(src, " \t\r\n", false);
+
+        CHECK(src == "true");
+    }
+    {
+        view_t src = "  # comment \r\n true";
+        skip_space(src, " \t\r\n", true);
+
+        CHECK(src == "true");
+    }
+    {
+        view_t src = "  \n \t";
+        skip_space(src, " \t\r\n", true);
+
+        CHECK(src == "");
+    }
+    {
+        view_t src = "  # \t";
+        skip_space(src, " \t\r\n", true);
+
+        CHECK(src == "");
+    }
+}
 
 TEST_CASE("testing parse_item(invalid)") {
     {
