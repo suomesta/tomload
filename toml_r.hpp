@@ -4,6 +4,7 @@
 #define TOML_R_HPP
 
 #include <exception>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -23,11 +24,13 @@ struct item_t {
         TYPE_VOID = 0,
         TYPE_BOOL,
         TYPE_UINT,
+        TYPE_FLOAT,
         TYPE_VECTOR,
     } type = TYPE_VOID;
 
     bool b;
     u64 u;
+    double d;
     std::unique_ptr<std::vector<item_t>> v;
 };
 
@@ -146,6 +149,30 @@ item_t parse_item(view_t& view) {
         ret.type = item_t::TYPE_BOOL;
         ret.b = false;
         view.remove_prefix(5);
+    } else if (starts_with(view, "inf")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = std::numeric_limits<double>::infinity();
+        view.remove_prefix(3);
+    } else if (starts_with(view, "+inf")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = std::numeric_limits<double>::infinity();
+        view.remove_prefix(4);
+    } else if (starts_with(view, "-inf")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = -std::numeric_limits<double>::infinity();
+        view.remove_prefix(4);
+    } else if (starts_with(view, "nan")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = std::numeric_limits<double>::quiet_NaN();
+        view.remove_prefix(3);
+    } else if (starts_with(view, "+nan")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = std::numeric_limits<double>::quiet_NaN();
+        view.remove_prefix(4);
+    } else if (starts_with(view, "-nan")) {
+        ret.type = item_t::TYPE_FLOAT;
+        ret.d = -std::numeric_limits<double>::quiet_NaN();
+        view.remove_prefix(4);
     } else if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
         u64 u = parse_radix_value(view, length, 16);

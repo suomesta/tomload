@@ -1,5 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
+#include <cmath>
 #include "toml_r.hpp"
 
 TEST_CASE("testing skip_space()") {
@@ -63,6 +64,57 @@ TEST_CASE("testing parse_item(bool)") {
 
         CHECK(result.type == item_t::TYPE_BOOL);
         CHECK(result.b == false);
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(special_float)") {
+    {
+        view_t src = "inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK(result.d == std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK(result.d == std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK(result.d == -std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK((std::isnan(result.d) && not std::signbit(result.d)));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK((std::isnan(result.d) && not std::signbit(result.d)));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.type == item_t::TYPE_FLOAT);
+        CHECK((std::isnan(result.d) && std::signbit(result.d)));
         CHECK(src.empty());
     }
 }
