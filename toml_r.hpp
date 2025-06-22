@@ -13,7 +13,7 @@
 #include "view_t.hpp"
 
 class parse_error : public std::runtime_error {
- public:     //元々std::runtime_errorにある文字列↓   ↓追加の情報
+ public:
     parse_error(const char* msg) :
         runtime_error(msg) {
     }
@@ -37,6 +37,9 @@ struct item_t {
 item_t parse_array(view_t& view);
 item_t parse_item(view_t& view);
 
+/*
+ * @pre `view` must start with "0x", "0o", or "0b"
+ */
 view_t::size_type get_radix_length(view_t view, view_t allowed) {
     view_t::size_type pos = view.find_first_not_of(allowed, 2);
     if (pos == view_t::npos) {
@@ -45,6 +48,9 @@ view_t::size_type get_radix_length(view_t view, view_t allowed) {
     return pos;
 }
 
+/*
+ * @pre `view` must start with "0x", "0o", or "0b"
+ */
 u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     view_t sub(view.data() + 2, length - 2);
     if ((starts_with(sub, "_")) ||
