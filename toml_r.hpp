@@ -5,6 +5,7 @@
 
 #include <exception>
 #include <limits>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -25,13 +26,17 @@ struct item_t {
         TYPE_BOOL,
         TYPE_UINT,
         TYPE_FLOAT,
-        TYPE_VECTOR,
+        TYPE_STRING,
+        TYPE_ARRAY,
+        TYPE_TABLE,
     } type = TYPE_VOID;
 
     bool b;
     u64 u;
     double d;
+    std::string s;
     std::unique_ptr<std::vector<item_t>> v;
+    std::unique_ptr<std::map<std::string, item_t>> m;
 };
 
 item_t parse_array(view_t& view);
@@ -77,6 +82,24 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     return ret;
 }
 
+/*
+ * @pre `view` must start with A-Za-z0-9_-
+ */
+view_t::size_type get_bare_length(view_t view) {
+    view_t::size_type pos = view.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", 2);
+    if (pos == view_t::npos) {
+        pos = view.size();
+    }
+    return pos;
+}
+
+/*
+ * @pre `view` must start with A-Za-z0-9_-
+ */
+std::string parse_bare_value(view_t view, view_t::size_type length) {
+    return {view.data(), length};
+}
+
 void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     bool go_recurrsive = false;
 
@@ -93,7 +116,7 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
             view_t::size_type lf_pos = view.find('\n');
             if (lf_pos == view_t::npos) {
                 view = view_t{};
-            } else if (lf_pos > 1) {
+            } else {
                 view.remove_prefix(lf_pos);
                 go_recurrsive = true;
             }
@@ -105,12 +128,32 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     }
 }
 
+bool wait_newline(view_t& view) {
+    skip_space(view, " \t\r", false);
+    if (view.empty()) {
+        return true;
+    } else if (starts_with(view, "\n")) {
+        view.remove_prefix(1);
+        return true;
+    } else if (starts_with(view, "#")) {
+        view_t::size_type lf_pos = view.find('\n');
+        if (lf_pos == view_t::npos) {
+            view = view_t{};
+        } else {
+            view.remove_prefix(lf_pos);
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 item_t parse_array(view_t& view) {
     view_t backup(view);
 
     view.remove_prefix(1);
 
-    item_t tmp_vector = {item_t::TYPE_VECTOR};
+    item_t tmp_vector = {item_t::TYPE_ARRAY};
     tmp_vector.v = std::make_unique<std::vector<item_t>>();
 
     enum {
@@ -204,6 +247,111 @@ item_t parse_item(view_t& view) {
         ret = parse_array(view);
     } else {
         throw parse_error("not hit item");
+    }
+
+    return ret;
+}
+
+item_t parse(view_t& view) {
+    item_t ret = {item_t::TYPE_VOID};
+
+    std::vector<std::string> bracket;
+    std::vector<std::string> key;
+
+    enum {
+        start,
+        bracket_wait_string,
+        bracket_wait_dot,
+        bracket_wait_newline,
+        pair_wait_dot,
+        pair_wait_value,
+        pair_wait_newline,
+        completed,
+    } status = start;
+
+    while (status != completed) {
+        if (status == start) {
+            skip_space(view, " \t\r\n", true);
+            if (view.empty()) {
+                status = completed;
+            } else if (starts_with(view, "[")) {
+                bracket.clear();
+                status = bracket_wait_string;
+                view.remove_prefix(1);
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
+                key.clear();
+                view_t::size_type length = get_bare_length(view);
+                std::string s = parse_bare_value(view, length);
+
+                status = pair_wait_dot;
+                key.push_back(std::move(s));
+                view.remove_prefix(length);
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_string) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "]")) {
+                status = bracket_wait_newline;
+                view.remove_prefix(1);
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
+                view_t::size_type length = get_bare_length(view);
+                std::string s = parse_bare_value(view, length);
+
+                bracket.push_back(std::move(s));
+                view.remove_prefix(length);
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            }
+        } else if (status == pair_wait_dot) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "=")) {
+                status = pair_wait_value;
+                view.remove_prefix(1);
+            } else {
+                ;
+            }
+        } else if (status == pair_wait_value) {
+            skip_space(view, " \t", false);
+            item_t item = parse_item(view);
+std::cout << int(item.type) << std::endl;
+std::cout << int(item.b) << std::endl;
+return ret;
+/*
+            if (ret.type == item_t::TYPE_VOID) {
+                ret.type = item_t::TYPE_TABLE;
+                ret.m = std::make_unique<std::map<std::string, item_t>>();
+            }
+            std::unique_ptr<std::map<std::string, item_t>>* last = &ret.m;
+            for (const std::string& k : bracket) {
+                (*last)->insert({k, item_t{}});
+                (*(*last))[k].type = item_t::TYPE_TABLE;
+                (*(*last))[k].m = std::make_unique<std::map<std::string, item_t>>();
+//                ret.m = std::make_unique<std::map<std::string, item_t>>(k, item_t{});
+                last = &(*last)[k].m;
+            }
+            for (const std::string& k : key) {
+                (*last)->insert({k, item_t{}});
+                (*(*last))[k].type = item_t::TYPE_TABLE;
+                (*(*last))[k].m = std::make_unique<std::map<std::string, item_t>>();
+//                ret.m = std::make_unique<std::map<std::string, item_t>>(k, item_t{});
+                last = &(*last)[k].m;
+            }
+            last
+*/
+        } else {
+            if (view.empty()) {
+                break;
+            }
+        }
     }
 
     return ret;
