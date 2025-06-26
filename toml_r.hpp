@@ -252,11 +252,35 @@ item_t parse_item(view_t& view) {
     return ret;
 }
 
-item_t parse(view_t& view) {
-    item_t ret = {item_t::TYPE_VOID};
+void insert_table(item_t& root, item_t& item, const std::vector<std::string>& brackets, const std::vector<std::string>& keys) {
+    std::map<std::string, item_t>* mptr = root.m.get();
+    for (const std::string& key : brackets) {
+        mptr->insert({key, item_t{}});
+        mptr->find(key)->second.type = item_t::TYPE_TABLE;
+        mptr->find(key)->second.m = std::make_unique<std::map<std::string, item_t>>();
+        mptr = mptr->find(key)->second.m.get();
+    }
+    for (const std::string& key : keys) {
+        if (&key != &keys.back()) {
+            mptr->insert({key, item_t{}});
+            mptr->find(key)->second.type = item_t::TYPE_TABLE;
+            mptr->find(key)->second.m = std::make_unique<std::map<std::string, item_t>>();
+            mptr = mptr->find(key)->second.m.get();
+        } else {
+            mptr->insert({key, item_t{}});
+            mptr->find(key)->second = std::move(item);
+        }
+        
+    }
+}
 
-    std::vector<std::string> bracket;
-    std::vector<std::string> key;
+item_t parse(view_t& view) {
+    item_t ret = {};
+    ret.type = item_t::TYPE_TABLE;
+    ret.m = std::make_unique<std::map<std::string, item_t>>();
+
+    std::vector<std::string> brackets;
+    std::vector<std::string> keys;
 
     enum {
         start,
@@ -275,16 +299,16 @@ item_t parse(view_t& view) {
             if (view.empty()) {
                 status = completed;
             } else if (starts_with(view, "[")) {
-                bracket.clear();
+                brackets.clear();
                 status = bracket_wait_string;
                 view.remove_prefix(1);
             } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
-                key.clear();
+                keys.clear();
                 view_t::size_type length = get_bare_length(view);
                 std::string s = parse_bare_value(view, length);
 
                 status = pair_wait_dot;
-                key.push_back(std::move(s));
+                keys.push_back(std::move(s));
                 view.remove_prefix(length);
             } else {
                 ;
@@ -300,7 +324,7 @@ item_t parse(view_t& view) {
                 view_t::size_type length = get_bare_length(view);
                 std::string s = parse_bare_value(view, length);
 
-                bracket.push_back(std::move(s));
+                brackets.push_back(std::move(s));
                 view.remove_prefix(length);
             } else {
                 ;
@@ -324,12 +348,13 @@ item_t parse(view_t& view) {
             item_t item = parse_item(view);
 std::cout << int(item.type) << std::endl;
 std::cout << int(item.b) << std::endl;
+            insert_table(ret, item, brackets, keys);
+std::cout << int(ret.type) << std::endl;
+std::cout << int((*ret.m)["aa"].type) << std::endl;
+std::cout << int((*(*ret.m)["aa"].m)["bb"].type) << std::endl;
+std::cout << int((*(*ret.m)["aa"].m)["bb"].b) << std::endl;
 return ret;
 /*
-            if (ret.type == item_t::TYPE_VOID) {
-                ret.type = item_t::TYPE_TABLE;
-                ret.m = std::make_unique<std::map<std::string, item_t>>();
-            }
             std::unique_ptr<std::map<std::string, item_t>>* last = &ret.m;
             for (const std::string& k : bracket) {
                 (*last)->insert({k, item_t{}});
