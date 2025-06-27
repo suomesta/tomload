@@ -229,11 +229,11 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.type == item_t::TYPE_ARRAY);
-        CHECK(result.v->size() == 2);
-        CHECK(result.v->at(0).type == item_t::TYPE_UINT);
-        CHECK(result.v->at(0).u == 255UL);
-        CHECK(result.v->at(1).type == item_t::TYPE_BOOL);
-        CHECK(result.v->at(1).b == true);
+        CHECK(result.size() == 2);
+        CHECK(result[0].type == item_t::TYPE_UINT);
+        CHECK(result[0].u == 255UL);
+        CHECK(result[1].type == item_t::TYPE_BOOL);
+        CHECK(result[1].b == true);
         CHECK(src.empty());
     }
 

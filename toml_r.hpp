@@ -37,6 +37,24 @@ struct item_t {
     std::string s;
     std::unique_ptr<std::vector<item_t>> v;
     std::unique_ptr<std::map<std::string, item_t>> m;
+
+    size_t size() const {
+        if (type == TYPE_ARRAY) {
+            return v->size();
+        } else if (type == TYPE_TABLE) {
+            return m->size();
+        } else {
+            throw parse_error("neither array nor table");
+        }
+    }
+
+    const item_t& operator[](size_t index) const {
+        return v->at(index);
+    }
+
+    const item_t& operator[](const std::string& key) const {
+        return m->at(key);
+    }
 };
 
 item_t parse_array(view_t& view);
@@ -350,28 +368,10 @@ std::cout << int(item.type) << std::endl;
 std::cout << int(item.b) << std::endl;
             insert_table(ret, item, brackets, keys);
 std::cout << int(ret.type) << std::endl;
-std::cout << int((*ret.m)["aa"].type) << std::endl;
-std::cout << int((*(*ret.m)["aa"].m)["bb"].type) << std::endl;
-std::cout << int((*(*ret.m)["aa"].m)["bb"].b) << std::endl;
+std::cout << int(ret["aa"].type) << std::endl;
+std::cout << int(ret["aa"]["bb"].type) << std::endl;
+std::cout << int(ret["aa"]["bb"].b) << std::endl;
 return ret;
-/*
-            std::unique_ptr<std::map<std::string, item_t>>* last = &ret.m;
-            for (const std::string& k : bracket) {
-                (*last)->insert({k, item_t{}});
-                (*(*last))[k].type = item_t::TYPE_TABLE;
-                (*(*last))[k].m = std::make_unique<std::map<std::string, item_t>>();
-//                ret.m = std::make_unique<std::map<std::string, item_t>>(k, item_t{});
-                last = &(*last)[k].m;
-            }
-            for (const std::string& k : key) {
-                (*last)->insert({k, item_t{}});
-                (*(*last))[k].type = item_t::TYPE_TABLE;
-                (*(*last))[k].m = std::make_unique<std::map<std::string, item_t>>();
-//                ret.m = std::make_unique<std::map<std::string, item_t>>(k, item_t{});
-                last = &(*last)[k].m;
-            }
-            last
-*/
         } else {
             if (view.empty()) {
                 break;
