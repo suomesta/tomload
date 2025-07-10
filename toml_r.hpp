@@ -24,6 +24,7 @@ struct item_t {
     enum type_t {
         TYPE_VOID = 0,
         TYPE_BOOL,
+        TYPE_INT,
         TYPE_UINT,
         TYPE_FLOAT,
         TYPE_STRING,
@@ -32,13 +33,23 @@ struct item_t {
     } type = TYPE_VOID;
 
     bool b;
+    i64 i;
     u64 u;
     double d;
     std::string s;
     std::unique_ptr<std::vector<item_t>> v;
     std::unique_ptr<std::map<std::string, item_t>> m;
 
-    size_t size() const {
+    type_t get_type(void) const noexcept { return type; }
+    bool is_bool(void) const noexcept { return type == TYPE_BOOL; }
+    bool is_int(void) const noexcept { return type == TYPE_INT; }
+    bool is_uint(void) const noexcept { return type == TYPE_UINT; }
+    bool is_float(void) const noexcept { return type == TYPE_FLOAT; }
+    bool is_string(void) const noexcept { return type == TYPE_STRING; }
+    bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
+    bool is_table(void) const noexcept { return type == TYPE_TABLE; }
+
+    size_t size(void) const {
         if (type == TYPE_ARRAY) {
             return v->size();
         } else if (type == TYPE_TABLE) {
@@ -213,8 +224,6 @@ item_t parse_array(view_t& view) {
 
 item_t parse_item(view_t& view) {
     item_t ret = {item_t::TYPE_VOID};
-
-    skip_space(view, " \t\r\n", false);
 
     if (starts_with(view, "true")) {
         ret.type = item_t::TYPE_BOOL;
