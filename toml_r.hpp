@@ -37,8 +37,8 @@ struct item_t {
     u64 u;
     double d;
     std::string s;
-    std::unique_ptr<std::vector<item_t>> v;
-    std::unique_ptr<std::map<std::string, item_t>> m;
+    std::shared_ptr<std::vector<item_t>> v;
+    std::shared_ptr<std::map<std::string, item_t>> m;
 
     type_t get_type(void) const noexcept { return type; }
     bool is_bool(void) const noexcept { return type == TYPE_BOOL; }
@@ -209,7 +209,7 @@ item_t parse_array(view_t& view) {
     view.remove_prefix(1);
 
     item_t tmp_vector = {item_t::TYPE_ARRAY};
-    tmp_vector.v = std::make_unique<std::vector<item_t>>();
+    tmp_vector.v = std::make_shared<std::vector<item_t>>();
 
     enum {
         wait_item,
@@ -310,14 +310,14 @@ void insert_table(item_t& root, item_t& item, const std::vector<std::string>& br
     for (const std::string& key : brackets) {
         mptr->insert({key, item_t{}});
         mptr->find(key)->second.type = item_t::TYPE_TABLE;
-        mptr->find(key)->second.m = std::make_unique<std::map<std::string, item_t>>();
+        mptr->find(key)->second.m = std::make_shared<std::map<std::string, item_t>>();
         mptr = mptr->find(key)->second.m.get();
     }
     for (const std::string& key : keys) {
         if (&key != &keys.back()) {
             mptr->insert({key, item_t{}});
             mptr->find(key)->second.type = item_t::TYPE_TABLE;
-            mptr->find(key)->second.m = std::make_unique<std::map<std::string, item_t>>();
+            mptr->find(key)->second.m = std::make_shared<std::map<std::string, item_t>>();
             mptr = mptr->find(key)->second.m.get();
         } else {
             mptr->insert({key, item_t{}});
@@ -330,7 +330,7 @@ void insert_table(item_t& root, item_t& item, const std::vector<std::string>& br
 item_t parse(view_t& view) {
     item_t ret = {};
     ret.type = item_t::TYPE_TABLE;
-    ret.m = std::make_unique<std::map<std::string, item_t>>();
+    ret.m = std::make_shared<std::map<std::string, item_t>>();
 
     std::vector<std::string> brackets;
     std::vector<std::string> keys;
