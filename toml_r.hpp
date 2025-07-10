@@ -48,6 +48,24 @@ struct item_t {
     bool is_string(void) const noexcept { return type == TYPE_STRING; }
     bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
     bool is_table(void) const noexcept { return type == TYPE_TABLE; }
+    template <class TYPE>
+    bool get(TYPE& val) {
+        if (std::is_same<TYPE, bool>() && type == TYPE_BOOL) {
+            val = b;
+        } else if (std::is_same<TYPE, i64>() && type == TYPE_INT) {
+            val = i;
+        } else if (std::is_same<TYPE, u64>() && type == TYPE_UINT) {
+            val = u;
+        } else if (std::is_same<TYPE, double>() && type == TYPE_FLOAT) {
+            val = d;
+        } else if (std::is_same<TYPE, std::string>() && type == TYPE_STRING) {
+            val = s;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
 
     size_t size(void) const {
         if (type == TYPE_ARRAY) {
