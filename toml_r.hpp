@@ -49,11 +49,19 @@ struct item_t {
     }
 
     const item_t& operator[](size_t index) const {
-        return v->at(index);
+        if (type == TYPE_ARRAY) {
+            return v->at(index);
+        } else {
+            throw parse_error("not array");
+        }
     }
 
     const item_t& operator[](const std::string& key) const {
-        return m->at(key);
+        if (type == TYPE_TABLE) {
+            return m->at(key);
+        } else {
+            throw parse_error("not table");
+        }
     }
 };
 
