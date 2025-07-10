@@ -60,6 +60,10 @@ struct item_t {
             val = d;
         } else if (std::is_same<TYPE, std::string>() && type == TYPE_STRING) {
             val = s;
+        } else if (std::is_same<TYPE, std::shared_ptr<const std::vector<item_t>>>() && type == TYPE_ARRAY) {
+            val = v;
+        } else if (std::is_same<TYPE, std::shared_ptr<const std::map<std::string, item_t>>>() && type == TYPE_TABLE) {
+            val = m;
         } else {
             return false;
         }
