@@ -172,7 +172,7 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 0);
+        CHECK(result.size() == 0);
         CHECK(src.empty());
     }
     {
@@ -180,7 +180,7 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 0);
+        CHECK(result.size() == 0);
         CHECK(src.empty());
     }
     {
@@ -188,8 +188,8 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 1);
-        CHECK(result.v->at(0).type == item_t::TYPE_UINT);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_uint() == true);
         CHECK(src.empty());
     }
     {
@@ -197,9 +197,9 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 1);
-        CHECK(result.v->at(0).type == item_t::TYPE_UINT);
-        CHECK(result.v->at(0).u == 255UL);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_uint() == true);
+        CHECK(result[0].get_uint() == 255UL);
         CHECK(src.empty());
     }
     {
@@ -207,9 +207,9 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 1);
-        CHECK(result.v->at(0).type == item_t::TYPE_UINT);
-        CHECK(result.v->at(0).u == 255UL);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_uint() == true);
+        CHECK(result[0].get_uint() == 255UL);
         CHECK(src.empty());
     }
     {
@@ -217,11 +217,11 @@ TEST_CASE("testing parse_item(array)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_array() == true);
-        CHECK(result.v->size() == 2);
-        CHECK(result.v->at(0).type == item_t::TYPE_UINT);
-        CHECK(result.v->at(0).u == 255UL);
-        CHECK(result.v->at(1).type == item_t::TYPE_BOOL);
-        CHECK(result.v->at(1).b == true);
+        CHECK(result.size() == 2);
+        CHECK(result[0].is_uint() == true);
+        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[1].is_bool() == true);
+        CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
     }
     {
