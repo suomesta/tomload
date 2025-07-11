@@ -124,6 +124,14 @@ struct item_t {
             throw parse_error("not table");
         }
     }
+
+    bool contains(const std::string& key) const {
+        if (type == TYPE_TABLE) {
+            return m->find(key) != m->cend();
+        } else {
+            false;
+        }
+    }
 };
 
 item_t parse_array(view_t& view);
@@ -431,14 +439,14 @@ item_t parse(view_t& view) {
         } else if (status == pair_wait_value) {
             skip_space(view, " \t", false);
             item_t item = parse_item(view);
-std::cout << int(item.type) << std::endl;
-std::cout << int(item.b) << std::endl;
             insert_table(ret, item, brackets, keys);
-std::cout << int(ret.type) << std::endl;
-std::cout << int(ret["aa"].type) << std::endl;
-std::cout << int(ret["aa"]["bb"].type) << std::endl;
-std::cout << int(ret["aa"]["bb"].b) << std::endl;
-return ret;
+            status = pair_wait_newline;
+        } else if (status == pair_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            } else {
+                break;
+            }
         } else {
             if (view.empty()) {
                 break;

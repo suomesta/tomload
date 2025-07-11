@@ -236,13 +236,25 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[1].b == true);
         CHECK(src.empty());
     }
+}
 
+TEST_CASE("testing parse()") {
     {
         view_t src = "[aa]  #comm\n";
-        parse(src);
+        item_t result = parse(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 0);
+        CHECK(src.empty());
     }
     {
-        view_t src = "[aa]  #comm\nbb = true\n";
-        parse(src);
+        view_t src = "[aa]  #comm\nbb = false\n";
+        item_t result = parse(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["aa"]["bb"].is_bool() == true);
+        CHECK(result["aa"]["bb"].get_bool() == false);
+        CHECK(src.empty());
     }
 }
