@@ -22,8 +22,8 @@ class parse_error : public std::runtime_error {
 
 struct item_t {
     enum type_t {
-        TYPE_VOID = 0,
-        TYPE_BOOL,
+        TYPE_VOID = -1,
+        TYPE_BOOL = 0,
         TYPE_INT,
         TYPE_UINT,
         TYPE_FLOAT,
@@ -31,6 +31,8 @@ struct item_t {
         TYPE_ARRAY,
         TYPE_TABLE,
     } type = TYPE_VOID;
+
+    using value_type_index = std::tuple<bool, i64, u64, double, std::string>;
 
     bool b;
     i64 i;
@@ -48,27 +50,53 @@ struct item_t {
     bool is_string(void) const noexcept { return type == TYPE_STRING; }
     bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
     bool is_table(void) const noexcept { return type == TYPE_TABLE; }
-    template <class TYPE>
-    bool get(TYPE& val) {
-        if (std::is_same<TYPE, bool>() && type == TYPE_BOOL) {
+    template <class PARAM>
+    bool get(PARAM& val) {
+        if (std::is_same<PARAM, bool>() && type == TYPE_BOOL) {
             val = b;
-        } else if (std::is_same<TYPE, i64>() && type == TYPE_INT) {
+        } else if (std::is_same<PARAM, i64>() && type == TYPE_INT) {
             val = i;
-        } else if (std::is_same<TYPE, u64>() && type == TYPE_UINT) {
+        } else if (std::is_same<PARAM, u64>() && type == TYPE_UINT) {
             val = u;
-        } else if (std::is_same<TYPE, double>() && type == TYPE_FLOAT) {
+        } else if (std::is_same<PARAM, double>() && type == TYPE_FLOAT) {
             val = d;
-        } else if (std::is_same<TYPE, std::string>() && type == TYPE_STRING) {
+        } else if (std::is_same<PARAM, std::string>() && type == TYPE_STRING) {
             val = s;
-        } else if (std::is_same<TYPE, std::shared_ptr<const std::vector<item_t>>>() && type == TYPE_ARRAY) {
-            val = v;
-        } else if (std::is_same<TYPE, std::shared_ptr<const std::map<std::string, item_t>>>() && type == TYPE_TABLE) {
-            val = m;
         } else {
             return false;
         }
 
         return true;
+    }
+    bool get_bool(void) const {
+        if (type != TYPE_BOOL) {
+            throw parse_error("type mismatch");
+        }
+        return b;
+    }
+    i64 get_int(void) const {
+        if (type != TYPE_INT) {
+            throw parse_error("type mismatch");
+        }
+        return i;
+    }
+    u64 get_uint(void) const {
+        if (type != TYPE_UINT) {
+            throw parse_error("type mismatch");
+        }
+        return u;
+    }
+    double get_float(void) const {
+        if (type != TYPE_FLOAT) {
+            throw parse_error("type mismatch");
+        }
+        return d;
+    }
+    std::string get_string(void) {
+        if (type != TYPE_STRING) {
+            throw parse_error("type mismatch");
+        }
+        return s;
     }
 
     size_t size(void) const {

@@ -55,7 +55,7 @@ TEST_CASE("testing parse_item(bool)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_bool() == true);
-        CHECK(result.b == true);
+        CHECK(result.get_bool() == true);
         CHECK(src.empty());
     }
     {
@@ -63,7 +63,7 @@ TEST_CASE("testing parse_item(bool)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_bool() == true);
-        CHECK(result.b == false);
+        CHECK(result.get_bool() == false);
         CHECK(src.empty());
     }
 }
@@ -74,7 +74,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK(result.d == std::numeric_limits<double>::infinity());
+        CHECK(result.get_float() == std::numeric_limits<double>::infinity());
         CHECK(src.empty());
     }
     {
@@ -82,7 +82,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK(result.d == std::numeric_limits<double>::infinity());
+        CHECK(result.get_float() == std::numeric_limits<double>::infinity());
         CHECK(src.empty());
     }
     {
@@ -90,7 +90,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK(result.d == -std::numeric_limits<double>::infinity());
+        CHECK(result.get_float() == -std::numeric_limits<double>::infinity());
         CHECK(src.empty());
     }
     {
@@ -98,7 +98,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.d) && not std::signbit(result.d)));
+        CHECK((std::isnan(result.get_float()) && not std::signbit(result.get_float())));
         CHECK(src.empty());
     }
     {
@@ -106,7 +106,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.d) && not std::signbit(result.d)));
+        CHECK((std::isnan(result.get_float()) && not std::signbit(result.get_float())));
         CHECK(src.empty());
     }
     {
@@ -114,7 +114,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.d) && std::signbit(result.d)));
+        CHECK((std::isnan(result.get_float()) && std::signbit(result.get_float())));
         CHECK(src.empty());
     }
 }
@@ -125,7 +125,7 @@ TEST_CASE("testing parse_item(uint)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_uint() == true);
-        CHECK(result.u == 255UL);
+        CHECK(result.get_uint() == 255UL);
         CHECK(src.empty());
     }
     {
@@ -133,7 +133,7 @@ TEST_CASE("testing parse_item(uint)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_uint() == true);
-        CHECK(result.u == 511UL);
+        CHECK(result.get_uint() == 511UL);
         CHECK(src.empty());
     }
     {
@@ -141,7 +141,7 @@ TEST_CASE("testing parse_item(uint)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_uint() == true);
-        CHECK(result.u == 240UL);
+        CHECK(result.get_uint() == 240UL);
         CHECK(src.empty());
     }
     {
