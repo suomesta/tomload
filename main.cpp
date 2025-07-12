@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 #include <cmath>
+#include <iterator>
 #include "toml_r.hpp"
 
 TEST_CASE("testing skip_space()") {
@@ -223,6 +224,15 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[1].is_bool() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
+        for (item_t::array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
+            if (std::distance(result.array_begin(), i) == 0) {
+                CHECK(i->is_uint() == true);
+                CHECK(i->get_uint() == 255UL);
+            } else if (std::distance(result.array_begin(), i) == 1) {
+                CHECK(i->is_bool() == true);
+                CHECK(i->get_bool() == true);
+            }
+        }
         int i = 0;
         for (auto r : result.array_range()) {
             if (i == 0) {

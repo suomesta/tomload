@@ -131,6 +131,41 @@ struct item_t {
         }
     }
 
+    using array_iterator = std::vector<item_t>::const_iterator;
+    using table_iterator = std::map<std::string, item_t>::const_iterator;
+
+    array_iterator array_begin(void) const {
+        if (type == TYPE_ARRAY) {
+            return v->begin();
+        } else {
+            throw parse_error("not array");
+        }
+    }
+
+    array_iterator array_end(void) const {
+        if (type == TYPE_ARRAY) {
+            return v->end();
+        } else {
+            throw parse_error("not array");
+        }
+    }
+
+    table_iterator table_begin(void) const {
+        if (type == TYPE_TABLE) {
+            return m->begin();
+        } else {
+            throw parse_error("not table");
+        }
+    }
+
+    table_iterator table_end(void) const {
+        if (type == TYPE_TABLE) {
+            return m->end();
+        } else {
+            throw parse_error("not table");
+        }
+    }
+
     template <typename I>
     class range_t {
      public:
@@ -147,8 +182,8 @@ struct item_t {
         I begin_;
         I end_;
     };
-    using array_range_t = range_t<std::vector<item_t>::const_iterator>;
-    using table_range_t = range_t<std::map<std::string, item_t>::const_iterator>;
+    using array_range_t = range_t<array_iterator>;
+    using table_range_t = range_t<table_iterator>;
 
     const array_range_t array_range(void) const {
         if (type == TYPE_ARRAY) {
@@ -162,7 +197,7 @@ struct item_t {
         if (type == TYPE_TABLE) {
             return table_range_t(m->begin(), m->end());
         } else {
-            throw parse_error("not array");
+            throw parse_error("not table");
         }
     }
 };
