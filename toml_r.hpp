@@ -22,8 +22,8 @@ class parse_error : public std::runtime_error {
 
 struct item_t {
     enum type_t {
-        TYPE_VOID = -1,
-        TYPE_BOOL = 0,
+        TYPE_VOID = 0,
+        TYPE_BOOL,
         TYPE_INT,
         TYPE_UINT,
         TYPE_FLOAT,
@@ -31,8 +31,6 @@ struct item_t {
         TYPE_ARRAY,
         TYPE_TABLE,
     } type = TYPE_VOID;
-
-    using value_type_index = std::tuple<bool, i64, u64, double, std::string>;
 
     bool b;
     i64 i;
@@ -129,7 +127,42 @@ struct item_t {
         if (type == TYPE_TABLE) {
             return m->find(key) != m->cend();
         } else {
-            false;
+            return false;
+        }
+    }
+
+    template <typename I>
+    class range_t {
+     public:
+        range_t(I begin, I end) :
+            begin_(begin),
+            end_(end) {
+        }
+        I begin(void) const noexcept {
+            return begin_;
+        }
+        I end(void) const noexcept {
+            return end_;
+        }
+        I begin_;
+        I end_;
+    };
+    using array_range_t = range_t<std::vector<item_t>::const_iterator>;
+    using table_range_t = range_t<std::map<std::string, item_t>::const_iterator>;
+
+    const array_range_t array_range(void) const {
+        if (type == TYPE_ARRAY) {
+            return array_range_t(v->begin(), v->end());
+        } else {
+            throw parse_error("not array");
+        }
+    }
+
+    const table_range_t table_range(void) const {
+        if (type == TYPE_TABLE) {
+            return table_range_t(m->begin(), m->end());
+        } else {
+            throw parse_error("not array");
         }
     }
 };

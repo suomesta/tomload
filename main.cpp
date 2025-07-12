@@ -223,6 +223,17 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[1].is_bool() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
+        int i = 0;
+        for (auto r : result.array_range()) {
+            if (i == 0) {
+                CHECK(r.is_uint() == true);
+                CHECK(r.get_uint() == 255UL);
+            } else if (i == 1) {
+                CHECK(r.is_bool() == true);
+                CHECK(r.get_bool() == true);
+            }
+            i++;
+        }
     }
     {
         view_t src = "[0xff , true , ]";
@@ -230,10 +241,10 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 2);
-        CHECK(result[0].type == item_t::TYPE_UINT);
-        CHECK(result[0].u == 255UL);
-        CHECK(result[1].type == item_t::TYPE_BOOL);
-        CHECK(result[1].b == true);
+        CHECK(result[0].is_uint() == true);
+        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[1].is_bool() == true);
+        CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
     }
 }
@@ -253,6 +264,7 @@ TEST_CASE("testing parse()") {
 
         CHECK(result.is_table() == true);
         CHECK(result.size() == 1);
+        CHECK(result.contains("aa") == true);
         CHECK(result["aa"]["bb"].is_bool() == true);
         CHECK(result["aa"]["bb"].get_bool() == false);
         CHECK(src.empty());
