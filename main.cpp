@@ -167,6 +167,49 @@ TEST_CASE("testing parse_item(uint)") {
     }
 }
 
+TEST_CASE("testing parse_item(''')") {
+    {
+        view_t src = "''''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'''A\r\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\r\na");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "''''A\r\na''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "'A\r\na'");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'''''A\r\na'''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "''A\r\na''");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "''''''A\r\na''''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.compare("A\r\na''''''") == 0);
+    }
+}
+
 TEST_CASE("testing parse_item(array)") {
     {
         view_t src = "[]";

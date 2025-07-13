@@ -311,6 +311,31 @@ bool wait_newline(view_t& view) {
     }
 }
 
+/*
+ * @pre `view` must start with "'''"
+ */
+view_t::size_type get_multi_literal_string_length(view_t view) {
+    view_t::size_type pos = view.find("'''", 3);
+
+    if (pos == view_t::npos) {
+        throw parse_error("not closed by '''");
+    }
+
+    view_t::size_type pos5 = view.find("'''''", 3);
+    view_t::size_type pos4 = view.find("''''", 3);
+    if (pos == pos5) {
+        pos += 2;
+    } else if (pos == pos4) {
+        pos += 1;
+    }
+
+    return pos + 3;
+}
+
+std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
+    return std::string(view.data() + 3, length - 6);
+}
+
 item_t parse_array(view_t& view) {
     view_t backup(view);
 
@@ -403,6 +428,13 @@ item_t parse_item(view_t& view) {
 
         ret.type = item_t::TYPE_UINT;
         ret.u = u;
+        view.remove_prefix(length);
+    } else if (starts_with(view, "'''")) {
+        view_t::size_type length = get_multi_literal_string_length(view);
+        std::string str = parse_multi_literal_string(view, length);
+
+        ret.type = item_t::TYPE_STRING;
+        ret.s = std::move(str);
         view.remove_prefix(length);
     } else if (starts_with(view, "[")) {
         ret = parse_array(view);
