@@ -185,19 +185,19 @@ struct item_t {
     using array_range_t = range_t<array_iterator>;
     using table_range_t = range_t<table_iterator>;
 
-    const array_range_t array_range(void) const {
+    const array_range_t array_range(void) const noexcept {
         if (type == TYPE_ARRAY) {
             return array_range_t(v->begin(), v->end());
         } else {
-            throw parse_error("not array");
+            return array_range_t(array_iterator{}, array_iterator{});
         }
     }
 
-    const table_range_t table_range(void) const {
+    const table_range_t table_range(void) const noexcept {
         if (type == TYPE_TABLE) {
             return table_range_t(m->begin(), m->end());
         } else {
-            throw parse_error("not table");
+            return table_range_t(table_iterator{}, table_iterator{});
         }
     }
 };
