@@ -333,7 +333,13 @@ view_t::size_type get_multi_literal_string_length(view_t view) {
 }
 
 std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
-    return std::string(view.data() + 3, length - 6);
+    if (starts_with(view, "'''\r\n")) {
+        return std::string(view.data() + 5, length - 8);
+    } else if (starts_with(view, "'''\n")) {
+        return std::string(view.data() + 4, length - 7);
+    } else {
+        return std::string(view.data() + 3, length - 6);
+    }
 }
 
 item_t parse_array(view_t& view) {

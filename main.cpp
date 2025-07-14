@@ -208,6 +208,22 @@ TEST_CASE("testing parse_item(''')") {
         CHECK(result.get_string() == "");
         CHECK(src.compare("A\r\na''''''") == 0);
     }
+    {
+        view_t src = "'''\r\nA\r\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\r\na");
+        CHECK(src.compare("") == 0);
+    }
+    {
+        view_t src = "'''\nA\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\na");
+        CHECK(src.compare("") == 0);
+    }
 }
 
 TEST_CASE("testing parse_item(array)") {
