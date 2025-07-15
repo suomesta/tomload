@@ -1,7 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 #include <cmath>
+#include <fstream>
 #include <iterator>
+#include <sstream>
+#include <string>
 #include "toml_r.hpp"
 
 TEST_CASE("testing skip_space()") {
@@ -318,6 +321,17 @@ TEST_CASE("testing parse_item(array)") {
     }
 }
 
+std::string load_file(const std::string& filename) {
+    std::ifstream file(std::string(TEST_DATA_DIR) + filename);
+    if (not file.is_open()) {
+        throw std::runtime_error("Cannot open " + filename);
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
 TEST_CASE("testing parse()") {
     {
         view_t src = "[aa]  #comm\n";
@@ -339,7 +353,8 @@ TEST_CASE("testing parse()") {
         CHECK(src.empty());
     }
     {
-        view_t src = "bool1 = true\nbool2 = false";
+        std::string content = load_file("Boolean_1.toml");
+        view_t src{content.c_str()};
         item_t t = parse(src);
 
         CHECK(t.is_table() == true);

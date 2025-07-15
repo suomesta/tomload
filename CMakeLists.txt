@@ -11,3 +11,6 @@ add_executable(a.out main.cpp toml_r.hpp)
 
 target_include_directories(a.out PUBLIC ./include)
 
+target_compile_definitions(a.out PRIVATE
+    TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/samples/"
+)
