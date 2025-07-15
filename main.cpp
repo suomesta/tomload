@@ -338,4 +338,15 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"]["bb"].get_bool() == false);
         CHECK(src.empty());
     }
+    {
+        view_t src = "bool1 = true\nbool2 = false";
+        item_t t = parse(src);
+
+        CHECK(t.is_table() == true);
+        CHECK(t.size() == 2);
+        CHECK(t["bool1"].is_bool() == true);
+        CHECK(t["bool1"].get_bool() == true);
+        CHECK(t["bool2"].is_bool() == true);
+        CHECK(t["bool2"].get_bool() == false);
+    }
 }
