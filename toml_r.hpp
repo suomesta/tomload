@@ -208,7 +208,7 @@ item_t parse_item(view_t& view);
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-view_t::size_type get_radix_length(view_t view, view_t allowed) {
+inline view_t::size_type get_radix_length(view_t view, view_t allowed) {
     view_t::size_type pos = view.find_first_not_of(allowed, 2);
     if (pos == view_t::npos) {
         pos = view.size();
@@ -219,7 +219,7 @@ view_t::size_type get_radix_length(view_t view, view_t allowed) {
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
+inline u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     view_t sub(view.data() + 2, length - 2);
     if ((starts_with(sub, "_")) ||
         (ends_with(sub, "_")) ||
@@ -248,7 +248,7 @@ u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
 /*
  * @pre `view` must start with A-Za-z0-9_-
  */
-view_t::size_type get_bare_length(view_t view) {
+inline view_t::size_type get_bare_length(view_t view) {
     view_t::size_type pos = view.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", 2);
     if (pos == view_t::npos) {
         pos = view.size();
@@ -259,11 +259,11 @@ view_t::size_type get_bare_length(view_t view) {
 /*
  * @pre `view` must start with A-Za-z0-9_-
  */
-std::string parse_bare_value(view_t view, view_t::size_type length) {
+inline std::string parse_bare_value(view_t view, view_t::size_type length) {
     return {view.data(), length};
 }
 
-void skip_space(view_t& view, view_t spaces, bool skip_comment) {
+inline void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     bool go_recurrsive = false;
 
     view_t::size_type pos = view.find_first_not_of(spaces);
@@ -291,7 +291,7 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     }
 }
 
-bool wait_newline(view_t& view) {
+inline bool wait_newline(view_t& view) {
     skip_space(view, " \t\r", false);
     if (view.empty()) {
         return true;
@@ -314,7 +314,7 @@ bool wait_newline(view_t& view) {
 /*
  * @pre `view` must start with "'''"
  */
-view_t::size_type get_multi_literal_string_length(view_t view) {
+inline view_t::size_type get_multi_literal_string_length(view_t view) {
     view_t::size_type pos = view.find("'''", 3);
 
     if (pos == view_t::npos) {
@@ -332,7 +332,7 @@ view_t::size_type get_multi_literal_string_length(view_t view) {
     return pos + 3;
 }
 
-std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
+inline std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
     if (starts_with(view, "'''\r\n")) {
         return std::string(view.data() + 5, length - 8);
     } else if (starts_with(view, "'''\n")) {
@@ -342,7 +342,7 @@ std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
     }
 }
 
-item_t parse_array(view_t& view) {
+inline item_t parse_array(view_t& view) {
     view_t backup(view);
 
     view.remove_prefix(1);
@@ -379,7 +379,7 @@ item_t parse_array(view_t& view) {
     return tmp_vector;
 }
 
-item_t parse_item(view_t& view) {
+inline item_t parse_item(view_t& view) {
     item_t ret = {item_t::TYPE_VOID};
 
     if (starts_with(view, "true")) {
@@ -451,7 +451,7 @@ item_t parse_item(view_t& view) {
     return ret;
 }
 
-void insert_table(item_t& root, item_t& item, const std::vector<std::string>& brackets, const std::vector<std::string>& keys) {
+inline void insert_table(item_t& root, item_t& item, const std::vector<std::string>& brackets, const std::vector<std::string>& keys) {
     std::map<std::string, item_t>* mptr = root.m.get();
     for (const std::string& key : brackets) {
         mptr->insert({key, item_t{}});
@@ -473,7 +473,7 @@ void insert_table(item_t& root, item_t& item, const std::vector<std::string>& br
     }
 }
 
-item_t parse(view_t& view) {
+inline item_t parse(view_t& view) {
     item_t ret = {};
     ret.type = item_t::TYPE_TABLE;
     ret.m = std::make_shared<std::map<std::string, item_t>>();

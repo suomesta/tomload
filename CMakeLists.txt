@@ -6,8 +6,7 @@ project(test_toml_r CXX)
 
 set(CMAKE_CXX_STANDARD 17) # C++17 for std::string_view
 
-# a.outという実行ファイルをmain.cppとtoml_r.hppから作成
-add_executable(a.out main.cpp toml_r.hpp)
+add_executable(a.out main.cpp samples.cpp toml_r.hpp view_t.hpp integers.hpp)
 
 target_include_directories(a.out PUBLIC ./include)
 

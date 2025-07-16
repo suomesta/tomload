@@ -1,10 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 #include <cmath>
-#include <fstream>
 #include <iterator>
-#include <sstream>
-#include <string>
 #include "toml_r.hpp"
 
 TEST_CASE("testing skip_space()") {
@@ -351,17 +348,5 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"]["bb"].is_bool() == true);
         CHECK(result["aa"]["bb"].get_bool() == false);
         CHECK(src.empty());
-    }
-    {
-        std::string content = load_file("Boolean_1.toml");
-        view_t src{content.c_str()};
-        item_t t = parse(src);
-
-        CHECK(t.is_table() == true);
-        CHECK(t.size() == 2);
-        CHECK(t["bool1"].is_bool() == true);
-        CHECK(t["bool1"].get_bool() == true);
-        CHECK(t["bool2"].is_bool() == true);
-        CHECK(t["bool2"].get_bool() == false);
     }
 }
