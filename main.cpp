@@ -120,33 +120,33 @@ TEST_CASE("testing parse_item(special_float)") {
     }
 }
 
-TEST_CASE("testing parse_item(uint)") {
+TEST_CASE("testing parse_item(radix)") {
     {
         view_t src = "0xF_f";
         item_t result = parse_item(src);
 
-        CHECK(result.is_uint() == true);
-        CHECK(result.get_uint() == 255UL);
+        CHECK(result.is_int() == true);
+        CHECK(result.get_int() == 255LL);
         CHECK(src.empty());
     }
     {
         view_t src = "0o77_7";
         item_t result = parse_item(src);
 
-        CHECK(result.is_uint() == true);
-        CHECK(result.get_uint() == 511UL);
+        CHECK(result.is_int() == true);
+        CHECK(result.get_int() == 511LL);
         CHECK(src.empty());
     }
     {
         view_t src = "0b11110000";
         item_t result = parse_item(src);
 
-        CHECK(result.is_uint() == true);
-        CHECK(result.get_uint() == 240UL);
+        CHECK(result.is_int() == true);
+        CHECK(result.get_int() == 240LL);
         CHECK(src.empty());
     }
     {
-        view_t src = "0xF_FFFF_FFFF_FFFF_FFFF";
+        view_t src = "0xFFFF_FFFF_FFFF_FFFF";
 
         CHECK_THROWS_AS(parse_item(src), parse_error&);
     }
@@ -249,7 +249,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_uint() == true);
+        CHECK(result[0].is_int() == true);
+        CHECK(result[0].get_int() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -258,8 +259,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_uint() == true);
-        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[0].is_int() == true);
+        CHECK(result[0].get_int() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -268,8 +269,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_uint() == true);
-        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[0].is_int() == true);
+        CHECK(result[0].get_int() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -278,15 +279,15 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 2);
-        CHECK(result[0].is_uint() == true);
-        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[0].is_int() == true);
+        CHECK(result[0].get_int() == 255LL);
         CHECK(result[1].is_bool() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
         for (item_t::array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
             if (std::distance(result.array_begin(), i) == 0) {
-                CHECK(i->is_uint() == true);
-                CHECK(i->get_uint() == 255UL);
+                CHECK(i->is_int() == true);
+                CHECK(i->get_int() == 255LL);
             } else if (std::distance(result.array_begin(), i) == 1) {
                 CHECK(i->is_bool() == true);
                 CHECK(i->get_bool() == true);
@@ -295,8 +296,8 @@ TEST_CASE("testing parse_item(array)") {
         int i = 0;
         for (auto r : result.array_range()) {
             if (i == 0) {
-                CHECK(r.is_uint() == true);
-                CHECK(r.get_uint() == 255UL);
+                CHECK(r.is_int() == true);
+                CHECK(r.get_int() == 255LL);
             } else if (i == 1) {
                 CHECK(r.is_bool() == true);
                 CHECK(r.get_bool() == true);
@@ -310,8 +311,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 2);
-        CHECK(result[0].is_uint() == true);
-        CHECK(result[0].get_uint() == 255UL);
+        CHECK(result[0].is_int() == true);
+        CHECK(result[0].get_int() == 255LL);
         CHECK(result[1].is_bool() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());

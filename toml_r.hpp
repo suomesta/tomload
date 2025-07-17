@@ -25,7 +25,6 @@ struct item_t {
         TYPE_VOID = 0,
         TYPE_BOOL,
         TYPE_INT,
-        TYPE_UINT,
         TYPE_FLOAT,
         TYPE_STRING,
         TYPE_ARRAY,
@@ -34,7 +33,6 @@ struct item_t {
 
     bool b;
     i64 i;
-    u64 u;
     double d;
     std::string s;
     std::shared_ptr<std::vector<item_t>> v;
@@ -43,7 +41,6 @@ struct item_t {
     type_t get_type(void) const noexcept { return type; }
     bool is_bool(void) const noexcept { return type == TYPE_BOOL; }
     bool is_int(void) const noexcept { return type == TYPE_INT; }
-    bool is_uint(void) const noexcept { return type == TYPE_UINT; }
     bool is_float(void) const noexcept { return type == TYPE_FLOAT; }
     bool is_string(void) const noexcept { return type == TYPE_STRING; }
     bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
@@ -54,8 +51,6 @@ struct item_t {
             val = b;
         } else if (std::is_same<PARAM, i64>() && type == TYPE_INT) {
             val = i;
-        } else if (std::is_same<PARAM, u64>() && type == TYPE_UINT) {
-            val = u;
         } else if (std::is_same<PARAM, double>() && type == TYPE_FLOAT) {
             val = d;
         } else if (std::is_same<PARAM, std::string>() && type == TYPE_STRING) {
@@ -77,12 +72,6 @@ struct item_t {
             throw parse_error("type mismatch");
         }
         return i;
-    }
-    u64 get_uint(void) const {
-        if (type != TYPE_UINT) {
-            throw parse_error("type mismatch");
-        }
-        return u;
     }
     double get_float(void) const {
         if (type != TYPE_FLOAT) {
@@ -219,7 +208,7 @@ inline view_t::size_type get_radix_length(view_t view, view_t allowed) {
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-inline u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
+inline i64 parse_radix_value(view_t view, view_t::size_type length, int base) {
     view_t sub(view.data() + 2, length - 2);
     if ((starts_with(sub, "_")) ||
         (ends_with(sub, "_")) ||
@@ -234,9 +223,9 @@ inline u64 parse_radix_value(view_t view, view_t::size_type length, int base) {
         }
     }
 
-    u64 ret = 0;
+    i64 ret = 0;
     try {
-        ret = std::stoull(str, nullptr, base);
+        ret = std::stoll(str, nullptr, base);
     } catch (std::out_of_range& err) {
         throw parse_error("out_of_range");
     } catch (std::invalid_argument& err) {
@@ -416,24 +405,24 @@ inline item_t parse_item(view_t& view) {
         view.remove_prefix(4);
     } else if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
-        u64 u = parse_radix_value(view, length, 16);
+        i64 i = parse_radix_value(view, length, 16);
 
-        ret.type = item_t::TYPE_UINT;
-        ret.u = u;
+        ret.type = item_t::TYPE_INT;
+        ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "0o")) {
         view_t::size_type length = get_radix_length(view, "01234567_");
-        u64 u = parse_radix_value(view, length, 8);
+        i64 i = parse_radix_value(view, length, 8);
 
-        ret.type = item_t::TYPE_UINT;
-        ret.u = u;
+        ret.type = item_t::TYPE_INT;
+        ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "0b")) {
         view_t::size_type length = get_radix_length(view, "01_");
-        u64 u = parse_radix_value(view, length, 2);
+        i64 i = parse_radix_value(view, length, 2);
 
-        ret.type = item_t::TYPE_UINT;
-        ret.u = u;
+        ret.type = item_t::TYPE_INT;
+        ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
