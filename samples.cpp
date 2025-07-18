@@ -20,6 +20,36 @@ std::string load_file(const std::string& filename) {
 
 }  // namespace
 
+TEST_CASE("String_7.toml") {
+    std::string content = load_file("String_7.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["regex2"].is_string() == true);
+    CHECK(t["regex2"].get_string() == "I [dw]on't need \\d{2} apples");
+    CHECK(t["lines"].is_string() == true);
+    CHECK(t["lines"].get_string() == "The first newline is\ntrimmed in raw strings.\n   All other whitespace\n   is preserved.\n");
+}
+
+TEST_CASE("String_8.toml") {
+/*
+    std::string content = load_file("String_8.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 3);
+    CHECK(t["quot15"].is_string() == true);
+    CHECK(t["quot15"].get_string() == "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\"");
+    CHECK(t["apos15"].is_string() == true);
+    CHECK(t["apos15"].get_string() == "Here are fifteen apostrophes: '''''''''''''''");
+    CHECK(t["str"].is_string() == true);
+    CHECK(t["str"].get_string() == "'That,' she said, 'is still pointless.'");
+*/
+}
+
 TEST_CASE("Boolean_1.toml") {
     std::string content = load_file("Boolean_1.toml");
     view_t src{content.c_str()};

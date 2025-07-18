@@ -87,7 +87,7 @@ struct item_t {
         }
         return d;
     }
-    std::string get_string(void) {
+    std::string get_string(void) const {
         if (type != TYPE_STRING) {
             throw parse_error("type mismatch");
         }
