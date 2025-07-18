@@ -21,7 +21,7 @@ class parse_error : public std::runtime_error {
 };
 
 struct item_t {
-    enum type_t {
+    enum type_t : int {
         TYPE_VOID = 0,
         TYPE_BOOL,
         TYPE_INT,
@@ -176,6 +176,7 @@ struct item_t {
         I end(void) const noexcept {
             return end_;
         }
+     private:
         I begin_;
         I end_;
     };
