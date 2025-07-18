@@ -319,17 +319,6 @@ TEST_CASE("testing parse_item(array)") {
     }
 }
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TEST_DATA_DIR) + filename);
-    if (not file.is_open()) {
-        throw std::runtime_error("Cannot open " + filename);
-    }
-
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
-
 TEST_CASE("testing parse()") {
     {
         view_t src = "[aa]  #comm\n";

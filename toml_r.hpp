@@ -55,6 +55,14 @@ struct item_t {
             val = d;
         } else if (std::is_same<PARAM, std::string>() && type == TYPE_STRING) {
             val = s;
+        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_INT) {
+            val = static_cast<PARAM>(i);
+        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_FLOAT) {
+            val = static_cast<PARAM>(d);
+        } else if (std::is_floating_point<PARAM>() && type == TYPE_INT) {
+            val = static_cast<PARAM>(i);
+        } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
+            val = static_cast<PARAM>(d);
         } else {
             return false;
         }
