@@ -20,6 +20,23 @@ std::string load_file(const std::string& filename) {
 
 }  // namespace
 
+TEST_CASE("String_6.toml") {
+    std::string content = load_file("String_6.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 4);
+    CHECK(t["winpath"].is_string() == true);
+    CHECK(t["winpath"].get_string() == "C:\\Users\\nodejs\\templates");
+    CHECK(t["winpath2"].is_string() == true);
+    CHECK(t["winpath2"].get_string() == "\\\\ServerX\\admin$\\system32\\");
+    CHECK(t["quoted"].is_string() == true);
+    CHECK(t["quoted"].get_string() == "Tom \"Dubs\" Preston-Werner");
+    CHECK(t["regex"].is_string() == true);
+    CHECK(t["regex"].get_string() == "<\\i\\c*\\s*>");
+}
+
 TEST_CASE("String_7.toml") {
     std::string content = load_file("String_7.toml");
     view_t src{content.c_str()};

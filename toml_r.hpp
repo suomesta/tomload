@@ -340,6 +340,31 @@ inline std::string parse_multi_literal_string(view_t& view, view_t::size_type le
     }
 }
 
+/*
+ * @pre `view` must start with "'"
+ */
+inline view_t::size_type get_literal_string_length(view_t view) {
+    view_t::size_type pos = view.find("'", 1);
+
+    if (pos == view_t::npos) {
+        throw parse_error("not closed by '");
+    }
+
+    view_t::size_type pos_r = view.find("\r", 1);
+    view_t::size_type pos_n = view.find("\n", 1);
+    if ((pos_r != view_t::npos) && (pos_r < pos)) {
+        throw parse_error("detect newline in literal string");
+    } else if ((pos_n != view_t::npos) && (pos_n < pos)) {
+        throw parse_error("detect newline in literal string");
+    }
+
+    return pos + 1;
+}
+
+inline std::string parse_literal_string(view_t& view, view_t::size_type length) {
+    return std::string(view.data() + 1, length - 2);
+}
+
 inline item_t parse_array(view_t& view) {
     view_t backup(view);
 
@@ -436,6 +461,13 @@ inline item_t parse_item(view_t& view) {
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
         std::string str = parse_multi_literal_string(view, length);
+
+        ret.type = item_t::TYPE_STRING;
+        ret.s = std::move(str);
+        view.remove_prefix(length);
+    } else if (starts_with(view, "'")) {
+        view_t::size_type length = get_literal_string_length(view);
+        std::string str = parse_literal_string(view, length);
 
         ret.type = item_t::TYPE_STRING;
         ret.s = std::move(str);

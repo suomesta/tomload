@@ -224,6 +224,35 @@ TEST_CASE("testing parse_item(''')") {
         CHECK(result.get_string() == "A\na");
         CHECK(src.compare("") == 0);
     }
+    {
+        view_t src = "'''\nA\na''";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(')") {
+    {
+        view_t src = "''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'a\"b'";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "a\"b");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'a\"b";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
 }
 
 TEST_CASE("testing parse_item(array)") {
