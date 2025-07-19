@@ -3,6 +3,7 @@
 #ifndef TOMLOAD_HPP
 #define TOMLOAD_HPP
 
+#include <cstdint>
 #include <exception>
 #include <limits>
 #include <map>
@@ -15,6 +16,13 @@
 
 namespace tomload {
 
+using boolean_t = bool;
+using integer_t = int64_t;
+using float_t = double;
+using string_t = std::string;
+
+static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
+
 class parse_error : public std::runtime_error {
  public:
     parse_error(const char* msg) :
@@ -25,8 +33,8 @@ class parse_error : public std::runtime_error {
 struct item_t {
     enum type_t : int {
         TYPE_VOID = 0,
-        TYPE_BOOL,
-        TYPE_INT,
+        TYPE_BOOLEAN,
+        TYPE_INTEGER,
         TYPE_FLOAT,
         TYPE_STRING,
         TYPE_ARRAY,
@@ -34,34 +42,34 @@ struct item_t {
     } type = TYPE_VOID;
 
     bool b;
-    i64 i;
+    integer_t i;
     double d;
     std::string s;
     std::shared_ptr<std::vector<item_t>> v;
     std::shared_ptr<std::map<std::string, item_t>> m;
 
     type_t get_type(void) const noexcept { return type; }
-    bool is_bool(void) const noexcept { return type == TYPE_BOOL; }
-    bool is_int(void) const noexcept { return type == TYPE_INT; }
+    bool is_boolean(void) const noexcept { return type == TYPE_BOOLEAN; }
+    bool is_integer(void) const noexcept { return type == TYPE_INTEGER; }
     bool is_float(void) const noexcept { return type == TYPE_FLOAT; }
     bool is_string(void) const noexcept { return type == TYPE_STRING; }
     bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
     bool is_table(void) const noexcept { return type == TYPE_TABLE; }
     template <class PARAM>
     bool get(PARAM& val) {
-        if (std::is_same<PARAM, bool>() && type == TYPE_BOOL) {
+        if (std::is_same<PARAM, bool>() && type == TYPE_BOOLEAN) {
             val = b;
-        } else if (std::is_same<PARAM, i64>() && type == TYPE_INT) {
+        } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
             val = i;
         } else if (std::is_same<PARAM, double>() && type == TYPE_FLOAT) {
             val = d;
         } else if (std::is_same<PARAM, std::string>() && type == TYPE_STRING) {
             val = s;
-        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_INT) {
+        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_INTEGER) {
             val = static_cast<PARAM>(i);
         } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_FLOAT) {
             val = static_cast<PARAM>(d);
-        } else if (std::is_floating_point<PARAM>() && type == TYPE_INT) {
+        } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
             val = static_cast<PARAM>(i);
         } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
             val = static_cast<PARAM>(d);
@@ -72,13 +80,13 @@ struct item_t {
         return true;
     }
     bool get_bool(void) const {
-        if (type != TYPE_BOOL) {
+        if (type != TYPE_BOOLEAN) {
             throw parse_error("type mismatch");
         }
         return b;
     }
-    i64 get_int(void) const {
-        if (type != TYPE_INT) {
+    integer_t get_integer(void) const {
+        if (type != TYPE_INTEGER) {
             throw parse_error("type mismatch");
         }
         return i;
@@ -219,7 +227,7 @@ inline view_t::size_type get_radix_length(view_t view, view_t allowed) {
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-inline i64 parse_radix_value(view_t view, view_t::size_type length, int base) {
+inline integer_t parse_radix_value(view_t view, view_t::size_type length, int base) {
     view_t sub(view.data() + 2, length - 2);
     if ((starts_with(sub, "_")) ||
         (ends_with(sub, "_")) ||
@@ -234,7 +242,7 @@ inline i64 parse_radix_value(view_t view, view_t::size_type length, int base) {
         }
     }
 
-    i64 ret = 0;
+    integer_t ret = 0;
     try {
         ret = std::stoll(str, nullptr, base);
     } catch (std::out_of_range& err) {
@@ -408,11 +416,11 @@ inline item_t parse_item(view_t& view) {
     item_t ret = {item_t::TYPE_VOID};
 
     if (starts_with(view, "true")) {
-        ret.type = item_t::TYPE_BOOL;
+        ret.type = item_t::TYPE_BOOLEAN;
         ret.b = true;
         view.remove_prefix(4);
     } else if (starts_with(view, "false")) {
-        ret.type = item_t::TYPE_BOOL;
+        ret.type = item_t::TYPE_BOOLEAN;
         ret.b = false;
         view.remove_prefix(5);
     } else if (starts_with(view, "inf")) {
@@ -441,23 +449,23 @@ inline item_t parse_item(view_t& view) {
         view.remove_prefix(4);
     } else if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
-        i64 i = parse_radix_value(view, length, 16);
+        integer_t i = parse_radix_value(view, length, 16);
 
-        ret.type = item_t::TYPE_INT;
+        ret.type = item_t::TYPE_INTEGER;
         ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "0o")) {
         view_t::size_type length = get_radix_length(view, "01234567_");
-        i64 i = parse_radix_value(view, length, 8);
+        integer_t i = parse_radix_value(view, length, 8);
 
-        ret.type = item_t::TYPE_INT;
+        ret.type = item_t::TYPE_INTEGER;
         ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "0b")) {
         view_t::size_type length = get_radix_length(view, "01_");
-        i64 i = parse_radix_value(view, length, 2);
+        integer_t i = parse_radix_value(view, length, 2);
 
-        ret.type = item_t::TYPE_INT;
+        ret.type = item_t::TYPE_INTEGER;
         ret.i = i;
         view.remove_prefix(length);
     } else if (starts_with(view, "'''")) {

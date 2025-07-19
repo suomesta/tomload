@@ -4,6 +4,8 @@
 
 #include <string_view>
 
+namespace tomload {
+
 using view_t = std::string_view;
 
 inline bool starts_with(view_t view, view_t x) {
@@ -13,5 +15,7 @@ inline bool starts_with(view_t view, view_t x) {
 inline bool ends_with(view_t view, view_t x) {
     return view.size() >= x.size() && view.compare(view.size() - x.size(), view_t::npos, x) == 0;
 }
+
+}  // namespace tomload
 
 #endif  // VIEW_T_HPP

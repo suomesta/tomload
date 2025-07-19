@@ -76,8 +76,8 @@ TEST_CASE("Boolean_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["bool1"].is_bool() == true);
+    CHECK(t["bool1"].is_boolean() == true);
     CHECK(t["bool1"].get_bool() == true);
-    CHECK(t["bool2"].is_bool() == true);
+    CHECK(t["bool2"].is_boolean() == true);
     CHECK(t["bool2"].get_bool() == false);
 }

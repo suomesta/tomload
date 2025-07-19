@@ -57,7 +57,7 @@ TEST_CASE("testing parse_item(bool)") {
         view_t src = "true";
         item_t result = parse_item(src);
 
-        CHECK(result.is_bool() == true);
+        CHECK(result.is_boolean() == true);
         CHECK(result.get_bool() == true);
         CHECK(src.empty());
     }
@@ -65,7 +65,7 @@ TEST_CASE("testing parse_item(bool)") {
         view_t src = "false";
         item_t result = parse_item(src);
 
-        CHECK(result.is_bool() == true);
+        CHECK(result.is_boolean() == true);
         CHECK(result.get_bool() == false);
         CHECK(src.empty());
     }
@@ -127,24 +127,24 @@ TEST_CASE("testing parse_item(radix)") {
         view_t src = "0xF_f";
         item_t result = parse_item(src);
 
-        CHECK(result.is_int() == true);
-        CHECK(result.get_int() == 255LL);
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 255LL);
         CHECK(src.empty());
     }
     {
         view_t src = "0o77_7";
         item_t result = parse_item(src);
 
-        CHECK(result.is_int() == true);
-        CHECK(result.get_int() == 511LL);
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 511LL);
         CHECK(src.empty());
     }
     {
         view_t src = "0b11110000";
         item_t result = parse_item(src);
 
-        CHECK(result.is_int() == true);
-        CHECK(result.get_int() == 240LL);
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 240LL);
         CHECK(src.empty());
     }
     {
@@ -280,8 +280,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_int() == true);
-        CHECK(result[0].get_int() == 255LL);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -290,8 +290,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_int() == true);
-        CHECK(result[0].get_int() == 255LL);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -300,8 +300,8 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 1);
-        CHECK(result[0].is_int() == true);
-        CHECK(result[0].get_int() == 255LL);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
         CHECK(src.empty());
     }
     {
@@ -310,27 +310,27 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 2);
-        CHECK(result[0].is_int() == true);
-        CHECK(result[0].get_int() == 255LL);
-        CHECK(result[1].is_bool() == true);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(result[1].is_boolean() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
         for (item_t::array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
             if (std::distance(result.array_begin(), i) == 0) {
-                CHECK(i->is_int() == true);
-                CHECK(i->get_int() == 255LL);
+                CHECK(i->is_integer() == true);
+                CHECK(i->get_integer() == 255LL);
             } else if (std::distance(result.array_begin(), i) == 1) {
-                CHECK(i->is_bool() == true);
+                CHECK(i->is_boolean() == true);
                 CHECK(i->get_bool() == true);
             }
         }
         int i = 0;
         for (auto r : result.array_range()) {
             if (i == 0) {
-                CHECK(r.is_int() == true);
-                CHECK(r.get_int() == 255LL);
+                CHECK(r.is_integer() == true);
+                CHECK(r.get_integer() == 255LL);
             } else if (i == 1) {
-                CHECK(r.is_bool() == true);
+                CHECK(r.is_boolean() == true);
                 CHECK(r.get_bool() == true);
             }
             i++;
@@ -342,9 +342,9 @@ TEST_CASE("testing parse_item(array)") {
 
         CHECK(result.is_array() == true);
         CHECK(result.size() == 2);
-        CHECK(result[0].is_int() == true);
-        CHECK(result[0].get_int() == 255LL);
-        CHECK(result[1].is_bool() == true);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(result[1].is_boolean() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
     }
@@ -366,7 +366,7 @@ TEST_CASE("testing parse()") {
         CHECK(result.is_table() == true);
         CHECK(result.size() == 1);
         CHECK(result.contains("aa") == true);
-        CHECK(result["aa"]["bb"].is_bool() == true);
+        CHECK(result["aa"]["bb"].is_boolean() == true);
         CHECK(result["aa"]["bb"].get_bool() == false);
         CHECK(src.empty());
     }

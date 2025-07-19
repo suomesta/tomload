@@ -17,9 +17,9 @@ def c_bool(b):
 
 TYPE_CHECK = {
     list: 'is_array', dict: 'is_table',
-    int: 'is_int', float: 'is_float', bool: 'is_bool', str: 'is_string'}
+    int: 'is_integer', float: 'is_float', bool: 'is_boolean', str: 'is_string'}
 TYPE_GET = {
-    int: 'get_int', float: 'get_float', bool: 'get_bool', str: 'get_string'}
+    int: 'get_integer', float: 'get_float', bool: 'get_bool', str: 'get_string'}
 KEY_CONV = {
     int: int, str: c_str}
 VAL_CONV = {
