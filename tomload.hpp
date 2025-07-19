@@ -1,7 +1,7 @@
 #include <iostream>
 
-#ifndef TOML_R_HPP
-#define TOML_R_HPP
+#ifndef TOMLOAD_HPP
+#define TOMLOAD_HPP
 
 #include <exception>
 #include <limits>
@@ -12,6 +12,8 @@
 #include <vector>
 #include "integers.hpp"
 #include "view_t.hpp"
+
+namespace tomload {
 
 class parse_error : public std::runtime_error {
  public:
@@ -593,4 +595,6 @@ inline item_t parse(view_t& view) {
     return ret;
 }
 
-#endif  // TOML_R_HPP
+}  // namespace tomload
+
+#endif  // TOMLOAD_HPP

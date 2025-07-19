@@ -20,6 +20,8 @@ std::string load_file(const std::string& filename) {
 
 }  // namespace
 
+using namespace tomload;
+
 TEST_CASE("String_6.toml") {
     std::string content = load_file("String_6.toml");
     view_t src{content.c_str()};

@@ -4,6 +4,8 @@
 #include <iterator>
 #include "tomload.hpp"
 
+using namespace tomload;
+
 TEST_CASE("testing skip_space()") {
     {
         view_t src = "true";
