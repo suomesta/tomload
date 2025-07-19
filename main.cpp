@@ -2,7 +2,7 @@
 #include "doctest/doctest.h"
 #include <cmath>
 #include <iterator>
-#include "toml_r.hpp"
+#include "tomload.hpp"
 
 TEST_CASE("testing skip_space()") {
     {

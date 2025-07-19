@@ -6,7 +6,7 @@ project(test_toml_r CXX)
 
 set(CMAKE_CXX_STANDARD 17) # C++17 for std::string_view
 
-add_executable(a.out main.cpp samples.cpp toml_r.hpp view_t.hpp integers.hpp)
+add_executable(a.out main.cpp samples.cpp tomload.hpp view_t.hpp integers.hpp)
 
 target_include_directories(a.out PUBLIC ./include)
 
