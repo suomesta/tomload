@@ -315,7 +315,7 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[1].is_boolean() == true);
         CHECK(result[1].get_bool() == true);
         CHECK(src.empty());
-        for (item_t::array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
+        for (array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
             if (std::distance(result.array_begin(), i) == 0) {
                 CHECK(i->is_integer() == true);
                 CHECK(i->get_integer() == 255LL);

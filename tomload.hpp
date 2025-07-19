@@ -15,19 +15,39 @@
 
 namespace tomload {
 
-using boolean_t = bool;
-using integer_t = int64_t;
-using float_t = double;
-using string_t = std::string;
-using key_t = std::string;
-static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
-
 class parse_error : public std::runtime_error {
  public:
     parse_error(const char* msg) :
         runtime_error(msg) {
     }
 };
+
+template <typename I>
+class range_t {
+ public:
+    range_t(I begin, I end) :
+        begin_(begin),
+        end_(end) {
+    }
+
+    I begin(void) const noexcept { return begin_; }
+    I end(void) const noexcept { return end_; }
+
+ private:
+    I begin_, end_;
+};
+
+using boolean_t = bool;
+using integer_t = int64_t;
+using float_t = double;
+using string_t = std::string;
+using key_t = std::string;
+struct item_t;
+using array_iterator = std::vector<item_t>::const_iterator;
+using table_iterator = std::map<key_t, item_t>::const_iterator;
+using array_range_t = range_t<array_iterator>;
+using table_range_t = range_t<table_iterator>;
+static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
 
 struct item_t {
     enum type_t : int {
@@ -47,12 +67,40 @@ struct item_t {
     std::shared_ptr<std::vector<item_t>> v;
     std::shared_ptr<std::map<key_t, item_t>> m;
 
+    item_t(void) = default;
+
+    void set(boolean_t val) noexcept {
+        type = TYPE_BOOLEAN;
+        b = val;
+    }
+
+    void set(integer_t val) noexcept {
+        type = TYPE_INTEGER;
+        i = val;
+    }
+
+    void set(float_t val) noexcept {
+        type = TYPE_FLOAT;
+        d = val;
+    }
+
+    void set(const string_t& val) noexcept {
+        type = TYPE_STRING;
+        s = val;
+    }
+
+    void set(string_t&& val) noexcept {
+        type = TYPE_STRING;
+        s = std::move(val);
+    }
+
     bool is_boolean(void) const noexcept { return type == TYPE_BOOLEAN; }
     bool is_integer(void) const noexcept { return type == TYPE_INTEGER; }
     bool is_float(void) const noexcept { return type == TYPE_FLOAT; }
     bool is_string(void) const noexcept { return type == TYPE_STRING; }
     bool is_array(void) const noexcept { return type == TYPE_ARRAY; }
     bool is_table(void) const noexcept { return type == TYPE_TABLE; }
+
     template <class PARAM>
     bool get(PARAM& val) {
         if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
@@ -77,6 +125,7 @@ struct item_t {
 
         return true;
     }
+
     boolean_t get_bool(void) const {
         if (type != TYPE_BOOLEAN) {
             throw parse_error("type mismatch");
@@ -132,12 +181,9 @@ struct item_t {
         if (type == TYPE_TABLE) {
             return m->find(key) != m->cend();
         } else {
-            return false;
+            throw parse_error("not table");
         }
     }
-
-    using array_iterator = std::vector<item_t>::const_iterator;
-    using table_iterator = std::map<key_t, item_t>::const_iterator;
 
     array_iterator array_begin(void) const {
         if (type == TYPE_ARRAY) {
@@ -170,26 +216,6 @@ struct item_t {
             throw parse_error("not table");
         }
     }
-
-    template <typename I>
-    class range_t {
-     public:
-        range_t(I begin, I end) :
-            begin_(begin),
-            end_(end) {
-        }
-        I begin(void) const noexcept {
-            return begin_;
-        }
-        I end(void) const noexcept {
-            return end_;
-        }
-     private:
-        I begin_;
-        I end_;
-    };
-    using array_range_t = range_t<array_iterator>;
-    using table_range_t = range_t<table_iterator>;
 
     const array_range_t array_range(void) const noexcept {
         if (type == TYPE_ARRAY) {
@@ -265,7 +291,7 @@ inline view_t::size_type get_bare_length(view_t view) {
 /*
  * @pre `view` must start with A-Za-z0-9_-
  */
-inline std::string parse_bare_value(view_t view, view_t::size_type length) {
+inline string_t parse_bare_value(view_t view, view_t::size_type length) {
     return {view.data(), length};
 }
 
@@ -338,13 +364,13 @@ inline view_t::size_type get_multi_literal_string_length(view_t view) {
     return pos + 3;
 }
 
-inline std::string parse_multi_literal_string(view_t& view, view_t::size_type length) {
+inline string_t parse_multi_literal_string(view_t& view, view_t::size_type length) {
     if (starts_with(view, "'''\r\n")) {
-        return std::string(view.data() + 5, length - 8);
+        return string_t(view.data() + 5, length - 8);
     } else if (starts_with(view, "'''\n")) {
-        return std::string(view.data() + 4, length - 7);
+        return string_t(view.data() + 4, length - 7);
     } else {
-        return std::string(view.data() + 3, length - 6);
+        return string_t(view.data() + 3, length - 6);
     }
 }
 
@@ -369,8 +395,8 @@ inline view_t::size_type get_literal_string_length(view_t view) {
     return pos + 1;
 }
 
-inline std::string parse_literal_string(view_t& view, view_t::size_type length) {
-    return std::string(view.data() + 1, length - 2);
+inline string_t parse_literal_string(view_t& view, view_t::size_type length) {
+    return string_t(view.data() + 1, length - 2);
 }
 
 inline item_t parse_array(view_t& view) {
@@ -378,7 +404,8 @@ inline item_t parse_array(view_t& view) {
 
     view.remove_prefix(1);
 
-    item_t tmp_vector = {item_t::TYPE_ARRAY};
+    item_t tmp_vector;
+    tmp_vector.type = item_t::TYPE_ARRAY;
     tmp_vector.v = std::make_shared<std::vector<item_t>>();
 
     enum {
@@ -414,71 +441,58 @@ inline item_t parse_item(view_t& view) {
     item_t ret = {};
 
     if (starts_with(view, "true")) {
-        ret.type = item_t::TYPE_BOOLEAN;
-        ret.b = true;
+        ret.set(true);
         view.remove_prefix(4);
     } else if (starts_with(view, "false")) {
-        ret.type = item_t::TYPE_BOOLEAN;
-        ret.b = false;
+        ret.set(false);
         view.remove_prefix(5);
     } else if (starts_with(view, "inf")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = std::numeric_limits<double>::infinity();
+        ret.set(std::numeric_limits<double>::infinity());
         view.remove_prefix(3);
     } else if (starts_with(view, "+inf")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = std::numeric_limits<double>::infinity();
+        ret.set(std::numeric_limits<double>::infinity());
         view.remove_prefix(4);
     } else if (starts_with(view, "-inf")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = -std::numeric_limits<double>::infinity();
+        ret.set(-std::numeric_limits<double>::infinity());
         view.remove_prefix(4);
     } else if (starts_with(view, "nan")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = std::numeric_limits<double>::quiet_NaN();
+        ret.set(std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(3);
     } else if (starts_with(view, "+nan")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = std::numeric_limits<double>::quiet_NaN();
+        ret.set(std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(4);
     } else if (starts_with(view, "-nan")) {
-        ret.type = item_t::TYPE_FLOAT;
-        ret.d = -std::numeric_limits<double>::quiet_NaN();
+        ret.set(-std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(4);
     } else if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
         integer_t i = parse_radix_value(view, length, 16);
 
-        ret.type = item_t::TYPE_INTEGER;
-        ret.i = i;
+        ret.set(i);
         view.remove_prefix(length);
     } else if (starts_with(view, "0o")) {
         view_t::size_type length = get_radix_length(view, "01234567_");
         integer_t i = parse_radix_value(view, length, 8);
 
-        ret.type = item_t::TYPE_INTEGER;
-        ret.i = i;
+        ret.set(i);
         view.remove_prefix(length);
     } else if (starts_with(view, "0b")) {
         view_t::size_type length = get_radix_length(view, "01_");
         integer_t i = parse_radix_value(view, length, 2);
 
-        ret.type = item_t::TYPE_INTEGER;
-        ret.i = i;
+        ret.set(i);
         view.remove_prefix(length);
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
-        std::string str = parse_multi_literal_string(view, length);
+        string_t str = parse_multi_literal_string(view, length);
 
-        ret.type = item_t::TYPE_STRING;
-        ret.s = std::move(str);
+        ret.set(std::move(str));
         view.remove_prefix(length);
     } else if (starts_with(view, "'")) {
         view_t::size_type length = get_literal_string_length(view);
-        std::string str = parse_literal_string(view, length);
+        string_t str = parse_literal_string(view, length);
 
-        ret.type = item_t::TYPE_STRING;
-        ret.s = std::move(str);
+        ret.set(std::move(str));
         view.remove_prefix(length);
     } else if (starts_with(view, "[")) {
         ret = parse_array(view);
@@ -489,19 +503,19 @@ inline item_t parse_item(view_t& view) {
     return ret;
 }
 
-inline void insert_table(item_t& root, item_t& item, const std::vector<std::string>& brackets, const std::vector<std::string>& keys) {
-    std::map<std::string, item_t>* mptr = root.m.get();
-    for (const std::string& key : brackets) {
+inline void insert_table(item_t& root, item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
+    std::map<key_t, item_t>* mptr = root.m.get();
+    for (const key_t& key : brackets) {
         mptr->insert({key, item_t{}});
         mptr->find(key)->second.type = item_t::TYPE_TABLE;
-        mptr->find(key)->second.m = std::make_shared<std::map<std::string, item_t>>();
+        mptr->find(key)->second.m = std::make_shared<std::map<key_t, item_t>>();
         mptr = mptr->find(key)->second.m.get();
     }
-    for (const std::string& key : keys) {
+    for (const key_t& key : keys) {
         if (&key != &keys.back()) {
             mptr->insert({key, item_t{}});
             mptr->find(key)->second.type = item_t::TYPE_TABLE;
-            mptr->find(key)->second.m = std::make_shared<std::map<std::string, item_t>>();
+            mptr->find(key)->second.m = std::make_shared<std::map<key_t, item_t>>();
             mptr = mptr->find(key)->second.m.get();
         } else {
             mptr->insert({key, item_t{}});
@@ -514,10 +528,10 @@ inline void insert_table(item_t& root, item_t& item, const std::vector<std::stri
 inline item_t parse(view_t& view) {
     item_t ret = {};
     ret.type = item_t::TYPE_TABLE;
-    ret.m = std::make_shared<std::map<std::string, item_t>>();
+    ret.m = std::make_shared<std::map<key_t, item_t>>();
 
-    std::vector<std::string> brackets;
-    std::vector<std::string> keys;
+    std::vector<key_t> brackets;
+    std::vector<key_t> keys;
 
     enum {
         start,
@@ -542,7 +556,7 @@ inline item_t parse(view_t& view) {
             } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
                 keys.clear();
                 view_t::size_type length = get_bare_length(view);
-                std::string s = parse_bare_value(view, length);
+                key_t s = parse_bare_value(view, length);
 
                 status = pair_wait_dot;
                 keys.push_back(std::move(s));
@@ -559,7 +573,7 @@ inline item_t parse(view_t& view) {
                 view.remove_prefix(1);
             } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
                 view_t::size_type length = get_bare_length(view);
-                std::string s = parse_bare_value(view, length);
+                key_t s = parse_bare_value(view, length);
 
                 brackets.push_back(std::move(s));
                 view.remove_prefix(length);
