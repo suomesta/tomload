@@ -11,7 +11,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "integers.hpp"
 #include "view_t.hpp"
 
 namespace tomload {
@@ -20,7 +19,7 @@ using boolean_t = bool;
 using integer_t = int64_t;
 using float_t = double;
 using string_t = std::string;
-
+using key_t = std::string;
 static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
 
 class parse_error : public std::runtime_error {
@@ -32,23 +31,22 @@ class parse_error : public std::runtime_error {
 
 struct item_t {
     enum type_t : int {
-        TYPE_VOID = 0,
-        TYPE_BOOLEAN,
+        TYPE_BOOLEAN = 0,
         TYPE_INTEGER,
         TYPE_FLOAT,
         TYPE_STRING,
         TYPE_ARRAY,
         TYPE_TABLE,
-    } type = TYPE_VOID;
+        TYPE_NONE,
+    } type = TYPE_NONE;
 
-    bool b;
+    boolean_t b;
     integer_t i;
-    double d;
-    std::string s;
+    float_t d;
+    string_t s;
     std::shared_ptr<std::vector<item_t>> v;
-    std::shared_ptr<std::map<std::string, item_t>> m;
+    std::shared_ptr<std::map<key_t, item_t>> m;
 
-    type_t get_type(void) const noexcept { return type; }
     bool is_boolean(void) const noexcept { return type == TYPE_BOOLEAN; }
     bool is_integer(void) const noexcept { return type == TYPE_INTEGER; }
     bool is_float(void) const noexcept { return type == TYPE_FLOAT; }
@@ -57,17 +55,17 @@ struct item_t {
     bool is_table(void) const noexcept { return type == TYPE_TABLE; }
     template <class PARAM>
     bool get(PARAM& val) {
-        if (std::is_same<PARAM, bool>() && type == TYPE_BOOLEAN) {
+        if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
             val = b;
         } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
             val = i;
-        } else if (std::is_same<PARAM, double>() && type == TYPE_FLOAT) {
+        } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
             val = d;
-        } else if (std::is_same<PARAM, std::string>() && type == TYPE_STRING) {
+        } else if (std::is_same<PARAM, string_t>() && type == TYPE_STRING) {
             val = s;
-        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_INTEGER) {
+        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
             val = static_cast<PARAM>(i);
-        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, bool>() && type == TYPE_FLOAT) {
+        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
             val = static_cast<PARAM>(d);
         } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
             val = static_cast<PARAM>(i);
@@ -79,7 +77,7 @@ struct item_t {
 
         return true;
     }
-    bool get_bool(void) const {
+    boolean_t get_bool(void) const {
         if (type != TYPE_BOOLEAN) {
             throw parse_error("type mismatch");
         }
@@ -91,13 +89,13 @@ struct item_t {
         }
         return i;
     }
-    double get_float(void) const {
+    float_t get_float(void) const {
         if (type != TYPE_FLOAT) {
             throw parse_error("type mismatch");
         }
         return d;
     }
-    std::string get_string(void) const {
+    string_t get_string(void) const {
         if (type != TYPE_STRING) {
             throw parse_error("type mismatch");
         }
@@ -122,7 +120,7 @@ struct item_t {
         }
     }
 
-    const item_t& operator[](const std::string& key) const {
+    const item_t& operator[](const key_t& key) const {
         if (type == TYPE_TABLE) {
             return m->at(key);
         } else {
@@ -130,7 +128,7 @@ struct item_t {
         }
     }
 
-    bool contains(const std::string& key) const {
+    bool contains(const key_t& key) const {
         if (type == TYPE_TABLE) {
             return m->find(key) != m->cend();
         } else {
@@ -139,7 +137,7 @@ struct item_t {
     }
 
     using array_iterator = std::vector<item_t>::const_iterator;
-    using table_iterator = std::map<std::string, item_t>::const_iterator;
+    using table_iterator = std::map<key_t, item_t>::const_iterator;
 
     array_iterator array_begin(void) const {
         if (type == TYPE_ARRAY) {
@@ -413,7 +411,7 @@ inline item_t parse_array(view_t& view) {
 }
 
 inline item_t parse_item(view_t& view) {
-    item_t ret = {item_t::TYPE_VOID};
+    item_t ret = {};
 
     if (starts_with(view, "true")) {
         ret.type = item_t::TYPE_BOOLEAN;
