@@ -48,6 +48,10 @@ using table_iterator = std::map<key_t, item_t>::const_iterator;
 using array_range_t = range_t<array_iterator>;
 using table_range_t = range_t<table_iterator>;
 static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
+struct make_array_t { explicit make_array_t() = default; };
+static constexpr make_array_t make_array{};
+struct make_table_t { explicit make_table_t() = default; };
+static constexpr make_table_t make_table{};
 
 struct item_t {
     enum type_t : int {
@@ -69,29 +73,39 @@ struct item_t {
 
     item_t(void) = default;
 
-    void set(boolean_t val) noexcept {
-        type = TYPE_BOOLEAN;
-        b = val;
+    item_t(boolean_t val) noexcept :
+        type(TYPE_BOOLEAN),
+        b(val) {
     }
 
-    void set(integer_t val) noexcept {
-        type = TYPE_INTEGER;
-        i = val;
+    item_t(integer_t val) noexcept :
+        type(TYPE_INTEGER),
+        i(val) {
     }
 
-    void set(float_t val) noexcept {
-        type = TYPE_FLOAT;
-        d = val;
+    item_t(float_t val) noexcept :
+        type(TYPE_FLOAT),
+        d(val) {
     }
 
-    void set(const string_t& val) noexcept {
-        type = TYPE_STRING;
-        s = val;
+    item_t(const string_t& val) noexcept :
+        type(TYPE_STRING),
+        s(val) {
     }
 
-    void set(string_t&& val) noexcept {
-        type = TYPE_STRING;
-        s = std::move(val);
+    item_t(string_t&& val) noexcept :
+        type(TYPE_STRING),
+        s(std::move(val)) {
+    }
+
+    item_t(make_array_t) :
+        type(TYPE_ARRAY),
+        v(std::make_shared<std::vector<item_t>>()) {
+    }
+
+    item_t(make_table_t) :
+        type(TYPE_TABLE),
+        m(std::make_shared<std::map<key_t, item_t>>()) {
     }
 
     bool is_boolean(void) const noexcept { return type == TYPE_BOOLEAN; }
@@ -404,9 +418,7 @@ inline item_t parse_array(view_t& view) {
 
     view.remove_prefix(1);
 
-    item_t tmp_vector;
-    tmp_vector.type = item_t::TYPE_ARRAY;
-    tmp_vector.v = std::make_shared<std::vector<item_t>>();
+    item_t tmp_vector{make_array};
 
     enum {
         wait_item,
@@ -438,84 +450,76 @@ inline item_t parse_array(view_t& view) {
 }
 
 inline item_t parse_item(view_t& view) {
-    item_t ret = {};
-
     if (starts_with(view, "true")) {
-        ret.set(true);
         view.remove_prefix(4);
+        return item_t{true};
     } else if (starts_with(view, "false")) {
-        ret.set(false);
         view.remove_prefix(5);
+        return item_t{false};
     } else if (starts_with(view, "inf")) {
-        ret.set(std::numeric_limits<double>::infinity());
         view.remove_prefix(3);
+        return item_t{std::numeric_limits<double>::infinity()};
     } else if (starts_with(view, "+inf")) {
-        ret.set(std::numeric_limits<double>::infinity());
         view.remove_prefix(4);
+        return item_t{std::numeric_limits<double>::infinity()};
     } else if (starts_with(view, "-inf")) {
-        ret.set(-std::numeric_limits<double>::infinity());
         view.remove_prefix(4);
+        return item_t{-std::numeric_limits<double>::infinity()};
     } else if (starts_with(view, "nan")) {
-        ret.set(std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(3);
+        return item_t{std::numeric_limits<double>::quiet_NaN()};
     } else if (starts_with(view, "+nan")) {
-        ret.set(std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(4);
+        return item_t{std::numeric_limits<double>::quiet_NaN()};
     } else if (starts_with(view, "-nan")) {
-        ret.set(-std::numeric_limits<double>::quiet_NaN());
         view.remove_prefix(4);
+        return item_t{-std::numeric_limits<double>::quiet_NaN()};
     } else if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
         integer_t i = parse_radix_value(view, length, 16);
 
-        ret.set(i);
         view.remove_prefix(length);
+        return item_t{i};
     } else if (starts_with(view, "0o")) {
         view_t::size_type length = get_radix_length(view, "01234567_");
         integer_t i = parse_radix_value(view, length, 8);
 
-        ret.set(i);
         view.remove_prefix(length);
+        return item_t{i};
     } else if (starts_with(view, "0b")) {
         view_t::size_type length = get_radix_length(view, "01_");
         integer_t i = parse_radix_value(view, length, 2);
 
-        ret.set(i);
         view.remove_prefix(length);
+        return item_t{i};
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
         string_t str = parse_multi_literal_string(view, length);
 
-        ret.set(std::move(str));
         view.remove_prefix(length);
+        return item_t{std::move(str)};
     } else if (starts_with(view, "'")) {
         view_t::size_type length = get_literal_string_length(view);
         string_t str = parse_literal_string(view, length);
 
-        ret.set(std::move(str));
         view.remove_prefix(length);
+        return item_t{std::move(str)};
     } else if (starts_with(view, "[")) {
-        ret = parse_array(view);
-    } else {
-        throw parse_error("not hit item");
+        return parse_array(view);
     }
 
-    return ret;
+    throw parse_error("not hit item");
 }
 
 inline void insert_table(item_t& root, item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
     std::map<key_t, item_t>* mptr = root.m.get();
     for (const key_t& key : brackets) {
-        mptr->insert({key, item_t{}});
-        mptr->find(key)->second.type = item_t::TYPE_TABLE;
-        mptr->find(key)->second.m = std::make_shared<std::map<key_t, item_t>>();
+        mptr->insert({key, item_t{make_table}});
         mptr = mptr->find(key)->second.m.get();
     }
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
-            mptr->insert({key, item_t{}});
-            mptr->find(key)->second.type = item_t::TYPE_TABLE;
-            mptr->find(key)->second.m = std::make_shared<std::map<key_t, item_t>>();
+            mptr->insert({key, item_t{make_table}});
             mptr = mptr->find(key)->second.m.get();
         } else {
             mptr->insert({key, item_t{}});
@@ -526,9 +530,7 @@ inline void insert_table(item_t& root, item_t& item, const std::vector<key_t>& b
 }
 
 inline item_t parse(view_t& view) {
-    item_t ret = {};
-    ret.type = item_t::TYPE_TABLE;
-    ret.m = std::make_shared<std::map<key_t, item_t>>();
+    item_t ret{make_table};
 
     std::vector<key_t> brackets;
     std::vector<key_t> keys;
