@@ -22,6 +22,17 @@ std::string load_file(const std::string& filename) {
 
 using namespace tomload;
 
+TEST_CASE("String_1.toml") {
+    std::string content = load_file("String_1.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t["str"].is_string() == true);
+    CHECK(t["str"].get_string() == "I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
+}
+
 TEST_CASE("String_6.toml") {
     std::string content = load_file("String_6.toml");
     view_t src{content.c_str()};

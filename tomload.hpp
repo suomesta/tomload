@@ -3,6 +3,7 @@
 #ifndef TOMLOAD_HPP
 #define TOMLOAD_HPP
 
+#include <algorithm>
 #include <cstdint>
 #include <exception>
 #include <limits>
@@ -52,6 +53,30 @@ struct make_array_t { explicit make_array_t() = default; };
 static constexpr make_array_t make_array{};
 struct make_table_t { explicit make_table_t() = default; };
 static constexpr make_table_t make_table{};
+
+inline std::string utf8_encode(uint32_t codepoint) {
+    std::string out_str;
+    if (codepoint <= 0x7F) {
+        out_str.resize(1);
+        out_str[0] = static_cast<char>(codepoint);
+    } else if (codepoint <= 0x7FF) {
+        out_str.resize(2);
+        out_str[0] = 0xC0 | (codepoint >> 6);
+        out_str[1] = 0x80 | (codepoint & 0x3F);
+    } else if (codepoint <= 0xFFFF) {
+        out_str.resize(3);
+        out_str[0] = 0xE0 | (codepoint >> 12);
+        out_str[1] = 0x80 | ((codepoint >> 6) & 0x3F);
+        out_str[2] = 0x80 | (codepoint & 0x3F);
+    } else if (codepoint <= 0x10FFFF) {
+        out_str.resize(4);
+        out_str[0] = 0xF0 | (codepoint >> 18);
+        out_str[1] = 0x80 | ((codepoint >> 12) & 0x3F);
+        out_str[2] = 0x80 | ((codepoint >> 6) & 0x3F);
+        out_str[3] = 0x80 | (codepoint & 0x3F);
+    }
+    return out_str; // Invalid code point
+}
 
 struct item_t {
     enum type_t : int {
@@ -413,28 +438,61 @@ inline string_t parse_literal_string(view_t& view, view_t::size_type length) {
     return string_t(view.data() + 1, length - 2);
 }
 
+inline std::string parse_unicode_escape(const view_t& view, int size) {
+    auto is_hex = [](char c) {  // avoid to use std::isxdigit() because it depends on the locale
+        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+    };
+
+    if (size > view.size()) {
+        throw parse_error("invalid unicode escape sequence");
+    }
+    if (not std::all_of(view.data(), view.data() + size, is_hex)) {
+        throw parse_error("invalid unicode escape sequence");
+    }
+    uint32_t code_point = static_cast<uint32_t>(std::stoul(std::string(view.data(), size), nullptr, 16));
+    if (((0x00 <= code_point) && (code_point <= 0x08)) ||
+        ((0x0A <= code_point) && (code_point <= 0x1F)) ||
+        (code_point == 0x7F)) {  // U+0000 ～ U+0008、U+000A ～ U+001F、U+007F
+        throw parse_error("invalid unicode escape sequence");
+    }
+    std::string chars = utf8_encode(code_point);
+    if (chars.empty()) {
+        throw parse_error("invalid unicode escape sequence");
+    }
+    return chars;
+}
+
 /*
  * @pre `view` must start with '"'
  */
 inline view_t::size_type get_string_length(view_t view) {
-    bool detected_backlash = false;
+    bool detected_backslash = false;
     for (view_t::size_type i = 1; i < view.size(); ++i) {
-        if (detected_backlash) {
-            detected_backlash = false;
-            if ((view[i] == 'n') || (view[i] == 'r') || (view[i] == 't') || (view[i] == 'b') ||
-                (view[i] == 'f') || (view[i] == '\\') || (view[i] == '"')) {
-                detected_backlash = false;
-            } else {
-                throw parse_error("invalid escape sequence");
-            }
-        } else {
+        if (not detected_backslash) {
             if (view[i] == '"') {
                 return i + 1;
             } else if (view[i] == '\\') {
-                detected_backlash = true;
+                detected_backslash = true;
             } else if (view[i] == '\n' || view[i] == '\r') {
                 throw parse_error("detect newline in string");
             }
+        } else {
+            if ((view[i] == 'n') || (view[i] == 'r') || (view[i] == 't') || (view[i] == 'b') ||
+                (view[i] == 'f') || (view[i] == '\\') || (view[i] == '"')) {
+            } else if (view[i] == 'u') {
+                if (i + 4 > view.size()) {
+                    throw parse_error("invalid unicode escape sequence");
+                }
+                i += 4;
+            } else if (view[i] == 'U') {
+                if (i + 8 > view.size()) {
+                    throw parse_error("invalid unicode escape sequence");
+                }
+                i += 8;
+            } else {
+                throw parse_error("invalid escape sequence");
+            }
+            detected_backslash = false;
         }
     }
     throw parse_error("not closed by \"");
@@ -445,33 +503,7 @@ inline string_t parse_string(view_t& view, view_t::size_type length) {
 
     bool detected_backlash = false;
     for (view_t::size_type i = 1; i < view.size(); ++i) {
-        if (detected_backlash) {
-            detected_backlash = false;
-            if (view[i] == 'n') {
-                ret.push_back('\n');
-                detected_backlash = false;
-            } else if (view[i] == 'r') {
-                ret.push_back('\r');
-                detected_backlash = false;
-            } else if (view[i] == 't') {
-                ret.push_back('\t');
-                detected_backlash = false;
-            } else if (view[i] == 'b') {
-                ret.push_back('\b');
-                detected_backlash = false;
-            } else if (view[i] == 'f') {
-                ret.push_back('\f');
-                detected_backlash = false;
-            } else if (view[i] == '\\') {
-                ret.push_back('\\');
-                detected_backlash = false;
-            } else if (view[i] == '"') {
-                ret.push_back('"');
-                detected_backlash = false;
-            } else {
-                throw parse_error("invalid escape sequence");
-            }
-        } else {
+        if (not detected_backlash) {
             if (view[i] == '"') {
                 return ret;
             } else if (view[i] == '\\') {
@@ -481,6 +513,31 @@ inline string_t parse_string(view_t& view, view_t::size_type length) {
             } else {
                 ret.push_back(view[i]);
             }
+        } else {
+            if (view[i] == 'n') {
+                ret.push_back('\n');
+            } else if (view[i] == 'r') {
+                ret.push_back('\r');
+            } else if (view[i] == 't') {
+                ret.push_back('\t');
+            } else if (view[i] == 'b') {
+                ret.push_back('\b');
+            } else if (view[i] == 'f') {
+                ret.push_back('\f');
+            } else if (view[i] == '\\') {
+                ret.push_back('\\');
+            } else if (view[i] == '"') {
+                ret.push_back('"');
+            } else if (view[i] == 'u') {
+                ret += parse_unicode_escape(view.substr(i + 1), 4);
+                i += 4;
+            } else if (view[i] == 'U') {
+                ret += parse_unicode_escape(view.substr(i + 1), 8);
+                i += 8;
+            } else {
+                throw parse_error("invalid escape sequence");
+            }
+            detected_backlash = false;
         }
     }
     throw parse_error("not closed by \"");
