@@ -53,7 +53,6 @@ TEST_CASE("String_7.toml") {
 }
 
 TEST_CASE("String_8.toml") {
-/*
     std::string content = load_file("String_8.toml");
     view_t src{content.c_str()};
     item_t t = parse(src);
@@ -66,7 +65,6 @@ TEST_CASE("String_8.toml") {
     CHECK(t["apos15"].get_string() == "Here are fifteen apostrophes: '''''''''''''''");
     CHECK(t["str"].is_string() == true);
     CHECK(t["str"].get_string() == "'That,' she said, 'is still pointless.'");
-*/
 }
 
 TEST_CASE("Boolean_1.toml") {

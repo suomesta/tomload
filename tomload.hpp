@@ -413,6 +413,79 @@ inline string_t parse_literal_string(view_t& view, view_t::size_type length) {
     return string_t(view.data() + 1, length - 2);
 }
 
+/*
+ * @pre `view` must start with '"'
+ */
+inline view_t::size_type get_string_length(view_t view) {
+    bool detected_backlash = false;
+    for (view_t::size_type i = 1; i < view.size(); ++i) {
+        if (detected_backlash) {
+            detected_backlash = false;
+            if ((view[i] == 'n') || (view[i] == 'r') || (view[i] == 't') || (view[i] == 'b') ||
+                (view[i] == 'f') || (view[i] == '\\') || (view[i] == '"')) {
+                detected_backlash = false;
+            } else {
+                throw parse_error("invalid escape sequence");
+            }
+        } else {
+            if (view[i] == '"') {
+                return i + 1;
+            } else if (view[i] == '\\') {
+                detected_backlash = true;
+            } else if (view[i] == '\n' || view[i] == '\r') {
+                throw parse_error("detect newline in string");
+            }
+        }
+    }
+    throw parse_error("not closed by \"");
+}
+
+inline string_t parse_string(view_t& view, view_t::size_type length) {
+    std::string ret;
+
+    bool detected_backlash = false;
+    for (view_t::size_type i = 1; i < view.size(); ++i) {
+        if (detected_backlash) {
+            detected_backlash = false;
+            if (view[i] == 'n') {
+                ret.push_back('\n');
+                detected_backlash = false;
+            } else if (view[i] == 'r') {
+                ret.push_back('\r');
+                detected_backlash = false;
+            } else if (view[i] == 't') {
+                ret.push_back('\t');
+                detected_backlash = false;
+            } else if (view[i] == 'b') {
+                ret.push_back('\b');
+                detected_backlash = false;
+            } else if (view[i] == 'f') {
+                ret.push_back('\f');
+                detected_backlash = false;
+            } else if (view[i] == '\\') {
+                ret.push_back('\\');
+                detected_backlash = false;
+            } else if (view[i] == '"') {
+                ret.push_back('"');
+                detected_backlash = false;
+            } else {
+                throw parse_error("invalid escape sequence");
+            }
+        } else {
+            if (view[i] == '"') {
+                return ret;
+            } else if (view[i] == '\\') {
+                detected_backlash = true;
+            } else if (view[i] == '\n' || view[i] == '\r') {
+                throw parse_error("detect newline in string");
+            } else {
+                ret.push_back(view[i]);
+            }
+        }
+    }
+    throw parse_error("not closed by \"");
+}
+
 inline item_t parse_array(view_t& view) {
     view_t backup(view);
 
@@ -501,6 +574,12 @@ inline item_t parse_item(view_t& view) {
     } else if (starts_with(view, "'")) {
         view_t::size_type length = get_literal_string_length(view);
         string_t str = parse_literal_string(view, length);
+
+        view.remove_prefix(length);
+        return item_t{std::move(str)};
+    } else if (starts_with(view, "\"")) {
+        view_t::size_type length = get_string_length(view);
+        string_t str = parse_string(view, length);
 
         view.remove_prefix(length);
         return item_t{std::move(str)};
