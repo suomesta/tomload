@@ -251,7 +251,90 @@ TEST_CASE("testing parse_item(')") {
         CHECK(src.empty());
     }
     {
+        view_t src = "'a\r\nb'";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
         view_t src = "'a\"b";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(\")") {
+    {
+        view_t src = "\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"abc\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\\\\\\"\\r\\n\\t\\b \t\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\\\"\r\n\t\b \t");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\u3042\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "あ");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\U00003044\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "い");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\u0000\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\u123\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\U0000001F\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\U1234567\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"abc\r\ndef\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"abc";
 
         CHECK_THROWS_AS(parse_item(src), parse_error&);
     }
