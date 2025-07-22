@@ -55,27 +55,23 @@ struct make_table_t { explicit make_table_t() = default; };
 static constexpr make_table_t make_table{};
 
 inline std::string utf8_encode(uint32_t codepoint) {
-    std::string out_str;
-    if (codepoint <= 0x7F) {
-        out_str.resize(1);
-        out_str[0] = static_cast<char>(codepoint);
-    } else if (codepoint <= 0x7FF) {
-        out_str.resize(2);
-        out_str[0] = 0xC0 | (codepoint >> 6);
-        out_str[1] = 0x80 | (codepoint & 0x3F);
-    } else if (codepoint <= 0xFFFF) {
-        out_str.resize(3);
-        out_str[0] = 0xE0 | (codepoint >> 12);
-        out_str[1] = 0x80 | ((codepoint >> 6) & 0x3F);
-        out_str[2] = 0x80 | (codepoint & 0x3F);
-    } else if (codepoint <= 0x10FFFF) {
-        out_str.resize(4);
-        out_str[0] = 0xF0 | (codepoint >> 18);
-        out_str[1] = 0x80 | ((codepoint >> 12) & 0x3F);
-        out_str[2] = 0x80 | ((codepoint >> 6) & 0x3F);
-        out_str[3] = 0x80 | (codepoint & 0x3F);
+    if (codepoint <= 0x7F) {  // 1-byte UTF-8
+        return {static_cast<char>(codepoint)};
+    } else if (codepoint <= 0x7FF) {  // 2-byte UTF-8
+        return {static_cast<char>(0xC0 | (codepoint >> 6)),
+                static_cast<char>(0x80 | (codepoint & 0x3F))};
+    } else if (codepoint <= 0xFFFF) {  // 3-byte UTF-8
+        return {static_cast<char>(0xE0 | (codepoint >> 12)),
+                static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F)),
+                static_cast<char>(0x80 | (codepoint & 0x3F))};
+    } else if (codepoint <= 0x10FFFF) {  // 4-byte UTF-8
+        return {static_cast<char>(0xF0 | (codepoint >> 18)),
+                static_cast<char>(0x80 | ((codepoint >> 12) & 0x3F)),
+                static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F)),
+                static_cast<char>(0x80 | (codepoint & 0x3F))};  
+    } else {
+        return {};  // Invalid code point
     }
-    return out_str; // Invalid code point
 }
 
 struct item_t {
