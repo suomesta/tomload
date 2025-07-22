@@ -2,7 +2,7 @@
 #include "doctest/doctest.h"
 #include <cmath>
 #include <iterator>
-#include "tomload.hpp"
+#include "tomload.h"
 
 using namespace tomload;
 

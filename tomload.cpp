@@ -1,0 +1,256 @@
+#include "tomload.h"
+
+namespace tomload {
+
+item_t::item_t(view_t view) :
+    type(TYPE_TABLE),
+    m(std::make_shared<std::map<key_t, item_t>>()) {
+
+    std::vector<key_t> brackets;
+    std::vector<key_t> keys;
+
+    enum {
+        start,
+        bracket_wait_string,
+        bracket_wait_dot,
+        bracket_wait_newline,
+        pair_wait_dot,
+        pair_wait_value,
+        pair_wait_newline,
+        completed,
+    } status = start;
+
+    while (status != completed) {
+        if (status == start) {
+            skip_space(view, " \t\r\n", true);
+            if (view.empty()) {
+                status = completed;
+            } else if (starts_with(view, "[")) {
+                brackets.clear();
+                status = bracket_wait_string;
+                view.remove_prefix(1);
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
+                keys.clear();
+                view_t::size_type length = get_bare_length(view);
+                key_t s = parse_bare_value(view, length);
+
+                status = pair_wait_dot;
+                keys.push_back(std::move(s));
+                view.remove_prefix(length);
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_string) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "]")) {
+                status = bracket_wait_newline;
+                view.remove_prefix(1);
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
+                view_t::size_type length = get_bare_length(view);
+                key_t s = parse_bare_value(view, length);
+
+                brackets.push_back(std::move(s));
+                view.remove_prefix(length);
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            }
+        } else if (status == pair_wait_dot) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "=")) {
+                status = pair_wait_value;
+                view.remove_prefix(1);
+            } else {
+                ;
+            }
+        } else if (status == pair_wait_value) {
+            skip_space(view, " \t", false);
+            item_t item = parse_item(view);
+            insert_table(*this, item, brackets, keys);
+            status = pair_wait_newline;
+        } else if (status == pair_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            } else {
+                break;
+            }
+        } else {
+            if (view.empty()) {
+                break;
+            }
+        }
+    }
+}
+
+item_t::item_t(boolean_t val) noexcept :
+    type(TYPE_BOOLEAN),
+    b(val) {
+}
+
+item_t::item_t(integer_t val) noexcept :
+    type(TYPE_INTEGER),
+    i(val) {
+}
+
+item_t::item_t(float_t val) noexcept :
+    type(TYPE_FLOAT),
+    d(val) {
+}
+
+item_t::item_t(string_t&& val) noexcept :
+    type(TYPE_STRING),
+    s(std::move(val)) {
+}
+
+item_t::item_t(make_array_t) :
+    type(TYPE_ARRAY),
+    v(std::make_shared<std::vector<item_t>>()) {
+}
+
+item_t::item_t(make_table_t) :
+    type(TYPE_TABLE),
+    m(std::make_shared<std::map<key_t, item_t>>()) {
+}
+
+bool item_t::is_boolean(void) const noexcept {
+    return type == TYPE_BOOLEAN;
+}
+
+bool item_t::is_integer(void) const noexcept {
+    return type == TYPE_INTEGER;
+}
+
+bool item_t::is_float(void) const noexcept {
+    return type == TYPE_FLOAT;
+}
+
+bool item_t::is_string(void) const noexcept {
+    return type == TYPE_STRING;
+}
+
+bool item_t::is_array(void) const noexcept {
+    return type == TYPE_ARRAY;
+}
+
+bool item_t::is_table(void) const noexcept {
+    return type == TYPE_TABLE;
+}
+
+boolean_t item_t::get_bool(void) const {
+    if (type != TYPE_BOOLEAN) {
+        throw parse_error("type mismatch");
+    }
+    return b;
+}
+
+integer_t item_t::get_integer(void) const {
+    if (type != TYPE_INTEGER) {
+        throw parse_error("type mismatch");
+    }
+    return i;
+}
+
+float_t item_t::get_float(void) const {
+    if (type != TYPE_FLOAT) {
+        throw parse_error("type mismatch");
+    }
+    return d;
+}
+
+string_t item_t::get_string(void) const {
+    if (type != TYPE_STRING) {
+        throw parse_error("type mismatch");
+    }
+    return s;
+}
+
+size_t item_t::size(void) const {
+    if (type == TYPE_ARRAY) {
+        return v->size();
+    } else if (type == TYPE_TABLE) {
+        return m->size();
+    } else {
+        throw parse_error("neither array nor table");
+    }
+}
+
+const item_t& item_t::operator[](size_t index) const {
+    if (type == TYPE_ARRAY) {
+        return v->at(index);
+    } else {
+        throw parse_error("not array");
+    }
+}
+
+const item_t& item_t::operator[](const key_t& key) const {
+    if (type == TYPE_TABLE) {
+        return m->at(key);
+    } else {
+        throw parse_error("not table");
+    }
+}
+
+bool item_t::contains(const key_t& key) const {
+    if (type == TYPE_TABLE) {
+        return m->find(key) != m->cend();
+    } else {
+        throw parse_error("not table");
+    }
+}
+
+array_iterator item_t::array_begin(void) const {
+    if (type == TYPE_ARRAY) {
+        return v->begin();
+    } else {
+        throw parse_error("not array");
+    }
+}
+
+array_iterator item_t::array_end(void) const {
+    if (type == TYPE_ARRAY) {
+        return v->end();
+    } else {
+        throw parse_error("not array");
+    }
+}
+
+table_iterator item_t::table_begin(void) const {
+    if (type == TYPE_TABLE) {
+        return m->begin();
+    } else {
+        throw parse_error("not table");
+    }
+}
+
+table_iterator item_t::table_end(void) const {
+    if (type == TYPE_TABLE) {
+        return m->end();
+    } else {
+        throw parse_error("not table");
+    }
+}
+
+const array_range_t item_t::array_range(void) const noexcept {
+    if (type == TYPE_ARRAY) {
+        return array_range_t(v->begin(), v->end());
+    } else {
+        return array_range_t(array_iterator{}, array_iterator{});
+    }
+}
+
+const table_range_t item_t::table_range(void) const noexcept {
+    if (type == TYPE_TABLE) {
+        return table_range_t(m->begin(), m->end());
+    } else {
+        return table_range_t(table_iterator{}, table_iterator{});
+    }
+}
+
+}  // namespace tomload
