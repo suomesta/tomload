@@ -163,6 +163,21 @@ TEST_CASE("testing parse_item(radix)") {
         CHECK_THROWS_AS(parse_item(src), parse_error&);
     }
     {
+        view_t src = "0xz";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0o99";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0b24";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
         view_t src = "0x";
 
         CHECK_THROWS_AS(parse_item(src), parse_error&);
