@@ -33,6 +33,68 @@ TEST_CASE("String_1.toml") {
     CHECK(t["str"].get_string() == "I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
 }
 
+TEST_CASE("String_2.toml") {
+/*
+    std::string content = load_file("String_2.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t["str1"].is_string() == true);
+    CHECK(t["str1"].get_string() == "Roses are red\nViolets are blue");
+*/
+}
+
+TEST_CASE("String_3.toml") {
+    std::string content = load_file("String_3.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["str2"].is_string() == true);
+    CHECK(t["str2"].get_string() == "Roses are red\nViolets are blue");
+    CHECK(t["str3"].is_string() == true);
+    CHECK(t["str3"].get_string() == "Roses are red\r\nViolets are blue");
+}
+
+TEST_CASE("String_4.toml") {
+/*
+    std::string content = load_file("String_4.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 3);
+    CHECK(t["str1"].is_string() == true);
+    CHECK(t["str1"].get_string() == "The quick brown fox jumps over the lazy dog.");
+    CHECK(t["str2"].is_string() == true);
+    CHECK(t["str2"].get_string() == "The quick brown fox jumps over the lazy dog.");
+    CHECK(t["str3"].is_string() == true);
+    CHECK(t["str3"].get_string() == "The quick brown fox jumps over the lazy dog.");
+*/
+}
+
+TEST_CASE("String_5.toml") {
+/*
+    std::string content = load_file("String_5.toml");
+    view_t src{content.c_str()};
+    item_t t = parse(src);
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 4);
+    CHECK(t["str4"].is_string() == true);
+    CHECK(t["str4"].get_string() == "Here are two quotation marks: \"\". Simple enough.");
+    CHECK(t["str5"].is_string() == true);
+    CHECK(t["str5"].get_string() == "Here are three quotation marks: \"\"\".");
+    CHECK(t["str6"].is_string() == true);
+    CHECK(t["str6"].get_string() == "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\".");
+    CHECK(t["str7"].is_string() == true);
+    CHECK(t["str7"].get_string() == "\"This,\" she said, \"is just a pointless statement.\"");
+*/
+}
+
 TEST_CASE("String_6.toml") {
     std::string content = load_file("String_6.toml");
     view_t src{content.c_str()};
