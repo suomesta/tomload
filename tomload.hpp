@@ -11,6 +11,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include "view_t.hpp"
 
@@ -569,31 +570,25 @@ inline item_t parse_array(view_t& view) {
 }
 
 inline item_t parse_item(view_t& view) {
-    if (starts_with(view, "true")) {
-        view.remove_prefix(4);
-        return item_t{true};
-    } else if (starts_with(view, "false")) {
-        view.remove_prefix(5);
-        return item_t{false};
-    } else if (starts_with(view, "inf")) {
-        view.remove_prefix(3);
-        return item_t{std::numeric_limits<double>::infinity()};
-    } else if (starts_with(view, "+inf")) {
-        view.remove_prefix(4);
-        return item_t{std::numeric_limits<double>::infinity()};
-    } else if (starts_with(view, "-inf")) {
-        view.remove_prefix(4);
-        return item_t{-std::numeric_limits<double>::infinity()};
-    } else if (starts_with(view, "nan")) {
-        view.remove_prefix(3);
-        return item_t{std::numeric_limits<double>::quiet_NaN()};
-    } else if (starts_with(view, "+nan")) {
-        view.remove_prefix(4);
-        return item_t{std::numeric_limits<double>::quiet_NaN()};
-    } else if (starts_with(view, "-nan")) {
-        view.remove_prefix(4);
-        return item_t{-std::numeric_limits<double>::quiet_NaN()};
-    } else if (starts_with(view, "0x")) {
+    const std::pair<view_t, item_t> fixed_values[8] = {
+        {"true", item_t{true}},
+        {"false", item_t{false}},
+        {"inf", item_t{std::numeric_limits<double>::infinity()}},
+        {"+inf", item_t{std::numeric_limits<double>::infinity()}},
+        {"-inf", item_t{-std::numeric_limits<double>::infinity()}},
+        {"nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
+        {"+nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
+        {"-nan", item_t{-std::numeric_limits<double>::quiet_NaN()}},
+    };
+
+    for (const auto& pair : fixed_values) {
+        if (starts_with(view, pair.first)) {
+            view.remove_prefix(pair.first.size());
+            return pair.second;
+        }
+    }
+
+    if (starts_with(view, "0x")) {
         view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
         integer_t i = parse_radix_value(view, length, 16);
 
