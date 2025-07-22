@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iterator>
 #include "tomload.h"
+#include "parser.h"
 
 using namespace tomload;
 

@@ -1,92 +1,12 @@
 #include "tomload.h"
+#include "parser.h"
 
 namespace tomload {
 
 item_t::item_t(view_t view) :
     type(TYPE_TABLE),
     m(std::make_shared<std::map<key_t, item_t>>()) {
-
-    std::vector<key_t> brackets;
-    std::vector<key_t> keys;
-
-    enum {
-        start,
-        bracket_wait_string,
-        bracket_wait_dot,
-        bracket_wait_newline,
-        pair_wait_dot,
-        pair_wait_value,
-        pair_wait_newline,
-        completed,
-    } status = start;
-
-    while (status != completed) {
-        if (status == start) {
-            skip_space(view, " \t\r\n", true);
-            if (view.empty()) {
-                status = completed;
-            } else if (starts_with(view, "[")) {
-                brackets.clear();
-                status = bracket_wait_string;
-                view.remove_prefix(1);
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
-                keys.clear();
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                status = pair_wait_dot;
-                keys.push_back(std::move(s));
-                view.remove_prefix(length);
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_string) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "]")) {
-                status = bracket_wait_newline;
-                view.remove_prefix(1);
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                brackets.push_back(std::move(s));
-                view.remove_prefix(length);
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            }
-        } else if (status == pair_wait_dot) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "=")) {
-                status = pair_wait_value;
-                view.remove_prefix(1);
-            } else {
-                ;
-            }
-        } else if (status == pair_wait_value) {
-            skip_space(view, " \t", false);
-            item_t item = parse_item(view);
-            insert_table(*this, item, brackets, keys);
-            status = pair_wait_newline;
-        } else if (status == pair_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            } else {
-                break;
-            }
-        } else {
-            if (view.empty()) {
-                break;
-            }
-        }
-    }
+    parse_main(*this, view);
 }
 
 item_t::item_t(boolean_t val) noexcept :
