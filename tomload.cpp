@@ -101,6 +101,22 @@ size_t item_t::size(void) const {
     }
 }
 
+item_t& item_t::operator[](size_t index) {
+    if (type == TYPE_ARRAY) {
+        return v->at(index);
+    } else {
+        throw parse_error("not array");
+    }
+}
+
+item_t& item_t::operator[](const key_t& key) {
+    if (type == TYPE_TABLE) {
+        return m->at(key);
+    } else {
+        throw parse_error("not table");
+    }
+}
+
 const item_t& item_t::operator[](size_t index) const {
     if (type == TYPE_ARRAY) {
         return v->at(index);

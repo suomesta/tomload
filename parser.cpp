@@ -72,7 +72,7 @@ item_t parse_array(view_t& view) {
             view.remove_prefix(1);
             status = closed;
         } else if (status == wait_item) {
-            tmp_vector.v->push_back(parse_item(view));
+            tmp_vector.push(parse_item(view));
             status = wait_comma;
         } else {
             if (starts_with(view, ",")) {
@@ -151,20 +151,18 @@ item_t parse_item(view_t& view) {
 }
 
 void insert_table(item_t& root, item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
-    std::map<key_t, item_t>* mptr = root.m.get();
+    item_t* p_item = &root;
     for (const key_t& key : brackets) {
-        mptr->insert({key, item_t{make_table}});
-        mptr = mptr->find(key)->second.m.get();
+        p_item->push(key, item_t{make_table});
+        p_item = &((*p_item)[key]);
     }
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
-            mptr->insert({key, item_t{make_table}});
-            mptr = mptr->find(key)->second.m.get();
+            p_item->push(key, item_t{make_table});
+            p_item = &((*p_item)[key]);
         } else {
-            mptr->insert({key, item_t{}});
-            mptr->find(key)->second = std::move(item);
+            p_item->push(key, item);
         }
-        
     }
 }
 

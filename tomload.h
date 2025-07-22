@@ -117,6 +117,8 @@ struct item_t {
     string_t get_string(void) const;
 
     size_t size(void) const;
+    item_t& operator[](size_t index);
+    item_t& operator[](const key_t& key);
     const item_t& operator[](size_t index) const;
     const item_t& operator[](const key_t& key) const;
     array_iterator array_begin(void) const;
@@ -126,6 +128,18 @@ struct item_t {
     const array_range_t array_range(void) const noexcept;
     const table_range_t table_range(void) const noexcept;
     bool contains(const key_t& key) const;
+    void push(const item_t& item) {
+        if (type != TYPE_ARRAY) {
+            throw parse_error("not array");
+        }
+        v->push_back(item);
+    }
+    void push(const key_t& key, const item_t& item) {
+        if (type != TYPE_TABLE) {
+            throw parse_error("not table");
+        }
+        m->insert({key, item});
+    }
 };
 
 }  // namespace tomload
