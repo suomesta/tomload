@@ -1,4 +1,5 @@
 
+import os
 import sys
 import tomllib
 
@@ -53,6 +54,17 @@ def check_val(keys, val):
     yield f'.{name}() == {func(val)});'
 
 
+def print_load(argv1):
+    filename = os.path.basename(argv1)
+
+
+    print(f'TEST_CASE("{filename}") {{')
+    print(f'    std::string content = load_file("{filename}");')
+    print('    view_t src{content.c_str()};')
+    print('    item_t t(src);')
+    print('')
+
+
 def print_check(tom, keys=tuple()):
     if type(tom) in (list, dict, int, float, bool, str):
         print(''.join(check_type(keys, tom)))
@@ -71,7 +83,9 @@ def main():
     """Load TOML file and dump CHECK() lines of doctest."""
     if len(sys.argv) >= 2:
         with open(sys.argv[1], 'rb') as file:
+            print_load(sys.argv[1])
             print_check(tomllib.load(file))
+            print('}')
 
 
 if __name__ == '__main__':

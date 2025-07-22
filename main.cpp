@@ -451,21 +451,19 @@ TEST_CASE("testing parse_item(array)") {
 TEST_CASE("testing parse()") {
     {
         view_t src = "[aa]  #comm\n";
-        item_t result = parse(src);
+        item_t result(src);
 
         CHECK(result.is_table() == true);
         CHECK(result.size() == 0);
-        CHECK(src.empty());
     }
     {
         view_t src = "[aa]  #comm\nbb = false\n";
-        item_t result = parse(src);
+        item_t result(src);
 
         CHECK(result.is_table() == true);
         CHECK(result.size() == 1);
         CHECK(result.contains("aa") == true);
         CHECK(result["aa"]["bb"].is_boolean() == true);
         CHECK(result["aa"]["bb"].get_bool() == false);
-        CHECK(src.empty());
     }
 }

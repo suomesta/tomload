@@ -94,6 +94,8 @@ struct item_t {
 
     item_t(void) = default;
 
+    inline item_t(view_t view);
+
     item_t(boolean_t val) noexcept :
         type(TYPE_BOOLEAN),
         b(val) {
@@ -652,8 +654,9 @@ inline void insert_table(item_t& root, item_t& item, const std::vector<key_t>& b
     }
 }
 
-inline item_t parse(view_t& view) {
-    item_t ret{make_table};
+item_t::item_t(view_t view) :
+    type(TYPE_TABLE),
+    m(std::make_shared<std::map<key_t, item_t>>()) {
 
     std::vector<key_t> brackets;
     std::vector<key_t> keys;
@@ -722,7 +725,7 @@ inline item_t parse(view_t& view) {
         } else if (status == pair_wait_value) {
             skip_space(view, " \t", false);
             item_t item = parse_item(view);
-            insert_table(ret, item, brackets, keys);
+            insert_table(*this, item, brackets, keys);
             status = pair_wait_newline;
         } else if (status == pair_wait_newline) {
             if (wait_newline(view)) {
@@ -736,8 +739,6 @@ inline item_t parse(view_t& view) {
             }
         }
     }
-
-    return ret;
 }
 
 }  // namespace tomload

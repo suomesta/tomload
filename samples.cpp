@@ -25,7 +25,7 @@ using namespace tomload;
 TEST_CASE("String_1.toml") {
     std::string content = load_file("String_1.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -37,7 +37,7 @@ TEST_CASE("String_2.toml") {
 /*
     std::string content = load_file("String_2.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -49,7 +49,7 @@ TEST_CASE("String_2.toml") {
 TEST_CASE("String_3.toml") {
     std::string content = load_file("String_3.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -63,7 +63,7 @@ TEST_CASE("String_4.toml") {
 /*
     std::string content = load_file("String_4.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -80,7 +80,7 @@ TEST_CASE("String_5.toml") {
 /*
     std::string content = load_file("String_5.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -98,7 +98,7 @@ TEST_CASE("String_5.toml") {
 TEST_CASE("String_6.toml") {
     std::string content = load_file("String_6.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -115,7 +115,7 @@ TEST_CASE("String_6.toml") {
 TEST_CASE("String_7.toml") {
     std::string content = load_file("String_7.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -128,7 +128,7 @@ TEST_CASE("String_7.toml") {
 TEST_CASE("String_8.toml") {
     std::string content = load_file("String_8.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -143,7 +143,7 @@ TEST_CASE("String_8.toml") {
 TEST_CASE("Boolean_1.toml") {
     std::string content = load_file("Boolean_1.toml");
     view_t src{content.c_str()};
-    item_t t = parse(src);
+    item_t t(src);
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
