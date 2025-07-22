@@ -57,11 +57,9 @@ def check_val(keys, val):
 def print_load(argv1):
     filename = os.path.basename(argv1)
 
-
     print(f'TEST_CASE("{filename}") {{')
     print(f'    std::string content = load_file("{filename}");')
-    print('    view_t src{content.c_str()};')
-    print('    item_t t(src);')
+    print('    item_t t(view_t{content.c_str()});')
     print('')
 
 
