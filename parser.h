@@ -14,10 +14,6 @@ item_t parse_array(view_t& view);
 
 item_t parse_item(view_t& view);
 
-void insert_table(item_t& root, item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys);
-
-void parse_main(item_t& root, view_t& view);
-
 }  // namespace tomload
 
 #endif  // PARSER_H

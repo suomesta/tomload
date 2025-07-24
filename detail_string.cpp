@@ -178,7 +178,7 @@ string_t parse_string(view_t view, view_t::size_type length) {
  * @pre `view` must start with A-Za-z0-9_-
  */
 view_t::size_type get_bare_length(view_t view) {
-    view_t::size_type pos = view.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", 2);
+    view_t::size_type pos = view.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", 1);
     if (pos == view_t::npos) {
         pos = view.size();
     }

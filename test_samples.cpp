@@ -44,6 +44,79 @@ TEST_CASE("Key_Value_Pair_1.toml") {
     CHECK(t["key"].get_string() == "value");
 }
 
+TEST_CASE("Keys_1.toml") {
+    std::string content = load_file("Keys_1.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 4);
+    CHECK(t["key"].is_string() == true);
+    CHECK(t["key"].get_string() == "value");
+    CHECK(t["bare_key"].is_string() == true);
+    CHECK(t["bare_key"].get_string() == "value");
+    CHECK(t["bare-key"].is_string() == true);
+    CHECK(t["bare-key"].get_string() == "value");
+    CHECK(t["1234"].is_string() == true);
+    CHECK(t["1234"].get_string() == "value");
+}
+
+TEST_CASE("Keys_2.toml") {
+    std::string content = load_file("Keys_2.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 5);
+    CHECK(t["127.0.0.1"].is_string() == true);
+    CHECK(t["127.0.0.1"].get_string() == "value");
+    CHECK(t["character encoding"].is_string() == true);
+    CHECK(t["character encoding"].get_string() == "value");
+    CHECK(t["ʎǝʞ"].is_string() == true);
+    CHECK(t["ʎǝʞ"].get_string() == "value");
+    CHECK(t["key2"].is_string() == true);
+    CHECK(t["key2"].get_string() == "value");
+    CHECK(t["quoted \"value\""].is_string() == true);
+    CHECK(t["quoted \"value\""].get_string() == "value");
+}
+
+TEST_CASE("Keys_3_fix1.toml") {
+    std::string content = load_file("Keys_3_fix1.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t[""].is_string() == true);
+    CHECK(t[""].get_string() == "blank");
+}
+
+TEST_CASE("Keys_3_fix2.toml") {
+    std::string content = load_file("Keys_3_fix2.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t[""].is_string() == true);
+    CHECK(t[""].get_string() == "blank");
+}
+TEST_CASE("Keys_4.toml") {
+    std::string content = load_file("Keys_4.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 3);
+    CHECK(t["name"].is_string() == true);
+    CHECK(t["name"].get_string() == "Orange");
+    CHECK(t["physical"].is_table() == true);
+    CHECK(t["physical"].size() == 2);
+    CHECK(t["physical"]["color"].is_string() == true);
+    CHECK(t["physical"]["color"].get_string() == "orange");
+    CHECK(t["physical"]["shape"].is_string() == true);
+    CHECK(t["physical"]["shape"].get_string() == "round");
+    CHECK(t["site"].is_table() == true);
+    CHECK(t["site"].size() == 1);
+    CHECK(t["site"]["google.com"].is_boolean() == true);
+    CHECK(t["site"]["google.com"].get_bool() == true);
+}
+
 TEST_CASE("String_1.toml") {
     std::string content = load_file("String_1.toml");
     item_t t(view_t{content.c_str()});

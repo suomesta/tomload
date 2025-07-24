@@ -1,4 +1,5 @@
 #include "tomload.h"
+#include "detail_string.h"
 #include "parser.h"
 
 namespace tomload {
@@ -6,7 +7,7 @@ namespace tomload {
 item_t::item_t(view_t view) :
     type(TYPE_TABLE),
     m(std::make_shared<std::map<key_t, item_t>>()) {
-    parse_main(*this, view);
+    parse_main(view);
 }
 
 item_t::item_t(boolean_t val) noexcept :
@@ -32,6 +33,11 @@ item_t::item_t(const string_t& val) noexcept :
 item_t::item_t(string_t&& val) noexcept :
     type(TYPE_STRING),
     s(std::move(val)) {
+}
+
+item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
+    type(TYPE_ARRAY),
+    v(val) {
 }
 
 item_t::item_t(make_array_t) :
@@ -191,6 +197,157 @@ const table_range_t item_t::table_range(void) const noexcept {
         return table_range_t(m->begin(), m->end());
     } else {
         return table_range_t(table_iterator{}, table_iterator{});
+    }
+}
+
+void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
+    item_t* p_item = this;
+    for (const key_t& key : brackets) {
+        p_item->push(key, item_t{make_table});
+        p_item = &((*p_item)[key]);
+    }
+    for (const key_t& key : keys) {
+        if (&key != &keys.back()) {
+            p_item->push(key, item_t{make_table});
+            p_item = &((*p_item)[key]);
+        } else {
+            p_item->push(key, item);
+        }
+    }
+}
+
+void item_t::parse_main(view_t& view) {
+    std::vector<key_t> brackets;
+    std::vector<key_t> keys;
+
+    enum {
+        start,
+        bracket_wait_string,
+        bracket_wait_dot,
+        bracket_wait_newline,
+        pair_wait_string,
+        pair_wait_dot,
+        pair_wait_value,
+        pair_wait_newline,
+        completed,
+    } status = start;
+
+    while (status != completed) {
+std::cout << int(status) << std::endl;
+        if (status == start) {
+            skip_space(view, " \t\r\n", true);
+            if (view.empty()) {
+                status = completed;
+            } else if (starts_with(view, "[")) {
+                brackets.clear();
+                view.remove_prefix(1);
+                status = bracket_wait_string;
+            } else {
+                keys.clear();
+                status = pair_wait_string;
+            }
+        } else if (status == bracket_wait_string) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view[0]) != view_t::npos) {
+                view_t::size_type length = get_bare_length(view);
+                key_t s = parse_bare_value(view, length);
+
+                view.remove_prefix(length);
+                brackets.push_back(std::move(s));
+                status = bracket_wait_dot;
+            } else if (starts_with(view, "'")) {
+                view_t::size_type length = get_literal_string_length(view);
+                key_t s = parse_literal_string(view, length);
+ 
+                view.remove_prefix(length);
+                brackets.push_back(std::move(s));
+                status = bracket_wait_dot;
+            } else if (starts_with(view, "\"")) {
+                view_t::size_type length = get_string_length(view);
+                key_t s = parse_string(view, length);
+
+                view.remove_prefix(length);
+                brackets.push_back(std::move(s));
+                status = bracket_wait_dot;
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_dot) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "]")) {
+                view.remove_prefix(1);
+                status = bracket_wait_newline;
+            } else if (starts_with(view, ".")) {
+                view.remove_prefix(1);
+                status = bracket_wait_string;
+            } else {
+                ;
+            }
+        } else if (status == bracket_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            }
+        } else if (status == pair_wait_string) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view[0]) != view_t::npos) {
+                view_t::size_type length = get_bare_length(view);
+                key_t s = parse_bare_value(view, length);
+
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                status = pair_wait_dot;
+            } else if (starts_with(view, "'")) {
+                view_t::size_type length = get_literal_string_length(view);
+                key_t s = parse_literal_string(view, length);
+ 
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                status = pair_wait_dot;
+            } else if (starts_with(view, "\"")) {
+                view_t::size_type length = get_string_length(view);
+                key_t s = parse_string(view, length);
+
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                status = pair_wait_dot;
+            } else {
+                ;
+            }
+        } else if (status == pair_wait_dot) {
+            skip_space(view, " \t", false);
+            if (view.empty()) {
+                ;
+            } else if (starts_with(view, "=")) {
+                view.remove_prefix(1);
+                status = pair_wait_value;
+            } else if (starts_with(view, ".")) {
+                view.remove_prefix(1);
+                status = pair_wait_string;
+            } else {
+                ;
+            }
+        } else if (status == pair_wait_value) {
+            skip_space(view, " \t", false);
+            item_t item = parse_item(view);
+            insert_new_table(item, brackets, keys);
+            status = pair_wait_newline;
+        } else if (status == pair_wait_newline) {
+            if (wait_newline(view)) {
+                status = start;
+            } else {
+                break;
+            }
+        } else {
+            if (view.empty()) {
+                break;
+            }
+        }
     }
 }
 

@@ -77,6 +77,7 @@ struct item_t {
     item_t(float_t val) noexcept;
     item_t(const string_t& val) noexcept;
     item_t(string_t&& val) noexcept;
+    item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
     item_t(make_array_t);
     item_t(make_table_t);
 
@@ -141,6 +142,11 @@ struct item_t {
         }
         m->insert({key, item});
     }
+
+ private:
+    void insert_new_table(item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys);
+    void parse_main(view_t& view);
+
 };
 
 }  // namespace tomload

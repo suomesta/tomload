@@ -53,11 +53,9 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
 }
 
 item_t parse_array(view_t& view) {
-    view_t backup(view);
+    std::shared_ptr<std::vector<item_t>> v = std::make_shared<std::vector<item_t>>();
 
     view.remove_prefix(1);
-
-    item_t tmp_vector{make_array};
 
     enum {
         wait_item,
@@ -68,24 +66,30 @@ item_t parse_array(view_t& view) {
     while (status != closed) {
         skip_space(view, " \t\r\n", false);
 
-        if (starts_with(view, "]")) {
+        if (view.empty()) {
+            throw parse_error("missing \"]\" in array");
+        } else if (starts_with(view, "]")) {
             view.remove_prefix(1);
             status = closed;
         } else if (status == wait_item) {
-            tmp_vector.push(parse_item(view));
+            v->push_back(parse_item(view));
             status = wait_comma;
-        } else {
-            if (starts_with(view, ",")) {
+        } else if (status == wait_comma) {
+            skip_space(view, " \t\r\n", false);
+            if (view.empty()) {
+                throw parse_error("missing \",\" in array");
+            } else if (starts_with(view, ",")) {
                 view.remove_prefix(1);
                 status = wait_item;
             } else {
-                view = backup;
-                return {};
+                throw parse_error("missing \",\" in array");
             }
+        } else {
+            throw parse_error("unknown error");
         }
     }
 
-    return tmp_vector;
+    return item_t{v};
 }
 
 item_t parse_item(view_t& view) {
@@ -148,106 +152,6 @@ item_t parse_item(view_t& view) {
     }
 
     throw parse_error("not hit item");
-}
-
-void insert_table(item_t& root, item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
-    item_t* p_item = &root;
-    for (const key_t& key : brackets) {
-        p_item->push(key, item_t{make_table});
-        p_item = &((*p_item)[key]);
-    }
-    for (const key_t& key : keys) {
-        if (&key != &keys.back()) {
-            p_item->push(key, item_t{make_table});
-            p_item = &((*p_item)[key]);
-        } else {
-            p_item->push(key, item);
-        }
-    }
-}
-
-void parse_main(item_t& root, view_t& view) {
-    std::vector<key_t> brackets;
-    std::vector<key_t> keys;
-
-    enum {
-        start,
-        bracket_wait_string,
-        bracket_wait_dot,
-        bracket_wait_newline,
-        pair_wait_dot,
-        pair_wait_value,
-        pair_wait_newline,
-        completed,
-    } status = start;
-
-    while (status != completed) {
-        if (status == start) {
-            skip_space(view, " \t\r\n", true);
-            if (view.empty()) {
-                status = completed;
-            } else if (starts_with(view, "[")) {
-                brackets.clear();
-                status = bracket_wait_string;
-                view.remove_prefix(1);
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
-                keys.clear();
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                status = pair_wait_dot;
-                keys.push_back(std::move(s));
-                view.remove_prefix(length);
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_string) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "]")) {
-                status = bracket_wait_newline;
-                view.remove_prefix(1);
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view_t(view.data(), 1)) != view_t::npos) {
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                brackets.push_back(std::move(s));
-                view.remove_prefix(length);
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            }
-        } else if (status == pair_wait_dot) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "=")) {
-                status = pair_wait_value;
-                view.remove_prefix(1);
-            } else {
-                ;
-            }
-        } else if (status == pair_wait_value) {
-            skip_space(view, " \t", false);
-            item_t item = parse_item(view);
-            insert_table(root, item, brackets, keys);
-            status = pair_wait_newline;
-        } else if (status == pair_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            } else {
-                break;
-            }
-        } else {
-            if (view.empty()) {
-                break;
-            }
-        }
-    }
 }
 
 }  // namespace tomload
