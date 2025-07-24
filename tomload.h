@@ -75,6 +75,7 @@ struct item_t {
     item_t(boolean_t val) noexcept;
     item_t(integer_t val) noexcept;
     item_t(float_t val) noexcept;
+    item_t(const string_t& val) noexcept;
     item_t(string_t&& val) noexcept;
     item_t(make_array_t);
     item_t(make_table_t);
@@ -85,6 +86,11 @@ struct item_t {
     bool is_string(void) const noexcept;
     bool is_array(void) const noexcept;
     bool is_table(void) const noexcept;
+
+    boolean_t get_bool(void) const;
+    integer_t get_integer(void) const;
+    float_t get_float(void) const;
+    string_t get_string(void) const;
 
     template <class PARAM>
     bool get(PARAM& val) const noexcept {
@@ -110,11 +116,6 @@ struct item_t {
 
         return true;
     }
-
-    boolean_t get_bool(void) const;
-    integer_t get_integer(void) const;
-    float_t get_float(void) const;
-    string_t get_string(void) const;
 
     size_t size(void) const;
     item_t& operator[](size_t index);

@@ -24,6 +24,11 @@ item_t::item_t(float_t val) noexcept :
     d(val) {
 }
 
+item_t::item_t(const string_t& val) noexcept :
+    type(TYPE_STRING),
+    s(val) {
+}
+
 item_t::item_t(string_t&& val) noexcept :
     type(TYPE_STRING),
     s(std::move(val)) {
