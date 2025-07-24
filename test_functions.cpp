@@ -456,7 +456,6 @@ TEST_CASE("testing parse()") {
         CHECK(result.is_table() == true);
         CHECK(result.size() == 0);
     }
-/*
     {
         view_t src = "[aa]  #comm\nbb = false\n";
         item_t result(src);
@@ -467,5 +466,4 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"]["bb"].is_boolean() == true);
         CHECK(result["aa"]["bb"].get_bool() == false);
     }
-*/
 }

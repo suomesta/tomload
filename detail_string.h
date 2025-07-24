@@ -42,6 +42,8 @@ view_t::size_type get_bare_length(view_t view);
  */
 string_t parse_bare_value(view_t view, view_t::size_type length);
 
+std::vector<key_t> parse_keys(view_t& view);
+
 }  // namespace tomload
 
 #endif  // DETAIL_STRING_H

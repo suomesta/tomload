@@ -220,132 +220,44 @@ void item_t::parse_main(view_t& view) {
     std::vector<key_t> brackets;
     std::vector<key_t> keys;
 
-    enum {
-        start,
-        bracket_wait_string,
-        bracket_wait_dot,
-        bracket_wait_newline,
-        pair_wait_string,
-        pair_wait_dot,
-        pair_wait_value,
-        pair_wait_newline,
-        completed,
-    } status = start;
+    bool ini_state = true;
 
-    while (status != completed) {
-std::cout << int(status) << std::endl;
-        if (status == start) {
+    for (;;) {
+        if (ini_state) {
             skip_space(view, " \t\r\n", true);
             if (view.empty()) {
-                status = completed;
-            } else if (starts_with(view, "[")) {
-                brackets.clear();
-                view.remove_prefix(1);
-                status = bracket_wait_string;
-            } else {
-                keys.clear();
-                status = pair_wait_string;
-            }
-        } else if (status == bracket_wait_string) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view[0]) != view_t::npos) {
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                view.remove_prefix(length);
-                brackets.push_back(std::move(s));
-                status = bracket_wait_dot;
-            } else if (starts_with(view, "'")) {
-                view_t::size_type length = get_literal_string_length(view);
-                key_t s = parse_literal_string(view, length);
- 
-                view.remove_prefix(length);
-                brackets.push_back(std::move(s));
-                status = bracket_wait_dot;
-            } else if (starts_with(view, "\"")) {
-                view_t::size_type length = get_string_length(view);
-                key_t s = parse_string(view, length);
-
-                view.remove_prefix(length);
-                brackets.push_back(std::move(s));
-                status = bracket_wait_dot;
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_dot) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "]")) {
-                view.remove_prefix(1);
-                status = bracket_wait_newline;
-            } else if (starts_with(view, ".")) {
-                view.remove_prefix(1);
-                status = bracket_wait_string;
-            } else {
-                ;
-            }
-        } else if (status == bracket_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            }
-        } else if (status == pair_wait_string) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view[0]) != view_t::npos) {
-                view_t::size_type length = get_bare_length(view);
-                key_t s = parse_bare_value(view, length);
-
-                view.remove_prefix(length);
-                keys.push_back(std::move(s));
-                status = pair_wait_dot;
-            } else if (starts_with(view, "'")) {
-                view_t::size_type length = get_literal_string_length(view);
-                key_t s = parse_literal_string(view, length);
- 
-                view.remove_prefix(length);
-                keys.push_back(std::move(s));
-                status = pair_wait_dot;
-            } else if (starts_with(view, "\"")) {
-                view_t::size_type length = get_string_length(view);
-                key_t s = parse_string(view, length);
-
-                view.remove_prefix(length);
-                keys.push_back(std::move(s));
-                status = pair_wait_dot;
-            } else {
-                ;
-            }
-        } else if (status == pair_wait_dot) {
-            skip_space(view, " \t", false);
-            if (view.empty()) {
-                ;
-            } else if (starts_with(view, "=")) {
-                view.remove_prefix(1);
-                status = pair_wait_value;
-            } else if (starts_with(view, ".")) {
-                view.remove_prefix(1);
-                status = pair_wait_string;
-            } else {
-                ;
-            }
-        } else if (status == pair_wait_value) {
-            skip_space(view, " \t", false);
-            item_t item = parse_item(view);
-            insert_new_table(item, brackets, keys);
-            status = pair_wait_newline;
-        } else if (status == pair_wait_newline) {
-            if (wait_newline(view)) {
-                status = start;
-            } else {
                 break;
+            } else if (starts_with(view, "[")) {
+                view.remove_prefix(1);
+                brackets = parse_keys(view);
+
+                skip_space(view, " \t", false);
+                if (starts_with(view, "]")) {
+                    view.remove_prefix(1);
+                    ini_state = false;
+                } else {
+                    throw parse_error("expected ']'");
+                }
+            } else {
+                keys = parse_keys(view);
+
+                skip_space(view, " \t", false);
+                if (starts_with(view, "=")) {
+                    view.remove_prefix(1);
+                } else {
+                    throw parse_error("expected '='");
+                }
+
+                skip_space(view, " \t", false);
+                item_t item = parse_item(view);
+                insert_new_table(item, brackets, keys);
+                ini_state = false;
             }
         } else {
-            if (view.empty()) {
-                break;
+            if (wait_newline(view)) {
+                ini_state = true;
+            } else {
+                throw parse_error("expected newline");
             }
         }
     }
