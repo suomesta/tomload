@@ -14,6 +14,8 @@ item_t parse_array(view_t& view);
 
 item_t parse_item(view_t& view);
 
+std::vector<key_t> parse_keys(view_t& view);
+
 }  // namespace tomload
 
 #endif  // PARSER_H

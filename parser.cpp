@@ -154,4 +154,56 @@ item_t parse_item(view_t& view) {
     throw parse_error("not hit item");
 }
 
+std::vector<key_t> parse_keys(view_t& view) {
+    std::vector<std::string> keys;
+
+    bool wait_dot = false;
+
+    for (;;) {
+        skip_space(view, " \t", false);
+
+        if (not wait_dot) {
+            if (view.empty()) {
+                throw parse_error("unexpected end of input");
+            } else if (view_t("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").find(view[0]) != view_t::npos) {
+                view_t::size_type length = get_bare_length(view);
+                key_t s = parse_bare_value(view, length);
+
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                wait_dot = true;
+            } else if (starts_with(view, "'")) {
+                view_t::size_type length = get_literal_string_length(view);
+                key_t s = parse_literal_string(view, length);
+ 
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                wait_dot = true;
+            } else if (starts_with(view, "\"")) {
+                view_t::size_type length = get_string_length(view);
+                key_t s = parse_string(view, length);
+
+                view.remove_prefix(length);
+                keys.push_back(std::move(s));
+                wait_dot = true;
+            } else {
+                throw parse_error("expected string");
+            }
+        } else {
+            if (view.empty()) {
+                break;
+            } else if (starts_with(view, ".")) {
+                view.remove_prefix(1);
+                wait_dot = false;
+            } else {
+                break;
+            }
+        }
+    }
+    if (keys.empty()) {
+        throw parse_error("no keys found");
+    }
+    return keys;
+}
+
 }  // namespace tomload

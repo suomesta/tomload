@@ -1,5 +1,4 @@
 #include "tomload.h"
-#include "detail_string.h"
 #include "parser.h"
 
 namespace tomload {
@@ -200,25 +199,34 @@ const table_range_t item_t::table_range(void) const noexcept {
     }
 }
 
-void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys) {
+void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
         p_item->push(key, item_t{make_table});
         p_item = &((*p_item)[key]);
+        if (not p_item->is_table()) {
+            throw parse_error("expected table");
+        }
     }
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
             p_item->push(key, item_t{make_table});
             p_item = &((*p_item)[key]);
+            if (not p_item->is_table()) {
+                throw parse_error("expected table");
+            }
         } else {
-            p_item->push(key, item);
+            if (not p_item->contains(key)) {
+                p_item->push(key, item);
+            } else {
+                throw parse_error("already reginstered");
+            }
         }
     }
 }
 
 void item_t::parse_main(view_t& view) {
     std::vector<key_t> brackets;
-    std::vector<key_t> keys;
 
     bool ini_state = true;
 
@@ -239,7 +247,7 @@ void item_t::parse_main(view_t& view) {
                     throw parse_error("expected ']'");
                 }
             } else {
-                keys = parse_keys(view);
+                std::vector<key_t> keys = parse_keys(view);
 
                 skip_space(view, " \t", false);
                 if (starts_with(view, "=")) {
@@ -250,7 +258,7 @@ void item_t::parse_main(view_t& view) {
 
                 skip_space(view, " \t", false);
                 item_t item = parse_item(view);
-                insert_new_table(item, brackets, keys);
+                insert_new_table(item, brackets, std::move(keys));
                 ini_state = false;
             }
         } else {

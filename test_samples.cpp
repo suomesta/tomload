@@ -44,6 +44,18 @@ TEST_CASE("Key_Value_Pair_1.toml") {
     CHECK(t["key"].get_string() == "value");
 }
 
+TEST_CASE("Key_Value_Pair_2.toml") {
+    std::string content = load_file("Key_Value_Pair_2.toml");
+
+    CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
+}
+
+TEST_CASE("Key_Value_Pair_3.toml") {
+    std::string content = load_file("Key_Value_Pair_3.toml");
+
+    CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
+}
+
 TEST_CASE("Keys_1.toml") {
     std::string content = load_file("Keys_1.toml");
     item_t t(view_t{content.c_str()});
@@ -115,6 +127,118 @@ TEST_CASE("Keys_4.toml") {
     CHECK(t["site"].size() == 1);
     CHECK(t["site"]["google.com"].is_boolean() == true);
     CHECK(t["site"]["google.com"].get_bool() == true);
+}
+
+TEST_CASE("Keys_5.toml") {
+    std::string content = load_file("Keys_5.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t["fruit"].is_table() == true);
+    CHECK(t["fruit"].size() == 3);
+    CHECK(t["fruit"]["name"].is_string() == true);
+    CHECK(t["fruit"]["name"].get_string() == "banana");
+    CHECK(t["fruit"]["color"].is_string() == true);
+    CHECK(t["fruit"]["color"].get_string() == "yellow");
+    CHECK(t["fruit"]["flavor"].is_string() == true);
+    CHECK(t["fruit"]["flavor"].get_string() == "banana");
+}
+
+TEST_CASE("Keys_6.toml") {
+    std::string content = load_file("Keys_6.toml");
+
+    CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
+}
+
+TEST_CASE("Keys_7.toml") {
+    std::string content = load_file("Keys_7.toml");
+
+    CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
+}
+
+TEST_CASE("Keys_8.toml") {
+/*
+    std::string content = load_file("Keys_8.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t["fruit"].is_table() == true);
+    CHECK(t["fruit"].size() == 2);
+    CHECK(t["fruit"]["apple"].is_table() == true);
+    CHECK(t["fruit"]["apple"].size() == 1);
+    CHECK(t["fruit"]["apple"]["smooth"].is_boolean() == true);
+    CHECK(t["fruit"]["apple"]["smooth"].get_bool() == true);
+    CHECK(t["fruit"]["orange"].is_integer() == true);
+    CHECK(t["fruit"]["orange"].get_integer() == 2);
+*/
+}
+
+TEST_CASE("Keys_9.toml") {
+    std::string content = load_file("Keys_9.toml");
+
+    CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
+}
+
+TEST_CASE("Keys_10.toml") {
+    std::string content = load_file("Keys_10.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["apple"].is_table() == true);
+    CHECK(t["apple"].size() == 3);
+    CHECK(t["apple"]["type"].is_string() == true);
+    CHECK(t["apple"]["type"].get_string() == "fruit");
+    CHECK(t["apple"]["skin"].is_string() == true);
+    CHECK(t["apple"]["skin"].get_string() == "thin");
+    CHECK(t["apple"]["color"].is_string() == true);
+    CHECK(t["apple"]["color"].get_string() == "red");
+    CHECK(t["orange"].is_table() == true);
+    CHECK(t["orange"].size() == 3);
+    CHECK(t["orange"]["type"].is_string() == true);
+    CHECK(t["orange"]["type"].get_string() == "fruit");
+    CHECK(t["orange"]["skin"].is_string() == true);
+    CHECK(t["orange"]["skin"].get_string() == "thick");
+    CHECK(t["orange"]["color"].is_string() == true);
+    CHECK(t["orange"]["color"].get_string() == "orange");
+}
+
+TEST_CASE("Keys_11.toml") {
+    std::string content = load_file("Keys_11.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["apple"].is_table() == true);
+    CHECK(t["apple"].size() == 3);
+    CHECK(t["apple"]["type"].is_string() == true);
+    CHECK(t["apple"]["type"].get_string() == "fruit");
+    CHECK(t["apple"]["skin"].is_string() == true);
+    CHECK(t["apple"]["skin"].get_string() == "thin");
+    CHECK(t["apple"]["color"].is_string() == true);
+    CHECK(t["apple"]["color"].get_string() == "red");
+    CHECK(t["orange"].is_table() == true);
+    CHECK(t["orange"].size() == 3);
+    CHECK(t["orange"]["type"].is_string() == true);
+    CHECK(t["orange"]["type"].get_string() == "fruit");
+    CHECK(t["orange"]["skin"].is_string() == true);
+    CHECK(t["orange"]["skin"].get_string() == "thick");
+    CHECK(t["orange"]["color"].is_string() == true);
+    CHECK(t["orange"]["color"].get_string() == "orange");
+}
+
+TEST_CASE("Keys_12.toml") {
+    std::string content = load_file("Keys_12.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 1);
+    CHECK(t["3"].is_table() == true);
+    CHECK(t["3"].size() == 1);
+    CHECK(t["3"]["14159"].is_string() == true);
+    CHECK(t["3"]["14159"].get_string() == "pi");
 }
 
 TEST_CASE("String_1.toml") {

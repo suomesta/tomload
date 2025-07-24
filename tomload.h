@@ -144,7 +144,7 @@ struct item_t {
     }
 
  private:
-    void insert_new_table(item_t& item, const std::vector<key_t>& brackets, const std::vector<key_t>& keys);
+    void insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys);
     void parse_main(view_t& view);
 
 };
