@@ -49,10 +49,6 @@ using table_iterator = std::map<key_t, item_t>::const_iterator;
 using array_range_t = range_t<array_iterator>;
 using table_range_t = range_t<table_iterator>;
 static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
-struct make_array_t { explicit make_array_t() = default; };
-static constexpr make_array_t make_array{};
-struct make_table_t { explicit make_table_t() = default; };
-static constexpr make_table_t make_table{};
 
 struct item_t {
     enum type_t : int {
@@ -80,9 +76,7 @@ struct item_t {
     item_t(const string_t& val) noexcept;
     item_t(string_t&& val) noexcept;
     item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
-    item_t(make_array_t);
     item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
-    item_t(make_table_t);
     /////////////////////////////////////////////////////////////////////////////
 
     bool is_boolean(void) const noexcept;

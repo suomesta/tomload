@@ -46,21 +46,9 @@ item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(make_array_t) :
-    type(TYPE_ARRAY),
-    v(std::make_shared<std::vector<item_t>>()) {
-}
-/////////////////////////////////////////////////////////////////////////////
-
 item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {
-}
-/////////////////////////////////////////////////////////////////////////////
-
-item_t::item_t(make_table_t) :
-    type(TYPE_TABLE),
-    m(std::make_shared<std::map<key_t, item_t>>()) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -229,7 +217,7 @@ const table_range_t item_t::table_range(void) const noexcept {
 void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
-        p_item->push(key, item_t{make_table});
+        p_item->push(key, item_t{std::make_shared<std::map<key_t, item_t>>()});
         p_item = &((*p_item->m)[key]);
         if (not p_item->is_table()) {
             throw parse_error("expected table");
@@ -237,7 +225,7 @@ void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, 
     }
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
-            p_item->push(key, item_t{make_table});
+            p_item->push(key, item_t{std::make_shared<std::map<key_t, item_t>>()});
             p_item = &((*p_item->m)[key]);
             if (not p_item->is_table()) {
                 throw parse_error("expected table");
