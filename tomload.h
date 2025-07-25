@@ -79,6 +79,7 @@ struct item_t {
     item_t(string_t&& val) noexcept;
     item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
     item_t(make_array_t);
+    item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     item_t(make_table_t);
 
     bool is_boolean(void) const noexcept;

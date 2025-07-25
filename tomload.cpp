@@ -44,6 +44,11 @@ item_t::item_t(make_array_t) :
     v(std::make_shared<std::vector<item_t>>()) {
 }
 
+item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
+    type(TYPE_TABLE),
+    m(val) {
+}
+
 item_t::item_t(make_table_t) :
     type(TYPE_TABLE),
     m(std::make_shared<std::map<key_t, item_t>>()) {
