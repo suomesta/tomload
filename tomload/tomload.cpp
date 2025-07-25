@@ -152,14 +152,6 @@ bool item_t::contains(const key_t& key) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::push(const key_t& key, const item_t& item) {
-    if (type != TYPE_TABLE) {
-        throw parse_error("not table");
-    }
-    m->insert({key, item});
-}
-/////////////////////////////////////////////////////////////////////////////
-
 array_iterator item_t::array_begin(void) const {
     if (type == TYPE_ARRAY) {
         return v->begin();
@@ -214,19 +206,28 @@ const table_range_t item_t::table_range(void) const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+tomload::item_t* item_t::push(const key_t& key, const item_t& item) {
+    if (type != TYPE_TABLE) {
+        throw parse_error("not table");
+    }
+    auto ret = m->insert({key, item});
+    return &ret.first->second;
+}
+/////////////////////////////////////////////////////////////////////////////
+
 void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
-        p_item->push(key, item_t{std::make_shared<std::map<key_t, item_t>>()});
-        p_item = &((*p_item->m)[key]);
+        auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+        p_item = p_item->push(key, next_table);
         if (not p_item->is_table()) {
             throw parse_error("expected table");
         }
     }
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
-            p_item->push(key, item_t{std::make_shared<std::map<key_t, item_t>>()});
-            p_item = &((*p_item->m)[key]);
+            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+            p_item = p_item->push(key, next_table);
             if (not p_item->is_table()) {
                 throw parse_error("expected table");
             }

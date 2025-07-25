@@ -58,8 +58,7 @@ struct item_t {
         TYPE_STRING,
         TYPE_ARRAY,
         TYPE_TABLE,
-        TYPE_NONE,
-    } type = TYPE_NONE;
+    } type;
 
     boolean_t b;
     integer_t i;
@@ -68,7 +67,6 @@ struct item_t {
     std::shared_ptr<std::vector<item_t>> v;
     std::shared_ptr<std::map<key_t, item_t>> m;
 
-    item_t(void) = default;
     item_t(view_t view);
     item_t(boolean_t val) noexcept;
     item_t(integer_t val) noexcept;
@@ -110,7 +108,7 @@ struct item_t {
     /////////////////////////////////////////////////////////////////////////////
 
  private:
-    void push(const key_t& key, const item_t& item);
+    item_t* push(const key_t& key, const item_t& item);
     void insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys);
     void parse_main(view_t& view);
     /////////////////////////////////////////////////////////////////////////////
