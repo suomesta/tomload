@@ -137,24 +137,6 @@ size_t item_t::size(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t& item_t::operator[](size_t index) {
-    if (type == TYPE_ARRAY) {
-        return v->at(index);
-    } else {
-        throw parse_error("not array");
-    }
-}
-/////////////////////////////////////////////////////////////////////////////
-
-item_t& item_t::operator[](const key_t& key) {
-    if (type == TYPE_TABLE) {
-        return m->at(key);
-    } else {
-        throw parse_error("not table");
-    }
-}
-/////////////////////////////////////////////////////////////////////////////
-
 const item_t& item_t::operator[](size_t index) const {
     if (type == TYPE_ARRAY) {
         return v->at(index);
@@ -248,7 +230,7 @@ void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, 
     item_t* p_item = this;
     for (const key_t& key : brackets) {
         p_item->push(key, item_t{make_table});
-        p_item = &((*p_item)[key]);
+        p_item = &((*p_item->m)[key]);
         if (not p_item->is_table()) {
             throw parse_error("expected table");
         }
@@ -256,7 +238,7 @@ void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, 
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
             p_item->push(key, item_t{make_table});
-            p_item = &((*p_item)[key]);
+            p_item = &((*p_item->m)[key]);
             if (not p_item->is_table()) {
                 throw parse_error("expected table");
             }

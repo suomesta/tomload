@@ -104,8 +104,6 @@ struct item_t {
     /////////////////////////////////////////////////////////////////////////////
 
     size_t size(void) const;
-    item_t& operator[](size_t index);
-    item_t& operator[](const key_t& key);
     const item_t& operator[](size_t index) const;
     const item_t& operator[](const key_t& key) const;
     array_iterator array_begin(void) const;
