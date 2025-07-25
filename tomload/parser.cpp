@@ -23,6 +23,7 @@ bool wait_newline(view_t& view) {
         return false;
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     bool go_recurrsive = false;
@@ -51,6 +52,7 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
         skip_space(view, spaces, skip_comment);
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t parse_array(view_t& view) {
     std::shared_ptr<std::vector<item_t>> v = std::make_shared<std::vector<item_t>>();
@@ -91,6 +93,7 @@ item_t parse_array(view_t& view) {
 
     return item_t{v};
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t parse_item(view_t& view) {
     const std::pair<view_t, item_t> fixed_values[8] = {
@@ -153,6 +156,7 @@ item_t parse_item(view_t& view) {
 
     throw parse_error("not hit item");
 }
+/////////////////////////////////////////////////////////////////////////////
 
 std::vector<key_t> parse_keys(view_t& view) {
     std::vector<std::string> keys;
@@ -205,5 +209,6 @@ std::vector<key_t> parse_keys(view_t& view) {
     }
     return keys;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 }  // namespace tomload

@@ -21,6 +21,7 @@ std::string utf8_encode(uint32_t codepoint) {
         return {};  // Invalid code point
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @pre `view` must start with "'''"
@@ -42,6 +43,7 @@ view_t::size_type get_multi_literal_string_length(view_t view) {
 
     return pos + 3;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 string_t parse_multi_literal_string(view_t& view, view_t::size_type length) {
     if (starts_with(view, "'''\r\n")) {
@@ -52,6 +54,7 @@ string_t parse_multi_literal_string(view_t& view, view_t::size_type length) {
         return string_t(view.data() + 3, length - 6);
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @pre `view` must start with "'"
@@ -73,10 +76,12 @@ view_t::size_type get_literal_string_length(view_t view) {
 
     return pos + 1;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 string_t parse_literal_string(view_t& view, view_t::size_type length) {
     return string_t(view.data() + 1, length - 2);
 }
+/////////////////////////////////////////////////////////////////////////////
 
 std::string parse_unicode_escape(const view_t& view, int size) {
     auto is_hex = [](char c) {  // avoid to use std::isxdigit() because it depends on the locale
@@ -101,6 +106,7 @@ std::string parse_unicode_escape(const view_t& view, int size) {
     }
     return chars;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @pre `view` must start with '"'
@@ -137,6 +143,7 @@ view_t::size_type get_string_length(view_t view) {
     }
     throw parse_error("not closed by \"");
 }
+/////////////////////////////////////////////////////////////////////////////
 
 string_t parse_string(view_t view, view_t::size_type length) {
     std::string ret;
@@ -173,6 +180,7 @@ string_t parse_string(view_t view, view_t::size_type length) {
     }
     return ret;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @pre `view` must start with A-Za-z0-9_-
@@ -184,6 +192,7 @@ view_t::size_type get_bare_length(view_t view) {
     }
     return pos;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @pre `view` must start with A-Za-z0-9_-
@@ -191,5 +200,6 @@ view_t::size_type get_bare_length(view_t view) {
 string_t parse_bare_value(view_t view, view_t::size_type length) {
     return {view.data(), length};
 }
+/////////////////////////////////////////////////////////////////////////////
 
 }  // namespace tomload

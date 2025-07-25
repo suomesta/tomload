@@ -20,6 +20,7 @@ class parse_error : public std::runtime_error {
         runtime_error(msg) {
     }
 };
+/////////////////////////////////////////////////////////////////////////////
 
 template <typename I>
 class range_t {
@@ -35,6 +36,7 @@ class range_t {
  private:
     I begin_, end_;
 };
+/////////////////////////////////////////////////////////////////////////////
 
 using boolean_t = bool;
 using integer_t = int64_t;
@@ -81,6 +83,7 @@ struct item_t {
     item_t(make_array_t);
     item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     item_t(make_table_t);
+    /////////////////////////////////////////////////////////////////////////////
 
     bool is_boolean(void) const noexcept;
     bool is_integer(void) const noexcept;
@@ -88,36 +91,17 @@ struct item_t {
     bool is_string(void) const noexcept;
     bool is_array(void) const noexcept;
     bool is_table(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
 
     boolean_t get_bool(void) const;
     integer_t get_integer(void) const;
     float_t get_float(void) const;
     string_t get_string(void) const;
+    /////////////////////////////////////////////////////////////////////////////
 
     template <class PARAM>
-    bool get(PARAM& val) const noexcept {
-        if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
-            val = b;
-        } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
-            val = i;
-        } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
-            val = d;
-        } else if (std::is_same<PARAM, string_t>() && type == TYPE_STRING) {
-            val = s;
-        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
-            val = static_cast<PARAM>(i);
-        } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
-            val = static_cast<PARAM>(d);
-        } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
-            val = static_cast<PARAM>(i);
-        } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
-            val = static_cast<PARAM>(d);
-        } else {
-            return false;
-        }
-
-        return true;
-    }
+    bool get(PARAM& val) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
 
     size_t size(void) const;
     item_t& operator[](size_t index);
@@ -131,24 +115,41 @@ struct item_t {
     const array_range_t array_range(void) const noexcept;
     const table_range_t table_range(void) const noexcept;
     bool contains(const key_t& key) const;
-    void push(const item_t& item) {
-        if (type != TYPE_ARRAY) {
-            throw parse_error("not array");
-        }
-        v->push_back(item);
-    }
-    void push(const key_t& key, const item_t& item) {
-        if (type != TYPE_TABLE) {
-            throw parse_error("not table");
-        }
-        m->insert({key, item});
-    }
+    /////////////////////////////////////////////////////////////////////////////
 
  private:
+    void push(const key_t& key, const item_t& item);
     void insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys);
     void parse_main(view_t& view);
-
+    /////////////////////////////////////////////////////////////////////////////
 };
+/////////////////////////////////////////////////////////////////////////////
+
+template <class PARAM>
+bool item_t::get(PARAM& val) const noexcept {
+    if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
+        val = b;
+    } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
+        val = i;
+    } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
+        val = d;
+    } else if (std::is_same<PARAM, string_t>() && type == TYPE_STRING) {
+        val = s;
+    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
+        val = static_cast<PARAM>(i);
+    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
+        val = static_cast<PARAM>(d);
+    } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
+        val = static_cast<PARAM>(i);
+    } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
+        val = static_cast<PARAM>(d);
+    } else {
+        return false;
+    }
+
+    return true;
+}
+/////////////////////////////////////////////////////////////////////////////
 
 }  // namespace tomload
 

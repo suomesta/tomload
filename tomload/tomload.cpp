@@ -8,75 +8,91 @@ item_t::item_t(view_t view) :
     m(std::make_shared<std::map<key_t, item_t>>()) {
     parse_main(view);
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(boolean_t val) noexcept :
     type(TYPE_BOOLEAN),
     b(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(integer_t val) noexcept :
     type(TYPE_INTEGER),
     i(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(float_t val) noexcept :
     type(TYPE_FLOAT),
     d(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(const string_t& val) noexcept :
     type(TYPE_STRING),
     s(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(string_t&& val) noexcept :
     type(TYPE_STRING),
     s(std::move(val)) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
     type(TYPE_ARRAY),
     v(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(make_array_t) :
     type(TYPE_ARRAY),
     v(std::make_shared<std::vector<item_t>>()) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(make_table_t) :
     type(TYPE_TABLE),
     m(std::make_shared<std::map<key_t, item_t>>()) {
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_boolean(void) const noexcept {
     return type == TYPE_BOOLEAN;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_integer(void) const noexcept {
     return type == TYPE_INTEGER;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_float(void) const noexcept {
     return type == TYPE_FLOAT;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_string(void) const noexcept {
     return type == TYPE_STRING;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_array(void) const noexcept {
     return type == TYPE_ARRAY;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_table(void) const noexcept {
     return type == TYPE_TABLE;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 boolean_t item_t::get_bool(void) const {
     if (type != TYPE_BOOLEAN) {
@@ -84,6 +100,7 @@ boolean_t item_t::get_bool(void) const {
     }
     return b;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 integer_t item_t::get_integer(void) const {
     if (type != TYPE_INTEGER) {
@@ -91,6 +108,7 @@ integer_t item_t::get_integer(void) const {
     }
     return i;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 float_t item_t::get_float(void) const {
     if (type != TYPE_FLOAT) {
@@ -98,6 +116,7 @@ float_t item_t::get_float(void) const {
     }
     return d;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 string_t item_t::get_string(void) const {
     if (type != TYPE_STRING) {
@@ -105,6 +124,7 @@ string_t item_t::get_string(void) const {
     }
     return s;
 }
+/////////////////////////////////////////////////////////////////////////////
 
 size_t item_t::size(void) const {
     if (type == TYPE_ARRAY) {
@@ -115,6 +135,7 @@ size_t item_t::size(void) const {
         throw parse_error("neither array nor table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t& item_t::operator[](size_t index) {
     if (type == TYPE_ARRAY) {
@@ -123,6 +144,7 @@ item_t& item_t::operator[](size_t index) {
         throw parse_error("not array");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 item_t& item_t::operator[](const key_t& key) {
     if (type == TYPE_TABLE) {
@@ -131,6 +153,7 @@ item_t& item_t::operator[](const key_t& key) {
         throw parse_error("not table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 const item_t& item_t::operator[](size_t index) const {
     if (type == TYPE_ARRAY) {
@@ -139,6 +162,7 @@ const item_t& item_t::operator[](size_t index) const {
         throw parse_error("not array");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 const item_t& item_t::operator[](const key_t& key) const {
     if (type == TYPE_TABLE) {
@@ -147,6 +171,7 @@ const item_t& item_t::operator[](const key_t& key) const {
         throw parse_error("not table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 bool item_t::contains(const key_t& key) const {
     if (type == TYPE_TABLE) {
@@ -155,6 +180,15 @@ bool item_t::contains(const key_t& key) const {
         throw parse_error("not table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
+
+void item_t::push(const key_t& key, const item_t& item) {
+    if (type != TYPE_TABLE) {
+        throw parse_error("not table");
+    }
+    m->insert({key, item});
+}
+/////////////////////////////////////////////////////////////////////////////
 
 array_iterator item_t::array_begin(void) const {
     if (type == TYPE_ARRAY) {
@@ -163,6 +197,7 @@ array_iterator item_t::array_begin(void) const {
         throw parse_error("not array");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 array_iterator item_t::array_end(void) const {
     if (type == TYPE_ARRAY) {
@@ -171,6 +206,7 @@ array_iterator item_t::array_end(void) const {
         throw parse_error("not array");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 table_iterator item_t::table_begin(void) const {
     if (type == TYPE_TABLE) {
@@ -179,6 +215,7 @@ table_iterator item_t::table_begin(void) const {
         throw parse_error("not table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 table_iterator item_t::table_end(void) const {
     if (type == TYPE_TABLE) {
@@ -187,6 +224,7 @@ table_iterator item_t::table_end(void) const {
         throw parse_error("not table");
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 const array_range_t item_t::array_range(void) const noexcept {
     if (type == TYPE_ARRAY) {
@@ -195,6 +233,7 @@ const array_range_t item_t::array_range(void) const noexcept {
         return array_range_t(array_iterator{}, array_iterator{});
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 const table_range_t item_t::table_range(void) const noexcept {
     if (type == TYPE_TABLE) {
@@ -203,6 +242,7 @@ const table_range_t item_t::table_range(void) const noexcept {
         return table_range_t(table_iterator{}, table_iterator{});
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
     item_t* p_item = this;
@@ -229,6 +269,7 @@ void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, 
         }
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 void item_t::parse_main(view_t& view) {
     std::vector<key_t> brackets;
@@ -275,5 +316,6 @@ void item_t::parse_main(view_t& view) {
         }
     }
 }
+/////////////////////////////////////////////////////////////////////////////
 
 }  // namespace tomload
