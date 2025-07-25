@@ -1,8 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "tomload.h"
-#include "view_t.hpp"
+#include "tomload/tomload.h"
+#include "tomload/view_t.hpp"
 
 namespace tomload {
 

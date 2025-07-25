@@ -1,5 +1,5 @@
-#include "tomload.h"
-#include "parser.h"
+#include "tomload/tomload.h"
+#include "tomload/parser.h"
 
 namespace tomload {
 

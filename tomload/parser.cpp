@@ -1,6 +1,6 @@
-#include "parser.h"
-#include "detail_number.h"
-#include "detail_string.h"
+#include "tomload/parser.h"
+#include "tomload/detail_number.h"
+#include "tomload/detail_string.h"
 
 namespace tomload {
 

@@ -2,21 +2,24 @@
 cmake_minimum_required(VERSION 3.13)
 
 # プロジェクト名と使用する言語を設定
-project(test_toml_r CXX)
+project(tomload CXX)
 
 set(CMAKE_CXX_STANDARD 14) # C++17 if you want std::string_view
 
-add_executable(a.out
-    main.cpp test_functions.cpp test_samples.cpp
-    tomload.h tomload.cpp
-    parser.h parser.cpp
-    detail_string.h detail_string.cpp
-    detail_number.h detail_number.cpp
-    view_t.hpp include/string_view14.hpp
+add_executable(unittest
+    unittest/main.cpp unittest/test_functions.cpp unittest/test_samples.cpp
+    tomload/tomload.h tomload/tomload.cpp
+    tomload/parser.h tomload/parser.cpp
+    tomload/detail_string.h tomload/detail_string.cpp
+    tomload/detail_number.h tomload/detail_number.cpp
+    tomload/view_t.hpp include/string_view14.hpp
 )
 
-target_include_directories(a.out PUBLIC ./include)
+target_include_directories(unittest PUBLIC
+    ./include 
+    ${CMAKE_SOURCE_DIR}
+)
 
-target_compile_definitions(a.out PRIVATE
+target_compile_definitions(unittest PRIVATE
     TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/samples/"
 )

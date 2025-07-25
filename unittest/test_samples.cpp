@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "tomload.h"
+#include "tomload/tomload.h"
 
 namespace {
 

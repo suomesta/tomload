@@ -1,8 +1,8 @@
 #include "doctest/doctest.h"
 #include <cmath>
 #include <iterator>
-#include "tomload.h"
-#include "parser.h"
+#include "tomload/tomload.h"
+#include "tomload/parser.h"
 
 using namespace tomload;
 
