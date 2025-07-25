@@ -1,5 +1,5 @@
-#ifndef DETAIL_NUMBER_H
-#define DETAIL_NUMBER_H
+#ifndef TOMLOAD_DETAIL_NUMBER_H
+#define TOMLOAD_DETAIL_NUMBER_H
 
 #include "tomload/tomload.h"
 #include "tomload/view_t.hpp"
@@ -18,4 +18,4 @@ integer_t parse_radix_value(view_t view, view_t::size_type length, int base);
 
 }  // namespace tomload
 
-#endif  // DETAIL_NUMBER_H
+#endif  // TOMLOAD_DETAIL_NUMBER_H

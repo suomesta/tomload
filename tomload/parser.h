@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef TOMLOAD_PARSER_H
+#define TOMLOAD_PARSER_H
 
 #include "tomload/tomload.h"
 #include "tomload/view_t.hpp"
@@ -18,4 +18,4 @@ std::vector<key_t> parse_keys(view_t& view);
 
 }  // namespace tomload
 
-#endif  // PARSER_H
+#endif  // TOMLOAD_PARSER_H

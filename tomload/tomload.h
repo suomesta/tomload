@@ -1,6 +1,6 @@
 
-#ifndef TOMLOAD_H
-#define TOMLOAD_H
+#ifndef TOMLOAD_TOMLOAD_H
+#define TOMLOAD_TOMLOAD_H
 
 #include <algorithm>
 #include <cstdint>
@@ -152,4 +152,4 @@ struct item_t {
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_H
+#endif  // TOMLOAD_TOMLOAD_H

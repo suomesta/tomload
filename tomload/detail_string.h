@@ -1,5 +1,5 @@
-#ifndef DETAIL_STRING_H
-#define DETAIL_STRING_H
+#ifndef TOMLOAD_DETAIL_STRING_H
+#define TOMLOAD_DETAIL_STRING_H
 
 #include <cstdint>
 #include <string>
@@ -44,4 +44,4 @@ string_t parse_bare_value(view_t view, view_t::size_type length);
 
 }  // namespace tomload
 
-#endif  // DETAIL_STRING_H
+#endif  // TOMLOAD_DETAIL_STRING_H
