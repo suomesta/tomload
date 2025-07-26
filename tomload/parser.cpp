@@ -144,6 +144,12 @@ item_t parse_item(view_t& view) {
 
         view.remove_prefix(length);
         return item_t{std::move(str)};
+    } else if (starts_with(view, "\"\"\"")) {
+        view_t::size_type length = get_multi_string_length(view);
+        string_t str = parse_multi_string(view, length);
+
+        view.remove_prefix(length);
+        return item_t{std::move(str)};
     } else if (starts_with(view, "\"")) {
         view_t::size_type length = get_string_length(view);
         string_t str = parse_string(view, length);

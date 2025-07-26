@@ -1,3 +1,4 @@
+#include <iostream>
 #include "tomload/detail_string.h"
 
 namespace tomload {
@@ -105,6 +106,113 @@ std::string parse_unicode_escape(const view_t& view, int size) {
         throw parse_error("invalid unicode escape sequence");
     }
     return chars;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @pre `view` must start with '"""'
+ */
+view_t::size_type get_multi_string_length(view_t view) {
+    bool detected_backslash = false;
+    for (view_t::size_type i = 3; i < view.size(); i++) {
+        if (not detected_backslash) {
+            if (view.substr(i, 5) == "\"\"\"\"\"") {
+                return i + 5;
+            } else if (view.substr(i, 4) == "\"\"\"\"") {
+                return i + 4;
+            } else if (view.substr(i, 3) == "\"\"\"") {
+                return i + 3;
+            } else if (view[i] == '\\') {
+                detected_backslash = true;
+            }
+        } else {
+            if ((view[i] == 'n') || (view[i] == 'r') || (view[i] == 't') || (view[i] == 'b') ||
+                (view[i] == 'f') || (view[i] == '\\') || (view[i] == '"')) {
+            } else if (view[i] == 'u') {
+                if (i + 4 > view.size()) {
+                    throw parse_error("invalid unicode escape sequence");
+                }
+                i += 4;
+            } else if (view[i] == 'U') {
+                if (i + 8 > view.size()) {
+                    throw parse_error("invalid unicode escape sequence");
+                }
+                i += 8;
+            } else if (view[i] == '\r') {
+                view_t::size_type pos = view.find_first_not_of("\r\n\t ", i + 1);
+                if (pos == view_t::npos) {
+                    throw parse_error("not closed by \"\"\"");
+                }
+                i += pos - (i + 1);
+            } else if (view[i] == '\n') {
+                view_t::size_type pos = view.find_first_not_of("\r\n\t ", i + 1);
+                if (pos == view_t::npos) {
+                    throw parse_error("not closed by \"\"\"");
+                }
+                i += pos - (i + 1);
+            } else {
+                throw parse_error("invalid escape sequence");
+            }
+            detected_backslash = false;
+        }
+    }
+    throw parse_error("not closed by \"\"\"");
+}
+/////////////////////////////////////////////////////////////////////////////
+
+string_t parse_multi_string(view_t view, view_t::size_type length) {
+    std::string ret;
+
+    view_t sub(view.data() + 3, length - 6);
+
+    if (starts_with(sub, "\r\n")) {
+        sub = sub.substr(2);
+    } else if (starts_with(sub, "\n")) {
+        sub = sub.substr(1);
+    }
+
+    for (view_t::size_type i = 0; i < sub.size(); i++) {
+        if (sub[i] == '\\') {
+            i++;
+
+            if (sub[i] == 'n') {
+                ret.push_back('\n');
+            } else if (sub[i] == 'r') {
+                ret.push_back('\r');
+            } else if (sub[i] == 't') {
+                ret.push_back('\t');
+            } else if (sub[i] == 'b') {
+                ret.push_back('\b');
+            } else if (sub[i] == 'f') {
+                ret.push_back('\f');
+            } else if (sub[i] == '\\') {
+                ret.push_back('\\');
+            } else if (sub[i] == '"') {
+                ret.push_back('"');
+            } else if (sub[i] == 'u') {
+                ret += parse_unicode_escape(sub.substr(i + 1), 4);
+                i += 4;
+            } else if (sub[i] == 'U') {
+                ret += parse_unicode_escape(sub.substr(i + 1), 8);
+                i += 8;
+            } else if (sub[i] == '\r') {
+                view_t::size_type pos = sub.find_first_not_of("\r\n\t ", i + 1);
+                if (pos == view_t::npos) {
+                    pos = sub.size();
+                }
+                i += pos - (i + 1);
+            } else if (sub[i] == '\n') {
+                view_t::size_type pos = sub.find_first_not_of("\r\n\t ", i + 1);
+                if (pos == view_t::npos) {
+                    pos = sub.size();
+                }
+                i += pos - (i + 1);
+            }
+        } else {
+            ret.push_back(sub[i]);
+        }
+    }
+    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 

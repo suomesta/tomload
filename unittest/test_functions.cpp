@@ -277,6 +277,73 @@ TEST_CASE("testing parse_item(')") {
     }
 }
 
+TEST_CASE("testing parse_item(\"\"\")") {
+    {
+        view_t src = "\"\"\"\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"abc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\n\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\nabc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\r\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\r\n\r\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\r\nabc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\\\nedf\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abcedf");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\\\n \n\t\nedf\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abcedf");
+        CHECK(src.empty());
+    }
+}
+
 TEST_CASE("testing parse_item(\")") {
     {
         view_t src = "\"\"";

@@ -1,3 +1,4 @@
+#include <iostream>>
 #include "tomload/tomload.h"
 #include "tomload/parser.h"
 
@@ -282,6 +283,7 @@ void item_t::parse_main(view_t& view) {
             if (wait_newline(view)) {
                 ini_state = true;
             } else {
+std::cout << view << std::endl;
                 throw parse_error("expected newline");
             }
         }

@@ -33,6 +33,15 @@ std::string parse_unicode_escape(const view_t& view, int size);
 /////////////////////////////////////////////////////////////////////////////
 
 /*
+ * @pre `view` must start with '"""'
+ */
+view_t::size_type get_multi_string_length(view_t view);
+/////////////////////////////////////////////////////////////////////////////
+
+string_t parse_multi_string(view_t view, view_t::size_type length);
+/////////////////////////////////////////////////////////////////////////////
+
+/*
  * @pre `view` must start with '"'
  */
 view_t::size_type get_string_length(view_t view);

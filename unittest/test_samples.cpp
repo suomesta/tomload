@@ -252,7 +252,6 @@ TEST_CASE("String_1.toml") {
 }
 
 TEST_CASE("String_2.toml") {
-/*
     std::string content = load_file("String_2.toml");
     item_t t(view_t{content.c_str()});
 
@@ -260,7 +259,6 @@ TEST_CASE("String_2.toml") {
     CHECK(t.size() == 1);
     CHECK(t["str1"].is_string() == true);
     CHECK(t["str1"].get_string() == "Roses are red\nViolets are blue");
-*/
 }
 
 TEST_CASE("String_3.toml") {
@@ -276,7 +274,6 @@ TEST_CASE("String_3.toml") {
 }
 
 TEST_CASE("String_4.toml") {
-/*
     std::string content = load_file("String_4.toml");
     item_t t(view_t{content.c_str()});
 
@@ -288,11 +285,9 @@ TEST_CASE("String_4.toml") {
     CHECK(t["str2"].get_string() == "The quick brown fox jumps over the lazy dog.");
     CHECK(t["str3"].is_string() == true);
     CHECK(t["str3"].get_string() == "The quick brown fox jumps over the lazy dog.");
-*/
 }
 
 TEST_CASE("String_5.toml") {
-/*
     std::string content = load_file("String_5.toml");
     item_t t(view_t{content.c_str()});
 
@@ -306,7 +301,6 @@ TEST_CASE("String_5.toml") {
     CHECK(t["str6"].get_string() == "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\".");
     CHECK(t["str7"].is_string() == true);
     CHECK(t["str7"].get_string() == "\"This,\" she said, \"is just a pointless statement.\"");
-*/
 }
 
 TEST_CASE("String_6.toml") {
