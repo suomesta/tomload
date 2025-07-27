@@ -5,7 +5,11 @@ namespace tomload {
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-view_t::size_type get_radix_length(view_t view, view_t allowed) {
+view_t::size_type get_radix_length(view_t view) {
+    view_t allowed = starts_with(view, "0x") ? "0123456789ABCDEFabcdef_" :
+                          starts_with(view, "0o") ? "01234567_" :
+                          starts_with(view, "0b") ? "01_" : "";
+
     view_t::size_type pos = view.find_first_not_of(allowed, 2);
     if (pos == view_t::npos) {
         pos = view.size();
@@ -17,7 +21,11 @@ view_t::size_type get_radix_length(view_t view, view_t allowed) {
 /*
  * @pre `view` must start with "0x", "0o", or "0b"
  */
-integer_t parse_radix_value(view_t view, view_t::size_type length, int base) {
+integer_t parse_radix_value(view_t view, view_t::size_type length) {
+    int base = starts_with(view, "0x") ? 16 :
+                          starts_with(view, "0o") ? 8 :
+                          starts_with(view, "0b") ? 2 : 10;
+
     view_t sub(view.data() + 2, length - 2);
     if ((starts_with(sub, "_")) ||
         (ends_with(sub, "_")) ||

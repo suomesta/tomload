@@ -114,21 +114,9 @@ item_t parse_item(view_t& view) {
         }
     }
 
-    if (starts_with(view, "0x")) {
-        view_t::size_type length = get_radix_length(view, "0123456789ABCDEFabcdef_");
-        integer_t i = parse_radix_value(view, length, 16);
-
-        view.remove_prefix(length);
-        return item_t{i};
-    } else if (starts_with(view, "0o")) {
-        view_t::size_type length = get_radix_length(view, "01234567_");
-        integer_t i = parse_radix_value(view, length, 8);
-
-        view.remove_prefix(length);
-        return item_t{i};
-    } else if (starts_with(view, "0b")) {
-        view_t::size_type length = get_radix_length(view, "01_");
-        integer_t i = parse_radix_value(view, length, 2);
+    if (starts_with(view, {"0x", "0o", "0b"})) {
+        view_t::size_type length = get_radix_length(view);
+        integer_t i = parse_radix_value(view, length);
 
         view.remove_prefix(length);
         return item_t{i};
