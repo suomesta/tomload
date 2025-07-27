@@ -52,4 +52,61 @@ integer_t parse_radix_value(view_t view, view_t::size_type length) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must start with one of "+-0123456789"
+ */
+view_t::size_type get_integer_length(view_t view) {
+    view_t::size_type pos = view.find_first_not_of("0123456789_", 1);
+    if (pos == view_t::npos) {
+        pos = view.size();
+    }
+    return pos;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @pre `view` must start with one of "+-0123456789"
+ */
+integer_t parse_integer(view_t view, view_t::size_type length) {
+    view_t sub(view.data(), length);
+    if ((ends_with(sub, "_")) ||
+        (sub.find("__") != view_t::npos)) {
+        throw parse_error("invalid `_`");
+    }
+
+    std::string str;
+    for (char c : sub) {
+        if (c != '_') {
+            str.push_back(c);
+        }
+    }
+
+    integer_t ret = 0;
+    try {
+        ret = std::stoll(str, nullptr, 10);
+    } catch (std::out_of_range& err) {
+        throw parse_error("out_of_range");
+    } catch (std::invalid_argument& err) {
+        throw parse_error("invalid_argument");
+    }
+    return ret;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @pre `view` must start with one of "+-0123456789"
+ */
+view_t::size_type get_float_length(view_t view) {
+    return get_integer_length(view);
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @pre `view` must start with one of "+-0123456789"
+ */
+float_t parse_float(view_t view, view_t::size_type length) {
+    return parse_integer(view, length);
+}
+/////////////////////////////////////////////////////////////////////////////
+
 }  // namespace tomload

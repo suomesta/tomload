@@ -158,7 +158,6 @@ TEST_CASE("Keys_7.toml") {
 }
 
 TEST_CASE("Keys_8.toml") {
-/*
     std::string content = load_file("Keys_8.toml");
     item_t t(view_t{content.c_str()});
 
@@ -172,7 +171,6 @@ TEST_CASE("Keys_8.toml") {
     CHECK(t["fruit"]["apple"]["smooth"].get_bool() == true);
     CHECK(t["fruit"]["orange"].is_integer() == true);
     CHECK(t["fruit"]["orange"].get_integer() == 2);
-*/
 }
 
 TEST_CASE("Keys_9.toml") {
@@ -452,7 +450,6 @@ TEST_CASE("Array_1.toml") {
 }
 
 TEST_CASE("Array_2.toml") {
-/*
     std::string content = load_file("Array_2.toml");
     item_t t(view_t{content.c_str()});
 
@@ -472,5 +469,4 @@ TEST_CASE("Array_2.toml") {
     CHECK(t["integers3"][0].get_integer() == 1);
     CHECK(t["integers3"][1].is_integer() == true);
     CHECK(t["integers3"][1].get_integer() == 2);
-*/
 }

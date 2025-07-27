@@ -66,7 +66,7 @@ item_t parse_array(view_t& view) {
     } status = wait_item;
 
     while (status != closed) {
-        skip_space(view, " \t\r\n", false);
+        skip_space(view, " \t\r\n", true);
 
         if (view.empty()) {
             throw parse_error("missing \"]\" in array");
@@ -77,7 +77,7 @@ item_t parse_array(view_t& view) {
             v->push_back(parse_item(view));
             status = wait_comma;
         } else if (status == wait_comma) {
-            skip_space(view, " \t\r\n", false);
+            skip_space(view, " \t\r\n", true);
             if (view.empty()) {
                 throw parse_error("missing \",\" in array");
             } else if (starts_with(view, ",")) {
@@ -120,6 +120,26 @@ item_t parse_item(view_t& view) {
 
         view.remove_prefix(length);
         return item_t{i};
+    } else if (starts_with(view, {"+", "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"})) {
+        view_t::size_type integer_length = get_integer_length(view);
+        view_t::size_type float_length = get_float_length(view);
+        if (float_length > integer_length) {
+            float_t d = parse_float(view, float_length);
+
+            view.remove_prefix(float_length);
+            return item_t{d};
+        } else {
+            integer_t i = parse_integer(view, integer_length);
+
+            view.remove_prefix(integer_length);
+            return item_t{i};
+        }
+    } else if (starts_with(view, "'''")) {
+        view_t::size_type length = get_multi_literal_string_length(view);
+        string_t str = parse_multi_literal_string(view, length);
+
+        view.remove_prefix(length);
+        return item_t{std::move(str)};
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
         string_t str = parse_multi_literal_string(view, length);
