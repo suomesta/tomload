@@ -422,6 +422,100 @@ TEST_CASE("testing parse_item(\")") {
     }
 }
 
+TEST_CASE("testing parse_item(integer)") {
+    {
+        view_t src = "123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == -123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == -0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "00";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "-0_0";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+0_0_0";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+9223372036854775807";  // 0x7FFF_FFFF_FFFF_FFFF
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 9223372036854775807LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+9223372036854775808";  // 0x8000_0000_0000_0000
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+12__3";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+12_3_";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+_12_3";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
 TEST_CASE("testing parse_item(array)") {
     {
         view_t src = "[]";

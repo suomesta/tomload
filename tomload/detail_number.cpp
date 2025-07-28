@@ -69,7 +69,8 @@ view_t::size_type get_integer_length(view_t view) {
  */
 integer_t parse_integer(view_t view, view_t::size_type length) {
     view_t sub(view.data(), length);
-    if ((ends_with(sub, "_")) ||
+    if ((starts_with(sub, {"_", "+_", "-_"})) ||
+        (ends_with(sub, "_")) ||
         (sub.find("__") != view_t::npos)) {
         throw parse_error("invalid `_`");
     }
@@ -79,6 +80,12 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
         if (c != '_') {
             str.push_back(c);
         }
+    }
+
+    view_t ref{str.c_str()};
+    if ((starts_with(ref, "0") && (ref.size() > 1)) ||
+        (starts_with(ref, {"+0", "-0"}) && (ref.size() > 2))) {
+        throw parse_error("starts with 00");
     }
 
     integer_t ret = 0;
