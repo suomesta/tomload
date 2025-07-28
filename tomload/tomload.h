@@ -22,6 +22,14 @@ class parse_error : public std::runtime_error {
 };
 /////////////////////////////////////////////////////////////////////////////
 
+class type_error : public std::runtime_error {
+ public:
+    type_error(const char* msg) :
+        runtime_error(msg) {
+    }
+};
+/////////////////////////////////////////////////////////////////////////////
+
 template <typename I>
 class range_t {
  public:

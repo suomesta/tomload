@@ -84,7 +84,7 @@ bool item_t::is_table(void) const noexcept {
 
 boolean_t item_t::get_bool(void) const {
     if (type != TYPE_BOOLEAN) {
-        throw parse_error("type mismatch");
+        throw type_error("type mismatch");
     }
     return b;
 }
@@ -92,7 +92,7 @@ boolean_t item_t::get_bool(void) const {
 
 integer_t item_t::get_integer(void) const {
     if (type != TYPE_INTEGER) {
-        throw parse_error("type mismatch");
+        throw type_error("type mismatch");
     }
     return i;
 }
@@ -100,7 +100,7 @@ integer_t item_t::get_integer(void) const {
 
 float_t item_t::get_float(void) const {
     if (type != TYPE_FLOAT) {
-        throw parse_error("type mismatch");
+        throw type_error("type mismatch");
     }
     return d;
 }
@@ -108,7 +108,7 @@ float_t item_t::get_float(void) const {
 
 string_t item_t::get_string(void) const {
     if (type != TYPE_STRING) {
-        throw parse_error("type mismatch");
+        throw type_error("type mismatch");
     }
     return s;
 }
@@ -120,7 +120,7 @@ size_t item_t::size(void) const {
     } else if (type == TYPE_TABLE) {
         return m->size();
     } else {
-        throw parse_error("neither array nor table");
+        throw type_error("neither array nor table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ const item_t& item_t::operator[](size_t index) const {
     if (type == TYPE_ARRAY) {
         return v->at(index);
     } else {
-        throw parse_error("not array");
+        throw type_error("not array");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -138,7 +138,7 @@ const item_t& item_t::operator[](const key_t& key) const {
     if (type == TYPE_TABLE) {
         return m->at(key);
     } else {
-        throw parse_error("not table");
+        throw type_error("not table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ bool item_t::contains(const key_t& key) const {
     if (type == TYPE_TABLE) {
         return m->find(key) != m->cend();
     } else {
-        throw parse_error("not table");
+        throw type_error("not table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ array_iterator item_t::array_begin(void) const {
     if (type == TYPE_ARRAY) {
         return v->begin();
     } else {
-        throw parse_error("not array");
+        throw type_error("not array");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -165,7 +165,7 @@ array_iterator item_t::array_end(void) const {
     if (type == TYPE_ARRAY) {
         return v->end();
     } else {
-        throw parse_error("not array");
+        throw type_error("not array");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -174,7 +174,7 @@ table_iterator item_t::table_begin(void) const {
     if (type == TYPE_TABLE) {
         return m->begin();
     } else {
-        throw parse_error("not table");
+        throw type_error("not table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ table_iterator item_t::table_end(void) const {
     if (type == TYPE_TABLE) {
         return m->end();
     } else {
-        throw parse_error("not table");
+        throw type_error("not table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
