@@ -8,7 +8,7 @@
 namespace {
 
 std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TEST_DATA_DIR) + filename);
+    std::ifstream file(std::string(SAMPLES_DIR) + filename);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }

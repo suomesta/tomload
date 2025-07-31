@@ -21,5 +21,5 @@ target_include_directories(unittest PUBLIC
 )
 
 target_compile_definitions(unittest PRIVATE
-    TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/samples/"
+    SAMPLES_DIR="${CMAKE_SOURCE_DIR}/samples/"
 )
