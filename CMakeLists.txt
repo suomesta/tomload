@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 14) # C++17 if you want std::string_view
 add_executable(unittest
     unittest/main.cpp unittest/test_functions.cpp unittest/test_samples.cpp
     unittest/toml-test_runs/valid/bool.cpp unittest/toml-test_runs/invalid/bool.cpp
+    unittest/toml-test_runs/valid/integer.cpp unittest/toml-test_runs/invalid/integer.cpp
     tomload/tomload.h tomload/tomload.cpp
     tomload/parser.h tomload/parser.cpp
     tomload/detail_string.h tomload/detail_string.cpp
