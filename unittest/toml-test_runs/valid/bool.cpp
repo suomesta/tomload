@@ -1,0 +1,35 @@
+#include "doctest/doctest.h"
+#include <cmath>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include "tomload/tomload.h"
+
+namespace {
+
+std::string load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+    if (not file.is_open()) {
+        throw std::runtime_error("Cannot open " + filename);
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+}  // namespace
+
+using namespace tomload;
+
+TEST_CASE("valid/bool/bool.toml") {
+    std::string content = load_file("valid/bool/bool.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["t"].is_boolean() == true);
+    CHECK(t["t"].get_bool() == true);
+    CHECK(t["f"].is_boolean() == true);
+    CHECK(t["f"].get_bool() == false);
+}

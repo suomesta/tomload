@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 14) # C++17 if you want std::string_view
 
 add_executable(unittest
     unittest/main.cpp unittest/test_functions.cpp unittest/test_samples.cpp
+    unittest/toml-test_runs/valid/bool.cpp unittest/toml-test_runs/invalid/bool.cpp
     tomload/tomload.h tomload/tomload.cpp
     tomload/parser.h tomload/parser.cpp
     tomload/detail_string.h tomload/detail_string.cpp
@@ -22,4 +23,5 @@ target_include_directories(unittest PUBLIC
 
 target_compile_definitions(unittest PRIVATE
     SAMPLES_DIR="${CMAKE_SOURCE_DIR}/unittest/samples/"
+    TOML_TEST_DIR="${CMAKE_SOURCE_DIR}/unittest/toml-test/tests/"
 )
