@@ -79,7 +79,6 @@ struct item_t {
     item_t(boolean_t val) noexcept;
     item_t(integer_t val) noexcept;
     item_t(float_t val) noexcept;
-    item_t(const string_t& val) noexcept;
     item_t(string_t&& val) noexcept;
     item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
     item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
