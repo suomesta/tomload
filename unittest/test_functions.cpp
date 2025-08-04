@@ -387,8 +387,11 @@ TEST_CASE("testing parse_item(\")") {
     }
     {
         view_t src = "\"\\u0000\"";
+        item_t result = parse_item(src);
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == std::string(1, '\0'));
+        CHECK(src.empty());
     }
     {
         view_t src = "\"\\u123\"";
@@ -397,8 +400,11 @@ TEST_CASE("testing parse_item(\")") {
     }
     {
         view_t src = "\"\\U0000001F\"";
+        item_t result = parse_item(src);
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == std::string(1, '\x1f'));
+        CHECK(src.empty());
     }
     {
         view_t src = "\"\\U1234567\"";

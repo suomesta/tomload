@@ -22,30 +22,6 @@ std::string load_file(const std::string& filename) {
 
 using namespace tomload;
 
-TEST_CASE("valid/integer/long.toml") {
-    std::string content = load_file("valid/integer/long.toml");
-    item_t t(view_t{content.c_str()});
-
-    CHECK(t.is_table() == true);
-    CHECK(t.size() == 2);
-    CHECK(t["int64-max"].is_integer() == true);
-    CHECK(t["int64-max"].get_integer() == 9223372036854775807);
-    CHECK(t["int64-max-neg"].is_integer() == true);
-    CHECK(t["int64-max-neg"].get_integer() == -9223372036854775808);
-}
-
-TEST_CASE("valid/integer/underscore.toml") {
-    std::string content = load_file("valid/integer/underscore.toml");
-    item_t t(view_t{content.c_str()});
-
-    CHECK(t.is_table() == true);
-    CHECK(t.size() == 2);
-    CHECK(t["kilo"].is_integer() == true);
-    CHECK(t["kilo"].get_integer() == 1000);
-    CHECK(t["x"].is_integer() == true);
-    CHECK(t["x"].get_integer() == 1111);
-}
-
 TEST_CASE("valid/integer/float64-max.toml") {
     std::string content = load_file("valid/integer/float64-max.toml");
     item_t t(view_t{content.c_str()});
@@ -56,6 +32,22 @@ TEST_CASE("valid/integer/float64-max.toml") {
     CHECK(t["max_int"].get_integer() == 9007199254740991);
     CHECK(t["min_int"].is_integer() == true);
     CHECK(t["min_int"].get_integer() == -9007199254740991);
+}
+
+TEST_CASE("valid/integer/integer.toml") {
+    std::string content = load_file("valid/integer/integer.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 4);
+    CHECK(t["answer"].is_integer() == true);
+    CHECK(t["answer"].get_integer() == 42);
+    CHECK(t["posanswer"].is_integer() == true);
+    CHECK(t["posanswer"].get_integer() == 42);
+    CHECK(t["neganswer"].is_integer() == true);
+    CHECK(t["neganswer"].get_integer() == -42);
+    CHECK(t["zero"].is_integer() == true);
+    CHECK(t["zero"].get_integer() == 0);
 }
 
 TEST_CASE("valid/integer/literals.toml") {
@@ -84,20 +76,28 @@ TEST_CASE("valid/integer/literals.toml") {
     CHECK(t["hex4"].get_integer() == 2439);
 }
 
-TEST_CASE("valid/integer/integer.toml") {
-    std::string content = load_file("valid/integer/integer.toml");
+TEST_CASE("valid/integer/long.toml") {
+    std::string content = load_file("valid/integer/long.toml");
     item_t t(view_t{content.c_str()});
 
     CHECK(t.is_table() == true);
-    CHECK(t.size() == 4);
-    CHECK(t["answer"].is_integer() == true);
-    CHECK(t["answer"].get_integer() == 42);
-    CHECK(t["posanswer"].is_integer() == true);
-    CHECK(t["posanswer"].get_integer() == 42);
-    CHECK(t["neganswer"].is_integer() == true);
-    CHECK(t["neganswer"].get_integer() == -42);
-    CHECK(t["zero"].is_integer() == true);
-    CHECK(t["zero"].get_integer() == 0);
+    CHECK(t.size() == 2);
+    CHECK(t["int64-max"].is_integer() == true);
+    CHECK(t["int64-max"].get_integer() == 9223372036854775807);
+    CHECK(t["int64-max-neg"].is_integer() == true);
+    CHECK(t["int64-max-neg"].get_integer() == -9223372036854775808);
+}
+
+TEST_CASE("valid/integer/underscore.toml") {
+    std::string content = load_file("valid/integer/underscore.toml");
+    item_t t(view_t{content.c_str()});
+
+    CHECK(t.is_table() == true);
+    CHECK(t.size() == 2);
+    CHECK(t["kilo"].is_integer() == true);
+    CHECK(t["kilo"].get_integer() == 1000);
+    CHECK(t["x"].is_integer() == true);
+    CHECK(t["x"].get_integer() == 1111);
 }
 
 TEST_CASE("valid/integer/zero.toml") {

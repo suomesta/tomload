@@ -1,4 +1,3 @@
-#include <iostream>
 #include "tomload/detail_string.h"
 
 namespace tomload {
@@ -85,7 +84,7 @@ string_t parse_literal_string(view_t& view, view_t::size_type length) {
 /////////////////////////////////////////////////////////////////////////////
 
 std::string parse_unicode_escape(const view_t& view, int size) {
-    auto is_hex = [](char c) {  // avoid to use std::isxdigit() because it depends on the locale
+    auto is_hex = [](char c) {  // avoid to use std::isxdigit() because that depends on the locale
         return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
     };
 
@@ -96,10 +95,8 @@ std::string parse_unicode_escape(const view_t& view, int size) {
         throw parse_error("invalid unicode escape sequence");
     }
     uint32_t code_point = static_cast<uint32_t>(std::stoul(std::string(view.data(), size), nullptr, 16));
-    if (((0x00 <= code_point) && (code_point <= 0x08)) ||
-        ((0x0A <= code_point) && (code_point <= 0x1F)) ||
-        (code_point == 0x7F)) {  // U+0000 ～ U+0008、U+000A ～ U+001F、U+007F
-        throw parse_error("invalid unicode escape sequence");
+    if ((0xD800 <= code_point) && (code_point <= 0xDFFF)) {  // U+D800 ～ U+DFFF
+        throw parse_error("detect surrogate pair in 2bytes (U+D800 - U+DFFF)");
     }
     std::string chars = utf8_encode(code_point);
     if (chars.empty()) {
@@ -138,18 +135,28 @@ view_t::size_type get_multi_string_length(view_t view) {
                     throw parse_error("invalid unicode escape sequence");
                 }
                 i += 8;
-            } else if (view[i] == '\r') {
+            } else if ((view[i] == '\r') || (view[i] == '\n')) {
                 view_t::size_type pos = view.find_first_not_of("\r\n\t ", i + 1);
                 if (pos == view_t::npos) {
                     throw parse_error("not closed by \"\"\"");
                 }
                 i += pos - (i + 1);
-            } else if (view[i] == '\n') {
-                view_t::size_type pos = view.find_first_not_of("\r\n\t ", i + 1);
+            } else if ((view[i] == '\t') || (view[i] == ' ')) {
+                view_t::size_type pos = view.find_first_not_of("\t ", i + 1);
                 if (pos == view_t::npos) {
                     throw parse_error("not closed by \"\"\"");
                 }
-                i += pos - (i + 1);
+                i += pos - i;
+
+                if ((view[i] == '\r') || (view[i] == '\n')) {
+                    pos = view.find_first_not_of("\r\n\t ", i + 1);
+                    if (pos == view_t::npos) {
+                        throw parse_error("not closed by \"\"\"");
+                    }
+                    i += pos - (i + 1);
+                } else {
+                    throw parse_error("invalid escape sequence");
+                }
             } else {
                 throw parse_error("invalid escape sequence");
             }
@@ -195,17 +202,8 @@ string_t parse_multi_string(view_t view, view_t::size_type length) {
             } else if (sub[i] == 'U') {
                 ret += parse_unicode_escape(sub.substr(i + 1), 8);
                 i += 8;
-            } else if (sub[i] == '\r') {
+            } else if ((sub[i] == '\r') || (sub[i] == '\n') || (sub[i] == '\t') || (sub[i] == ' ')) {
                 view_t::size_type pos = sub.find_first_not_of("\r\n\t ", i + 1);
-                if (pos == view_t::npos) {
-                    pos = sub.size();
-                }
-                i += pos - (i + 1);
-            } else if (sub[i] == '\n') {
-                view_t::size_type pos = sub.find_first_not_of("\r\n\t ", i + 1);
-                if (pos == view_t::npos) {
-                    pos = sub.size();
-                }
                 i += pos - (i + 1);
             }
         } else {

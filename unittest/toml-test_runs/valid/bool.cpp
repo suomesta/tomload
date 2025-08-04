@@ -33,3 +33,4 @@ TEST_CASE("valid/bool/bool.toml") {
     CHECK(t["f"].is_boolean() == true);
     CHECK(t["f"].get_bool() == false);
 }
+

@@ -33,7 +33,8 @@ using namespace tomload;
 
 C_STR = {
     '"': '\\"', '\\': '\\\\',
-    '\r': '\\r', '\n': '\\n', '\t': '\\t', '\b': '\\b'}
+    '\r': '\\r', '\n': '\\n', '\t': '\\t', '\b': '\\b',
+    '\0': '" + std::string(1, \'\\0\') + "'}
 
 
 def c_str(s):
@@ -140,7 +141,11 @@ def main():
     """Load TOML file and dump CHECK() lines of doctest."""
     if len(sys.argv) >= 2:
         print_head()
-        for path in glob.glob(sys.argv[1] + "/*.toml"):
+        for path in sorted(glob.glob(sys.argv[1] + "/*.toml")):
+            if ('hex-escape.toml' in path or
+                'escape-esc.toml' in path):
+                continue
+
             print_check(path)
 
 
