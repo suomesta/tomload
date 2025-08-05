@@ -5,7 +5,7 @@ project(tomload CXX)
 set(CMAKE_CXX_STANDARD 14)  # set 17 if you want std::string_view
 
 add_executable(unittest
-    unittest/main.cpp unittest/test_functions.cpp unittest/test_samples.cpp
+    unittest/main.cpp unittest/test_accessor.cpp unittest/test_functions.cpp unittest/test_samples.cpp
     unittest/toml-test_runs/valid/bool.cpp unittest/toml-test_runs/invalid/bool.cpp
     unittest/toml-test_runs/valid/integer.cpp unittest/toml-test_runs/invalid/integer.cpp
     unittest/toml-test_runs/valid/string.cpp unittest/toml-test_runs/invalid/string.cpp

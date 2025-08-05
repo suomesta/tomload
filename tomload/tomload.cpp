@@ -355,4 +355,16 @@ void item_t::parse_main(view_t& view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+template <>
+bool item_t::get<string_t>(string_t& val) const noexcept {
+    if (type == TYPE_STRING) {
+        val = s;
+    } else {
+        return false;
+    }
+
+    return true;
+}
+/////////////////////////////////////////////////////////////////////////////
+
 }  // namespace tomload

@@ -264,10 +264,18 @@ class item_t {
 /////////////////////////////////////////////////////////////////////////////
 
 /*
+ * @brief This is the template specialization when PARAM is string_t.
+ */
+template <>
+bool item_t::get<string_t>(string_t& val) const noexcept;
+/////////////////////////////////////////////////////////////////////////////
+
+/*
  * @brief Getter of param[out] version. supported types are boolean, integer, float, and string.
  * @param val[out]: gotten value to be loaded.
  * @return true/false: success/fail to get.
  * @tparam PARAM: should one of boolean_t, integer_t, float_t, string_t or other integer or float types.
+ * @note When PARAM is string_t, then get<string_t>() is called instead.
  */
 template <class PARAM>
 bool item_t::get(PARAM& val) const noexcept {
@@ -277,8 +285,6 @@ bool item_t::get(PARAM& val) const noexcept {
         val = u.i;
     } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
         val = u.d;
-    } else if (std::is_same<PARAM, string_t>() && type == TYPE_STRING) {
-        val = s;
     } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
         val = static_cast<PARAM>(u.i);
     } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
