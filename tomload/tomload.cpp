@@ -3,6 +3,15 @@
 
 namespace tomload {
 
+/*
+ * @brief Constructor that initializes item_t from a view_t which holds TOML raw string.
+ * @param view[in]: The view_t object containing raw TOML string.
+ *                  TOML string must contain at least one key-value pair or
+ *                  completely empty (not allowed single value, like
+ *                  "true" or "123").
+ * @throws parse_error: if the view cannot be parsed correctly.
+ * @note Most users must use only this constructor to parse TOML string.
+ */
 item_t::item_t(view_t view) :
     type(TYPE_TABLE),
     m(std::make_shared<std::map<key_t, item_t>>()) {
@@ -108,6 +117,12 @@ string_t item_t::get_string(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief get size of array or table.
+ * @return size_t: size of array or table.
+ * @throw type_error: if the type is neither array nor table.
+ * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+ */
 size_t item_t::size(void) const {
     if (type == TYPE_ARRAY) {
         return v->size();
@@ -119,6 +134,13 @@ size_t item_t::size(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief operator[] of array.
+ * @param index[in]: appointed index of array.
+ * @throw type_error: if the type is not array.
+ * @throw std::out_of_range: if `index` is out of range of array.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ */
 const item_t& item_t::operator[](size_t index) const {
     if (type == TYPE_ARRAY) {
         return v->at(index);
@@ -128,6 +150,13 @@ const item_t& item_t::operator[](size_t index) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief operator[] of table.
+ * @param key[in]: appointed key of table.
+ * @throw type_error: if the type is not table.
+ * @throw std::out_of_range: if `key` is not found in the table.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ */
 const item_t& item_t::operator[](const key_t& key) const {
     if (type == TYPE_TABLE) {
         return m->at(key);
@@ -137,6 +166,13 @@ const item_t& item_t::operator[](const key_t& key) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Check if the table contains the specified key, like std::map::contains() in C++20.
+ * @param key[in]: The key to check for existence in the table.
+ * @return true if the key exists in the table, false otherwise.
+ * @throw type_error: if the type is not table.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ */
 bool item_t::contains(const key_t& key) const {
     if (type == TYPE_TABLE) {
         return m->find(key) != m->cend();
@@ -146,6 +182,12 @@ bool item_t::contains(const key_t& key) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Get an iterator to the beginning of the array.
+ * @return array_iterator: an iterator pointing to the first element of the array.
+ * @throw type_error: if the type is not array.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ */
 array_iterator item_t::array_begin(void) const {
     if (type == TYPE_ARRAY) {
         return v->begin();
@@ -155,6 +197,12 @@ array_iterator item_t::array_begin(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Get an iterator to the end of the array.
+ * @return array_iterator: an iterator pointing to the end of the array.
+ * @throw type_error: if the type is not array.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ */
 array_iterator item_t::array_end(void) const {
     if (type == TYPE_ARRAY) {
         return v->end();
@@ -164,6 +212,12 @@ array_iterator item_t::array_end(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Get an iterator to the beginning of the table.
+ * @return table_iterator: an iterator pointing to the first element of the table.
+ * @throw type_error: if the type is not table.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ */
 table_iterator item_t::table_begin(void) const {
     if (type == TYPE_TABLE) {
         return m->begin();
@@ -173,6 +227,12 @@ table_iterator item_t::table_begin(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Get an iterator to the end of the table.
+ * @return table_iterator: an iterator pointing to the end of the table.
+ * @throw type_error: if the type is not table.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ */
 table_iterator item_t::table_end(void) const {
     if (type == TYPE_TABLE) {
         return m->end();
@@ -182,20 +242,32 @@ table_iterator item_t::table_end(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-const array_range_t item_t::array_range(void) const noexcept {
+/*
+ * @brief Get a range of the array.
+ * @return array_range_t: a range object containing iterators to the beginning and end of the array.
+ * @throw type_error: if the type is not array.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ */
+const array_range_t item_t::array_range(void) const {
     if (type == TYPE_ARRAY) {
         return array_range_t(v->begin(), v->end());
     } else {
-        return array_range_t(array_iterator{}, array_iterator{});
+        throw type_error("not array");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
 
-const table_range_t item_t::table_range(void) const noexcept {
+/*
+ * @brief Get a range of the table.
+ * @return table_range_t: a range object containing iterators to the beginning and end of the table.
+ * @throw type_error: if the type is not table.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ */
+const table_range_t item_t::table_range(void) const {
     if (type == TYPE_TABLE) {
         return table_range_t(m->begin(), m->end());
     } else {
-        return table_range_t(table_iterator{}, table_iterator{});
+        throw type_error("not table");
     }
 }
 /////////////////////////////////////////////////////////////////////////////
