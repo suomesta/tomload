@@ -1,10 +1,8 @@
-# CMakeのバージョンを設定
 cmake_minimum_required(VERSION 3.13)
 
-# プロジェクト名と使用する言語を設定
 project(tomload CXX)
 
-set(CMAKE_CXX_STANDARD 14) # C++17 if you want std::string_view
+set(CMAKE_CXX_STANDARD 14)  # set 17 if you want std::string_view
 
 add_executable(unittest
     unittest/main.cpp unittest/test_functions.cpp unittest/test_samples.cpp
