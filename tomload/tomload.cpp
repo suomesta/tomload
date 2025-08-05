@@ -11,20 +11,20 @@ item_t::item_t(view_t view) :
 /////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(boolean_t val) noexcept :
-    type(TYPE_BOOLEAN),
-    b(val) {
+    type(TYPE_BOOLEAN) {
+    u.b = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(integer_t val) noexcept :
-    type(TYPE_INTEGER),
-    i(val) {
+    type(TYPE_INTEGER) {
+    u.i = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
 item_t::item_t(float_t val) noexcept :
-    type(TYPE_FLOAT),
-    d(val) {
+    type(TYPE_FLOAT) {
+    u.d = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +80,7 @@ boolean_t item_t::get_bool(void) const {
     if (type != TYPE_BOOLEAN) {
         throw type_error("type mismatch");
     }
-    return b;
+    return u.b;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +88,7 @@ integer_t item_t::get_integer(void) const {
     if (type != TYPE_INTEGER) {
         throw type_error("type mismatch");
     }
-    return i;
+    return u.i;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -96,7 +96,7 @@ float_t item_t::get_float(void) const {
     if (type != TYPE_FLOAT) {
         throw type_error("type mismatch");
     }
-    return d;
+    return u.d;
 }
 /////////////////////////////////////////////////////////////////////////////
 

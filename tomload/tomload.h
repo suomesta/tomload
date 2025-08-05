@@ -68,9 +68,11 @@ struct item_t {
         TYPE_TABLE,
     } type;
 
-    boolean_t b;
-    integer_t i;
-    float_t d;
+    union {
+        boolean_t b;
+        integer_t i;
+        float_t d;
+    } u = {false};
     string_t s;
     std::shared_ptr<std::vector<item_t>> v;
     std::shared_ptr<std::map<key_t, item_t>> m;
@@ -125,21 +127,21 @@ struct item_t {
 template <class PARAM>
 bool item_t::get(PARAM& val) const noexcept {
     if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
-        val = b;
+        val = u.b;
     } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
-        val = i;
+        val = u.i;
     } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
-        val = d;
+        val = u.d;
     } else if (std::is_same<PARAM, string_t>() && type == TYPE_STRING) {
         val = s;
     } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
-        val = static_cast<PARAM>(i);
+        val = static_cast<PARAM>(u.i);
     } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
-        val = static_cast<PARAM>(d);
+        val = static_cast<PARAM>(u.d);
     } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
-        val = static_cast<PARAM>(i);
+        val = static_cast<PARAM>(u.i);
     } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
-        val = static_cast<PARAM>(d);
+        val = static_cast<PARAM>(u.d);
     } else {
         return false;
     }
