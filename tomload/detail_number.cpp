@@ -83,8 +83,10 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
     }
 
     view_t ref{str.c_str()};
-    if ((starts_with(ref, "0") && (ref.size() > 1)) ||
-        (starts_with(ref, {"+0", "-0"}) && (ref.size() > 2))) {
+    if (starts_with(ref, {"+", "-"})) {
+        ref.remove_prefix(1);
+    }
+    if (starts_with(ref, "0") && (ref.size() > 1)) {
         throw parse_error("starts with 0");
     }
 
@@ -146,7 +148,7 @@ float_t parse_float(view_t view, view_t::size_type length) {
     view_t sub(view.data(), length);
     if (starts_with(sub, "_") ||
         ends_with(sub, "_") ||
-        contains(sub, {"__", "+_", "_+", "-_", "_-", "e_", "_e", "E_", "_E"})) {
+        contains(sub, {"__", "+_", "_+", "-_", "_-", "._", "_.", "e_", "_e", "E_", "_E"})) {
         throw parse_error("invalid `_`");
     }
 
@@ -158,8 +160,10 @@ float_t parse_float(view_t view, view_t::size_type length) {
     }
 
     view_t ref{str.c_str()};
-    if ((starts_with(ref, "0") && not starts_with(ref, "0.")) ||
-        (starts_with(ref, {"+0", "-0"}) && not starts_with(ref, {"+0.", "-0."}))) {
+    if (starts_with(ref, {"+", "-"})) {
+        ref.remove_prefix(1);
+    }
+    if (starts_with(ref, "0") && not starts_with(ref, {"0.", "0e", "0E"})) {
         throw parse_error("starts with 0");
     }
 
