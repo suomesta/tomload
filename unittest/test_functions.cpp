@@ -522,6 +522,25 @@ TEST_CASE("testing parse_item(integer)") {
     }
 }
 
+TEST_CASE("testing parse_item(float)") {
+    {
+        view_t src = "1.5";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == 1.5);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-0.25e002";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == -25.0);
+        CHECK(src.empty());
+    }
+}
+
 TEST_CASE("testing parse_item(array)") {
     {
         view_t src = "[]";

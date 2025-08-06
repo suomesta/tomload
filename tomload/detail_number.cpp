@@ -85,7 +85,7 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
     view_t ref{str.c_str()};
     if ((starts_with(ref, "0") && (ref.size() > 1)) ||
         (starts_with(ref, {"+0", "-0"}) && (ref.size() > 2))) {
-        throw parse_error("starts with 00");
+        throw parse_error("starts with 0");
     }
 
     integer_t ret = 0;
@@ -104,7 +104,38 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
  * @pre `view` must start with one of "+-0123456789"
  */
 view_t::size_type get_float_length(view_t view) {
-    return get_integer_length(view);
+    view_t::size_type pos = get_integer_length(view);
+
+    if (pos < view.size() && view[pos] == '.') {
+        pos++;
+
+        view_t::size_type decimal_pos = view.find_first_not_of("0123456789_", pos);
+        if (decimal_pos == pos) {
+            throw parse_error("must digit after '.'");
+        }
+        if (decimal_pos == view_t::npos) {
+            decimal_pos = view.size();
+        }
+        pos = decimal_pos;
+    }
+
+    if (pos < view.size() && (view[pos] == 'e' || view[pos] == 'E')) {
+        pos++;
+
+        if (pos < view.size() && (view[pos] == '+' || view[pos] == '-')) {
+            pos++;
+        }
+        view_t::size_type expo_pos = view.find_first_not_of("0123456789_", pos);
+        if (expo_pos == pos) {
+            throw parse_error("must digit after 'e' or 'E'");
+        }
+        if (expo_pos == view_t::npos) {
+            expo_pos = view.size();
+        }
+        pos = expo_pos;
+    }
+
+    return pos;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +143,43 @@ view_t::size_type get_float_length(view_t view) {
  * @pre `view` must start with one of "+-0123456789"
  */
 float_t parse_float(view_t view, view_t::size_type length) {
-    return parse_integer(view, length);
+    view_t sub(view.data(), length);
+    if ((starts_with(sub, "_")) ||
+        (ends_with(sub, "_")) ||
+        (sub.find("__") != view_t::npos) ||
+        (sub.find("+_") != view_t::npos) ||
+        (sub.find("_+") != view_t::npos) ||
+        (sub.find("-_") != view_t::npos) ||
+        (sub.find("_-") != view_t::npos) ||
+        (sub.find("e_") != view_t::npos) ||
+        (sub.find("_e") != view_t::npos) ||
+        (sub.find("E_") != view_t::npos) ||
+        (sub.find("_E") != view_t::npos)) {
+        throw parse_error("invalid `_`");
+    }
+
+    std::string str;
+    for (char c : sub) {
+        if (c != '_') {
+            str.push_back(c);
+        }
+    }
+
+    view_t ref{str.c_str()};
+    if ((starts_with(ref, "0") && not starts_with(ref, "0.")) ||
+        (starts_with(ref, {"+0", "-0"}) && not starts_with(ref, {"+0.", "-0."}))) {
+        throw parse_error("starts with 0");
+    }
+
+    float_t ret = 0;
+    try {
+        ret = std::stod(str, nullptr);
+    } catch (std::out_of_range& err) {
+        throw parse_error("out_of_range");
+    } catch (std::invalid_argument& err) {
+        throw parse_error("invalid_argument");
+    }
+    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 
