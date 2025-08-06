@@ -1,5 +1,6 @@
 
 import glob
+import math
 import os
 import sys
 import tomllib
@@ -25,6 +26,11 @@ std::string load_file(const std::string& filename) {
     return buffer.str();
 }
 
+struct rhs_nan {};
+bool operator==(tomload::float_t f, rhs_nan) {
+    return std::isnan(f);
+}
+
 }  // namespace
 
 using namespace tomload;
@@ -45,6 +51,17 @@ def c_bool(b):
     return str(b).lower()
 
 
+def c_float(f):
+    if f == float('inf'):
+        return 'std::numeric_limits<double>::infinity()'
+    elif f == float('-inf'):
+        return '-std::numeric_limits<double>::infinity()'
+    elif math.isnan(f):
+        return 'rhs_nan{}'
+    else:
+        return str(f)
+
+
 TYPE_CHECK = {
     list: 'is_array', dict: 'is_table',
     int: 'is_integer', float: 'is_float', bool: 'is_boolean', str: 'is_string'}
@@ -53,7 +70,7 @@ TYPE_GET = {
 KEY_CONV = {
     int: int, str: c_str}
 VAL_CONV = {
-    int: int, float: float, bool: c_bool, str: c_str}
+    int: int, float: c_float, bool: c_bool, str: c_str}
 
 
 def chain_keys(keys):

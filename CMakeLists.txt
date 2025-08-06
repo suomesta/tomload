@@ -8,6 +8,7 @@ add_executable(unittest
     unittest/main.cpp unittest/test_accessor.cpp unittest/test_functions.cpp unittest/test_samples.cpp
     unittest/toml-test_runs/valid/bool.cpp unittest/toml-test_runs/invalid/bool.cpp
     unittest/toml-test_runs/valid/integer.cpp unittest/toml-test_runs/invalid/integer.cpp
+    unittest/toml-test_runs/valid/float.cpp unittest/toml-test_runs/invalid/float.cpp
     unittest/toml-test_runs/valid/string.cpp unittest/toml-test_runs/invalid/string.cpp
     tomload/tomload.h tomload/tomload.cpp
     tomload/parser.h tomload/parser.cpp

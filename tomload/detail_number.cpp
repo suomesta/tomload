@@ -166,6 +166,9 @@ float_t parse_float(view_t view, view_t::size_type length) {
     if (starts_with(ref, "0") && not starts_with(ref, {"0.", "0e", "0E"})) {
         throw parse_error("starts with 0");
     }
+    if (starts_with(ref, {".", "e", "E"})) {
+        throw parse_error("missing integer digits");
+    }
 
     float_t ret = 0;
     try {
