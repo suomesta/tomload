@@ -27,9 +27,9 @@ integer_t parse_radix_value(view_t view, view_t::size_type length) {
                           starts_with(view, "0b") ? 2 : 10;
 
     view_t sub(view.data() + 2, length - 2);
-    if ((starts_with(sub, "_")) ||
-        (ends_with(sub, "_")) ||
-        (sub.find("__") != view_t::npos)) {
+    if (starts_with(sub, "_") ||
+        ends_with(sub, "_") ||
+        contains(sub, "__")) {
         throw parse_error("invalid `_`");
     }
 
@@ -69,9 +69,9 @@ view_t::size_type get_integer_length(view_t view) {
  */
 integer_t parse_integer(view_t view, view_t::size_type length) {
     view_t sub(view.data(), length);
-    if ((starts_with(sub, {"_", "+_", "-_"})) ||
-        (ends_with(sub, "_")) ||
-        (sub.find("__") != view_t::npos)) {
+    if (starts_with(sub, {"_", "+_", "-_"}) ||
+        ends_with(sub, "_") ||
+        contains(sub, "__")) {
         throw parse_error("invalid `_`");
     }
 
@@ -144,17 +144,9 @@ view_t::size_type get_float_length(view_t view) {
  */
 float_t parse_float(view_t view, view_t::size_type length) {
     view_t sub(view.data(), length);
-    if ((starts_with(sub, "_")) ||
-        (ends_with(sub, "_")) ||
-        (sub.find("__") != view_t::npos) ||
-        (sub.find("+_") != view_t::npos) ||
-        (sub.find("_+") != view_t::npos) ||
-        (sub.find("-_") != view_t::npos) ||
-        (sub.find("_-") != view_t::npos) ||
-        (sub.find("e_") != view_t::npos) ||
-        (sub.find("_e") != view_t::npos) ||
-        (sub.find("E_") != view_t::npos) ||
-        (sub.find("_E") != view_t::npos)) {
+    if (starts_with(sub, "_") ||
+        ends_with(sub, "_") ||
+        contains(sub, {"__", "+_", "_+", "-_", "_-", "e_", "_e", "E_", "_E"})) {
         throw parse_error("invalid `_`");
     }
 
