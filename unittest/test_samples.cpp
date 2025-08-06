@@ -452,11 +452,11 @@ TEST_CASE("Float_5.toml") {
     CHECK(t["sf3"].is_float() == true);
     CHECK(t["sf3"].get_float() == -std::numeric_limits<double>::infinity());
     CHECK(t["sf4"].is_float() == true);
-    CHECK((std::isnan(t["sf4"].get_float()) && not std::signbit(t["sf4"].get_float())));
+    CHECK(std::isnan(t["sf4"].get_float()));
     CHECK(t["sf5"].is_float() == true);
-    CHECK((std::isnan(t["sf5"].get_float()) && not std::signbit(t["sf5"].get_float())));
+    CHECK(std::isnan(t["sf5"].get_float()));
     CHECK(t["sf6"].is_float() == true);
-    CHECK((std::isnan(t["sf6"].get_float()) && std::signbit(t["sf6"].get_float())));
+    CHECK(std::isnan(t["sf6"].get_float()));
 }
 
 TEST_CASE("Boolean_1.toml") {

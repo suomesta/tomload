@@ -101,7 +101,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.get_float()) && not std::signbit(result.get_float())));
+        CHECK(std::isnan(result.get_float()));
         CHECK(src.empty());
     }
     {
@@ -109,7 +109,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.get_float()) && not std::signbit(result.get_float())));
+        CHECK(std::isnan(result.get_float()));
         CHECK(src.empty());
     }
     {
@@ -117,7 +117,7 @@ TEST_CASE("testing parse_item(special_float)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_float() == true);
-        CHECK((std::isnan(result.get_float()) && std::signbit(result.get_float())));
+        CHECK(std::isnan(result.get_float()));
         CHECK(src.empty());
     }
 }

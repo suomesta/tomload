@@ -104,7 +104,7 @@ item_t parse_item(view_t& view) {
         {"-inf", item_t{-std::numeric_limits<double>::infinity()}},
         {"nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
         {"+nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
-        {"-nan", item_t{-std::numeric_limits<double>::quiet_NaN()}},
+        {"-nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
     };
 
     for (const auto& pair : fixed_values) {
