@@ -41,6 +41,14 @@ inline bool ends_with(view_t view, view_t x) {
 /////////////////////////////////////////////////////////////////////////////
 
 /* 
+ * @brief Same as std::string_view::contains() in C++ 23.
+ */
+inline bool contains(view_t view, view_t x) {
+    return view.find(x) != view_t::npos;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/* 
  * @brief Util function like Python str.startswith([list]).
  */
 inline bool starts_with(view_t view, std::initializer_list<const char*> list) {
@@ -59,6 +67,19 @@ inline bool starts_with(view_t view, std::initializer_list<const char*> list) {
 inline bool ends_with(view_t view, std::initializer_list<const char*> list) {
     for (const char* str : list) {
         if (ends_with(view, str)) {
+            return true;
+        }
+    }
+    return false;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/* 
+ * @brief Util function, expand list.
+ */
+inline bool contains(view_t view, std::initializer_list<const char*> list) {
+    for (const char* str : list) {
+        if (contains(view, str)) {
             return true;
         }
     }
