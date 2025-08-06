@@ -18,6 +18,11 @@ std::string load_file(const std::string& filename) {
     return buffer.str();
 }
 
+struct rhs_nan {};
+bool operator==(tomload::float_t f, rhs_nan) {
+    return std::isnan(f);
+}
+
 }  // namespace
 
 using namespace tomload;
@@ -438,8 +443,6 @@ TEST_CASE("Float_4.toml") {
 }
 
 TEST_CASE("Float_5.toml") {
-    // This test is modified by manually because inf and nan are quite special.
-
     std::string content = load_file("Float_5.toml");
     item_t t(view_t{content.c_str()});
 
@@ -452,11 +455,11 @@ TEST_CASE("Float_5.toml") {
     CHECK(t["sf3"].is_float() == true);
     CHECK(t["sf3"].get_float() == -std::numeric_limits<double>::infinity());
     CHECK(t["sf4"].is_float() == true);
-    CHECK(std::isnan(t["sf4"].get_float()));
+    CHECK(t["sf4"].get_float() == rhs_nan{});
     CHECK(t["sf5"].is_float() == true);
-    CHECK(std::isnan(t["sf5"].get_float()));
+    CHECK(t["sf5"].get_float() == rhs_nan{});
     CHECK(t["sf6"].is_float() == true);
-    CHECK(std::isnan(t["sf6"].get_float()));
+    CHECK(t["sf6"].get_float() == rhs_nan{});
 }
 
 TEST_CASE("Boolean_1.toml") {
