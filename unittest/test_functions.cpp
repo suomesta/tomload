@@ -640,7 +640,10 @@ TEST_CASE("testing parse()") {
         item_t result(src);
 
         CHECK(result.is_table() == true);
-        CHECK(result.size() == 0);
+        CHECK(result.size() == 1);
+        CHECK(result.contains("aa") == true);
+        CHECK(result["aa"].is_table() == true);
+        CHECK(result["aa"].size() == 0);
     }
     {
         view_t src = "[aa]  #comm\nbb = false\n";

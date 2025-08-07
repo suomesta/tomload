@@ -281,6 +281,18 @@ tomload::item_t* item_t::push(const key_t& key, const item_t& item) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
+    item_t* p_item = this;
+    for (const key_t& key : brackets) {
+        auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+        p_item = p_item->push(key, next_table);
+        if (not p_item->is_table()) {
+            throw parse_error("expected table");
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
 void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
@@ -325,6 +337,7 @@ void item_t::parse_main(view_t& view) {
                 skip_space(view, " \t", false);
                 if (starts_with(view, "]")) {
                     view.remove_prefix(1);
+                    insert_empty_table(brackets);
                     ini_state = false;
                 } else {
                     throw parse_error("expected ']'");
