@@ -79,12 +79,12 @@ item_t parse_array(view_t& view) {
         } else if (status == wait_comma) {
             skip_space(view, " \t\r\n", true);
             if (view.empty()) {
-                throw parse_error("missing \",\" in array");
+                throw parse_error("missing \",\" or \"]\" in array");
             } else if (starts_with(view, ",")) {
                 view.remove_prefix(1);
                 status = wait_item;
             } else {
-                throw parse_error("missing \",\" in array");
+                throw parse_error("missing \",\" or \"]\" in array");
             }
         } else {
             throw parse_error("unknown error");
@@ -92,6 +92,85 @@ item_t parse_array(view_t& view) {
     }
 
     return item_t{v};
+}
+/////////////////////////////////////////////////////////////////////////////
+
+void insert_key_value(std::map<key_t, item_t>* p, std::vector<key_t> keys, item_t value) {
+/*
+    std::shared_ptr<std::map<key_t, item_t>> m = std::make_shared<std::map<key_t, item_t>>();
+
+    std::map<key_t, item_t>* p_map = p;
+    for (const key_t& key : keys) {
+        if (&key != &keys.back()) {
+            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+            p_map = p_map->insert({key, next_table});
+//            if (not p_item->is_table()) {
+//                throw parse_error("expected table");
+//            }
+        } else {
+            if (p_map->find(key) == p_map->end()) {
+                p_map->insert({key, value});
+            } else {
+                throw parse_error("already reginstered");
+            }
+        }
+    }
+*/
+}
+/////////////////////////////////////////////////////////////////////////////
+
+item_t parse_inline_table(view_t& view) {
+    item_t ret{std::make_shared<std::map<key_t, item_t>>()};
+
+    view.remove_prefix(1);
+
+    std::vector<key_t> keys;
+    enum {
+        wait_key,
+        wait_colon,
+        wait_value,
+        wait_comma,
+        closed,
+    } status = wait_key;
+
+    while (status != closed) {
+        skip_space(view, " \t", false);
+
+        if (view.empty()) {
+            throw parse_error("imcomplete inline table");
+        } else if (starts_with(view, "}")) {
+            if ((status == wait_key) || (status == wait_comma)) {
+                view.remove_prefix(1);
+                status = closed;
+            } else {
+                throw parse_error("imcomplete inline table");
+            }
+        } else if (status == wait_key) {
+            keys = parse_keys(view);
+            status = wait_colon;
+        } else if (status == wait_colon) {
+            if (starts_with(view, ":")) {
+                view.remove_prefix(1);
+                status = wait_value;
+            } else {
+                throw parse_error("missing \":\" in inline table");
+            }
+        } else if (status == wait_value) {
+            ret.merge(keys, parse_item(view));
+            status = wait_comma;
+        } else if (status == wait_comma) {
+            if (starts_with(view, ",")) {
+                view.remove_prefix(1);
+                status = wait_key;
+            } else {
+                throw parse_error("missing \",\" or \"}\" in array");
+            }
+        } else {
+            throw parse_error("unknown error");
+        }
+    }
+
+    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -160,6 +239,8 @@ item_t parse_item(view_t& view) {
         return item_t{std::move(str)};
     } else if (starts_with(view, "[")) {
         return parse_array(view);
+    } else if (starts_with(view, "{")) {
+        return parse_inline_table(view);
     }
 
     throw parse_error("not hit item");

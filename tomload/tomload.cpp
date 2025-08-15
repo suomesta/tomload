@@ -272,6 +272,33 @@ const table_range_t item_t::table_range(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+void item_t::merge(std::vector<key_t> keys, item_t value) {
+    if (type != TYPE_TABLE) {
+        throw parse_error("not table");
+    }
+    if (keys.empty()) {
+        throw parse_error("no keys");
+    }
+
+    item_t* p_item = this;
+    for (const key_t& key : keys) {
+        if (&key != &keys.back()) {
+            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+            p_item = p_item->push(key, next_table);
+            if (not p_item->is_table()) {
+                throw parse_error("expected table");
+            }
+        } else {
+            if (not p_item->contains(key)) {
+                p_item->push(key, value);
+            } else {
+                throw parse_error("already reginstered");
+            }
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
 tomload::item_t* item_t::push(const key_t& key, const item_t& item) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");

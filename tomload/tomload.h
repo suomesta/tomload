@@ -233,6 +233,8 @@ class item_t {
     const table_range_t table_range(void) const;
     /////////////////////////////////////////////////////////////////////////////
 
+void merge(std::vector<key_t> keys, item_t value);
+
  private:
     item_t* push(const key_t& key, const item_t& item);
     void insert_empty_table(const std::vector<key_t>& brackets);

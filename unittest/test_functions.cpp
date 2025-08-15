@@ -634,6 +634,37 @@ TEST_CASE("testing parse_item(array)") {
     }
 }
 
+TEST_CASE("testing parse_item(inline table)") {
+    {
+        view_t src = "{}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 0);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{a : 10}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{ \t \t a:10\t\t\t}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+}
+
 TEST_CASE("testing parse()") {
     {
         view_t src = "[aa]  #comm\n";
