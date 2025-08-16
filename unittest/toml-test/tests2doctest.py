@@ -66,7 +66,7 @@ TYPE_CHECK = {
     list: 'is_array', dict: 'is_table',
     int: 'is_integer', float: 'is_float', bool: 'is_boolean', str: 'is_string'}
 TYPE_GET = {
-    int: 'get_integer', float: 'get_float', bool: 'get_bool', str: 'get_string'}
+    int: 'get_integer', float: 'get_float', bool: 'get_boolean', str: 'get_string'}
 KEY_CONV = {
     int: int, str: c_str}
 VAL_CONV = {

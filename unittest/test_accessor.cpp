@@ -13,7 +13,7 @@ TEST_CASE("testing bool constructor, is_***() and get_***()") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK(item.get_bool() == true);
+    CHECK(item.get_boolean() == true);
     CHECK_THROWS_AS(item.get_integer(), type_error&);
     CHECK_THROWS_AS(item.get_float(), type_error&);
     CHECK_THROWS_AS(item.get_string(), type_error&);
@@ -39,7 +39,7 @@ TEST_CASE("testing integer constructor, is_***() and get_***()") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_bool(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), type_error&);
     CHECK(item.get_integer() == 123);
     CHECK_THROWS_AS(item.get_float(), type_error&);
     CHECK_THROWS_AS(item.get_string(), type_error&);
@@ -66,7 +66,7 @@ TEST_CASE("testing float constructor, is_***() and get_***()") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_bool(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), type_error&);
     CHECK_THROWS_AS(item.get_integer(), type_error&);
     CHECK(item.get_float() == 1.5);
     CHECK_THROWS_AS(item.get_string(), type_error&);
@@ -93,7 +93,7 @@ TEST_CASE("testing string constructor, is_***() and get_***()") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_bool(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), type_error&);
     CHECK_THROWS_AS(item.get_integer(), type_error&);
     CHECK_THROWS_AS(item.get_float(), type_error&);
     CHECK(item.get_string() == "abc");

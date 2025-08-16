@@ -132,7 +132,7 @@ TEST_CASE("Keys_4.toml") {
     CHECK(t["site"].is_table() == true);
     CHECK(t["site"].size() == 1);
     CHECK(t["site"]["google.com"].is_boolean() == true);
-    CHECK(t["site"]["google.com"].get_bool() == true);
+    CHECK(t["site"]["google.com"].get_boolean() == true);
 }
 
 TEST_CASE("Keys_5.toml") {
@@ -174,7 +174,7 @@ TEST_CASE("Keys_8.toml") {
     CHECK(t["fruit"]["apple"].is_table() == true);
     CHECK(t["fruit"]["apple"].size() == 1);
     CHECK(t["fruit"]["apple"]["smooth"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["smooth"].get_bool() == true);
+    CHECK(t["fruit"]["apple"]["smooth"].get_boolean() == true);
     CHECK(t["fruit"]["orange"].is_integer() == true);
     CHECK(t["fruit"]["orange"].get_integer() == 2);
 }
@@ -494,9 +494,9 @@ TEST_CASE("Boolean_1.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
     CHECK(t["bool1"].is_boolean() == true);
-    CHECK(t["bool1"].get_bool() == true);
+    CHECK(t["bool1"].get_boolean() == true);
     CHECK(t["bool2"].is_boolean() == true);
-    CHECK(t["bool2"].get_bool() == false);
+    CHECK(t["bool2"].get_boolean() == false);
 }
 
 TEST_CASE("Array_1.toml") {
@@ -788,7 +788,7 @@ TEST_CASE("Table_11.toml") {
     CHECK(t["fruit"]["apple"]["taste"].is_table() == true);
     CHECK(t["fruit"]["apple"]["taste"].size() == 1);
     CHECK(t["fruit"]["apple"]["taste"]["sweet"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_bool() == true);
+    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_boolean() == true);
 }
 
 TEST_CASE("Table_12.toml") {
@@ -806,9 +806,9 @@ TEST_CASE("Table_12.toml") {
     CHECK(t["fruit"]["apple"]["taste"].is_table() == true);
     CHECK(t["fruit"]["apple"]["taste"].size() == 1);
     CHECK(t["fruit"]["apple"]["taste"]["sweet"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_bool() == true);
+    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_boolean() == true);
     CHECK(t["fruit"]["apple"]["texture"].is_table() == true);
     CHECK(t["fruit"]["apple"]["texture"].size() == 1);
     CHECK(t["fruit"]["apple"]["texture"]["smooth"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["texture"]["smooth"].get_bool() == true);
+    CHECK(t["fruit"]["apple"]["texture"]["smooth"].get_boolean() == true);
 }

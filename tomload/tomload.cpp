@@ -85,7 +85,7 @@ bool item_t::is_table(void) const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-boolean_t item_t::get_bool(void) const {
+boolean_t item_t::get_boolean(void) const {
     if (type != TYPE_BOOLEAN) {
         throw type_error("type mismatch");
     }

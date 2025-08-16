@@ -29,8 +29,8 @@ TEST_CASE("valid/bool/bool.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
     CHECK(t["t"].is_boolean() == true);
-    CHECK(t["t"].get_bool() == true);
+    CHECK(t["t"].get_boolean() == true);
     CHECK(t["f"].is_boolean() == true);
-    CHECK(t["f"].get_bool() == false);
+    CHECK(t["f"].get_boolean() == false);
 }
 

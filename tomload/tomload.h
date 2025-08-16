@@ -124,7 +124,7 @@ class item_t {
      * @throw type_error: if type of item_t does not match with the type specified by getter.
      * @pre To prevent throwing exceptions, call `is_boolean()`, `is_integer()`, `is_float()`, or `is_string()` and confirm the return value.
      */
-    boolean_t get_bool(void) const;
+    boolean_t get_boolean(void) const;
     integer_t get_integer(void) const;
     float_t get_float(void) const;
     string_t get_string(void) const;

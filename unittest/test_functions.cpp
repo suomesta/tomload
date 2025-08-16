@@ -58,7 +58,7 @@ TEST_CASE("testing parse_item(bool)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_boolean() == true);
-        CHECK(result.get_bool() == true);
+        CHECK(result.get_boolean() == true);
         CHECK(src.empty());
     }
     {
@@ -66,7 +66,7 @@ TEST_CASE("testing parse_item(bool)") {
         item_t result = parse_item(src);
 
         CHECK(result.is_boolean() == true);
-        CHECK(result.get_bool() == false);
+        CHECK(result.get_boolean() == false);
         CHECK(src.empty());
     }
 }
@@ -597,7 +597,7 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[0].is_integer() == true);
         CHECK(result[0].get_integer() == 255LL);
         CHECK(result[1].is_boolean() == true);
-        CHECK(result[1].get_bool() == true);
+        CHECK(result[1].get_boolean() == true);
         CHECK(src.empty());
         for (array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
             if (std::distance(result.array_begin(), i) == 0) {
@@ -605,7 +605,7 @@ TEST_CASE("testing parse_item(array)") {
                 CHECK(i->get_integer() == 255LL);
             } else if (std::distance(result.array_begin(), i) == 1) {
                 CHECK(i->is_boolean() == true);
-                CHECK(i->get_bool() == true);
+                CHECK(i->get_boolean() == true);
             }
         }
         int i = 0;
@@ -615,7 +615,7 @@ TEST_CASE("testing parse_item(array)") {
                 CHECK(r.get_integer() == 255LL);
             } else if (i == 1) {
                 CHECK(r.is_boolean() == true);
-                CHECK(r.get_bool() == true);
+                CHECK(r.get_boolean() == true);
             }
             i++;
         }
@@ -629,7 +629,7 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[0].is_integer() == true);
         CHECK(result[0].get_integer() == 255LL);
         CHECK(result[1].is_boolean() == true);
-        CHECK(result[1].get_bool() == true);
+        CHECK(result[1].get_boolean() == true);
         CHECK(src.empty());
     }
 }
@@ -664,7 +664,7 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(result["22"].is_table() == true);
         CHECK(result["22"].size() == 1);
         CHECK(result["22"]["b"].is_boolean() == true);
-        CHECK(result["22"]["b"].get_bool() == true);
+        CHECK(result["22"]["b"].get_boolean() == true);
         CHECK(src.empty());
     }
     {
@@ -708,6 +708,6 @@ TEST_CASE("testing parse()") {
         CHECK(result.size() == 1);
         CHECK(result.contains("aa") == true);
         CHECK(result["aa"]["bb"].is_boolean() == true);
-        CHECK(result["aa"]["bb"].get_bool() == false);
+        CHECK(result["aa"]["bb"].get_boolean() == false);
     }
 }
