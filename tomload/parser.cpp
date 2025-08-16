@@ -95,30 +95,6 @@ item_t parse_array(view_t& view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void insert_key_value(std::map<key_t, item_t>* p, std::vector<key_t> keys, item_t value) {
-/*
-    std::shared_ptr<std::map<key_t, item_t>> m = std::make_shared<std::map<key_t, item_t>>();
-
-    std::map<key_t, item_t>* p_map = p;
-    for (const key_t& key : keys) {
-        if (&key != &keys.back()) {
-            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
-            p_map = p_map->insert({key, next_table});
-//            if (not p_item->is_table()) {
-//                throw parse_error("expected table");
-//            }
-        } else {
-            if (p_map->find(key) == p_map->end()) {
-                p_map->insert({key, value});
-            } else {
-                throw parse_error("already reginstered");
-            }
-        }
-    }
-*/
-}
-/////////////////////////////////////////////////////////////////////////////
-
 item_t parse_inline_table(view_t& view) {
     item_t ret{std::make_shared<std::map<key_t, item_t>>()};
 
@@ -156,7 +132,7 @@ item_t parse_inline_table(view_t& view) {
                 throw parse_error("missing \":\" in inline table");
             }
         } else if (status == wait_value) {
-            ret.merge(keys, parse_item(view));
+            ret.merge(std::move(keys), parse_item(view));
             status = wait_comma;
         } else if (status == wait_comma) {
             if (starts_with(view, ",")) {

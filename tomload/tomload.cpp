@@ -272,6 +272,13 @@ const table_range_t item_t::table_range(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Insert a value at the [keys] spot.
+ * @param keys[in]: appointed spot to be inserted.
+ * @param value[in]: A value to be inserted.
+ * @throw parse_error: [keys] spot is inappropreate.
+ * @note this method is intended to be used in parsing process.
+ */
 void item_t::merge(std::vector<key_t> keys, item_t value) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");

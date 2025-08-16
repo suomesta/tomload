@@ -644,7 +644,31 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "{a : 10}";
+        view_t src = "{a:10}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{a:10, \"22\".b:true}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 2);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(result["22"].is_table() == true);
+        CHECK(result["22"].size() == 1);
+        CHECK(result["22"]["b"].is_boolean() == true);
+        CHECK(result["22"]["b"].get_bool() == true);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{ \t \t a:10\t\t\t}";
         item_t result = parse_item(src);
 
         CHECK(result.is_table() == true);
