@@ -103,7 +103,7 @@ item_t parse_inline_table(view_t& view) {
     std::vector<key_t> keys;
     enum {
         wait_key,
-        wait_colon,
+        wait_equal,
         wait_value,
         wait_comma,
         closed,
@@ -123,13 +123,13 @@ item_t parse_inline_table(view_t& view) {
             }
         } else if (status == wait_key) {
             keys = parse_keys(view);
-            status = wait_colon;
-        } else if (status == wait_colon) {
-            if (starts_with(view, ":")) {
+            status = wait_equal;
+        } else if (status == wait_equal) {
+            if (starts_with(view, "=")) {
                 view.remove_prefix(1);
                 status = wait_value;
             } else {
-                throw parse_error("missing \":\" in inline table");
+                throw parse_error("missing \"=\" in inline table");
             }
         } else if (status == wait_value) {
             ret.merge(std::move(keys), parse_item(view));

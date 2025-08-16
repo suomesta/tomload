@@ -644,7 +644,7 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "{a:10}";
+        view_t src = "{a=10}";
         item_t result = parse_item(src);
 
         CHECK(result.is_table() == true);
@@ -654,7 +654,7 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "{a:10, \"22\".b:true}";
+        view_t src = "{a=10, \"22\".b=true}";
         item_t result = parse_item(src);
 
         CHECK(result.is_table() == true);
@@ -668,7 +668,7 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "{ \t \t a:10\t\t\t}";
+        view_t src = "{ \t \t a=10\t\t\t}";
         item_t result = parse_item(src);
 
         CHECK(result.is_table() == true);
@@ -678,7 +678,7 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(src.empty());
     }
     {
-        view_t src = "{ \t \t a:10\t\t\t}";
+        view_t src = "{ \t \t a=10\t\t\t}";
         item_t result = parse_item(src);
 
         CHECK(result.is_table() == true);
