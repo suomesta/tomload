@@ -93,19 +93,19 @@ class item_t {
      * @throws parse_error: if the view cannot be parsed correctly.
      * @note Most users must use only this constructor to parse TOML string.
      */
-    item_t(view_t view);
+    explicit item_t(view_t view);
     /////////////////////////////////////////////////////////////////////////////
 
     /*
      * @brief Constructors for each types (boolean, integer, float, string, array, and table).
      * @note Main purpose of these constructors are testing. Most users does not need use these.
      */
-    item_t(boolean_t val) noexcept;
-    item_t(integer_t val) noexcept;
-    item_t(float_t val) noexcept;
-    item_t(string_t&& val) noexcept;
-    item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
-    item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table = false) noexcept;
+    explicit item_t(boolean_t val) noexcept;
+    explicit item_t(integer_t val) noexcept;
+    explicit item_t(float_t val) noexcept;
+    explicit item_t(string_t&& val) noexcept;
+    explicit item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
+    explicit item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table = false) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
