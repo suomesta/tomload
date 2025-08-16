@@ -236,17 +236,17 @@ class item_t {
     /*
      * @brief Insert a value at the [keys] spot.
      * @param keys[in]: appointed spot to be inserted.
-     * @param value[in]: A value to be inserted.
+     * @param val[in]: A value to be inserted.
      * @throw parse_error: [keys] spot is inappropreate.
      * @note this method is intended to be used in parsing process.
      */
-    void merge(std::vector<key_t> keys, item_t value);
+    void merge(std::vector<key_t> keys, item_t val);
     /////////////////////////////////////////////////////////////////////////////
 
  private:
-    item_t* push(const key_t& key, const item_t& item);
+    item_t* push(const key_t& key, const item_t& val);
     void insert_empty_table(const std::vector<key_t>& brackets);
-    void insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys);
+    void insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val);
     void parse_main(view_t& view);
     /////////////////////////////////////////////////////////////////////////////
 

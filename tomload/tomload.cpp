@@ -275,11 +275,11 @@ const table_range_t item_t::table_range(void) const {
 /*
  * @brief Insert a value at the [keys] spot.
  * @param keys[in]: appointed spot to be inserted.
- * @param value[in]: A value to be inserted.
+ * @param val[in]: A value to be inserted.
  * @throw parse_error: [keys] spot is inappropreate.
  * @note this method is intended to be used in parsing process.
  */
-void item_t::merge(std::vector<key_t> keys, item_t value) {
+void item_t::merge(std::vector<key_t> keys, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
@@ -297,7 +297,7 @@ void item_t::merge(std::vector<key_t> keys, item_t value) {
             }
         } else {
             if (not p_item->contains(key)) {
-                p_item->push(key, value);
+                p_item->push(key, val);
             } else {
                 throw parse_error("already reginstered");
             }
@@ -306,11 +306,11 @@ void item_t::merge(std::vector<key_t> keys, item_t value) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-tomload::item_t* item_t::push(const key_t& key, const item_t& item) {
+tomload::item_t* item_t::push(const key_t& key, const item_t& val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
-    auto ret = m->insert({key, item});
+    auto ret = m->insert({key, val});
     return &ret.first->second;
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, std::vector<key_t> keys) {
+void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
         auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
@@ -345,7 +345,7 @@ void item_t::insert_new_table(item_t& item, const std::vector<key_t>& brackets, 
             }
         } else {
             if (not p_item->contains(key)) {
-                p_item->push(key, item);
+                p_item->push(key, val);
             } else {
                 throw parse_error("already reginstered");
             }
@@ -387,8 +387,7 @@ void item_t::parse_main(view_t& view) {
                 }
 
                 skip_space(view, " \t", false);
-                item_t item = parse_item(view);
-                insert_new_table(item, brackets, std::move(keys));
+                insert_new_table(brackets, std::move(keys), parse_item(view));
                 ini_state = false;
             }
         } else {

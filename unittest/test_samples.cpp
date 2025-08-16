@@ -876,9 +876,7 @@ TEST_CASE("InlineTable_3.toml") {
 }
 
 TEST_CASE("InlineTable_3_invalid.toml") {
-/*
     std::string content = load_file("InlineTable_3_invalid.toml");
 
     CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
-*/
 }
