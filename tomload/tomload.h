@@ -105,7 +105,7 @@ class item_t {
     item_t(float_t val) noexcept;
     item_t(string_t&& val) noexcept;
     item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
-    item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
+    item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table = false) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -244,7 +244,7 @@ class item_t {
     /////////////////////////////////////////////////////////////////////////////
 
  private:
-    item_t* push(const key_t& key, const item_t& val);
+    item_t* push(const key_t& key, item_t val);
     void insert_empty_table(const std::vector<key_t>& brackets);
     void insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val);
     void parse_main(view_t& view);
@@ -264,6 +264,7 @@ class item_t {
         boolean_t b;
         integer_t i;
         float_t d;
+        bool is_inline_table;  // internal status for table data
     } u = {false};
     // to keep source code clean, string, array and table are not in union.
     // if you want to use union, you can use std::variant instead, but it requires C++17.

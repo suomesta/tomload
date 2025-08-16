@@ -49,9 +49,10 @@ item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
+item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table/* = false*/) noexcept:
     type(TYPE_TABLE),
     m(val) {
+    u.is_inline_table = is_inline_table;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -306,7 +307,7 @@ void item_t::merge(std::vector<key_t> keys, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-tomload::item_t* item_t::push(const key_t& key, const item_t& val) {
+tomload::item_t* item_t::push(const key_t& key, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
@@ -344,8 +345,12 @@ void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<ke
                 throw parse_error("expected table");
             }
         } else {
+            if (p_item->u.is_inline_table) {
+                throw parse_error("inline table error");
+            }
+
             if (not p_item->contains(key)) {
-                p_item->push(key, val);
+                p_item = p_item->push(key, val);
             } else {
                 throw parse_error("already reginstered");
             }

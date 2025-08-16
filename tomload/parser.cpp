@@ -96,7 +96,7 @@ item_t parse_array(view_t& view) {
 /////////////////////////////////////////////////////////////////////////////
 
 item_t parse_inline_table(view_t& view) {
-    item_t ret{std::make_shared<std::map<key_t, item_t>>()};
+    item_t ret{std::make_shared<std::map<key_t, item_t>>(), true};
 
     view.remove_prefix(1);
 
