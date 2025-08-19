@@ -1,4 +1,5 @@
 #include "tomload/tomload.h"
+#include <set>
 #include "tomload/parser.h"
 
 namespace tomload {
@@ -305,26 +306,7 @@ void item_t::insert_inline_table_key_value(std::vector<key_t> keys, item_t val) 
         throw parse_error("no keys");
     }
 
-    item_t* p_item = this;
-    for (const key_t& key : keys) {
-        if (p_item->u.is_inline_table) {
-            throw parse_error("inline table error");
-        }
-
-        if (&key != &keys.back()) {
-            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
-            p_item = p_item->push(key, next_table);
-            if (not p_item->is_table()) {
-                throw parse_error("expected table");
-            }
-        } else {
-            if (not p_item->contains(key)) {
-                p_item->push(key, val);
-            } else {
-                throw parse_error("already reginstered");
-            }
-        }
-    }
+    insert_keys_table(this, std::move(keys), val);
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -342,7 +324,7 @@ void item_t::specify_as_inline_table(void) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-tomload::item_t* item_t::push(const key_t& key, item_t val) {
+item_t* item_t::push(const key_t& key, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
@@ -351,7 +333,7 @@ tomload::item_t* item_t::push(const key_t& key, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
+item_t* item_t::insert_brackets_table(const std::vector<key_t>& brackets) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
         if (p_item->u.is_inline_table) {
@@ -364,22 +346,16 @@ void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
             throw parse_error("expected table");
         }
     }
+    return p_item;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val) {
-    item_t* p_item = this;
-    for (const key_t& key : brackets) {
-        if (p_item->u.is_inline_table) {
-            throw parse_error("inline table error");
-        }
-
-        auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
-        p_item = p_item->push(key, next_table);
-        if (not p_item->is_table()) {
-            throw parse_error("expected table");
-        }
+void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t val) {
+    if (p_begin == nullptr) {
+        throw parse_error("unknown error");
     }
+
+    item_t* p_item = p_begin;
     for (const key_t& key : keys) {
         if (p_item->u.is_inline_table) {
             throw parse_error("inline table error");
@@ -388,6 +364,9 @@ void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<ke
         if (&key != &keys.back()) {
             auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
             p_item = p_item->push(key, next_table);
+            if (not p_item->is_table()) {
+                throw parse_error("expected table");
+            }
         } else {
             if (not p_item->contains(key)) {
                 p_item = p_item->push(key, val);
@@ -400,9 +379,8 @@ void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<ke
 /////////////////////////////////////////////////////////////////////////////
 
 void item_t::parse_main(view_t& view) {
-    std::vector<std::vector<key_t>> stored_brackets;
-    std::vector<key_t> brackets;
-
+    std::set<std::vector<key_t>> brackets_set;
+    item_t* p_brackets_end = this;
     bool ini_state = true;
 
     for (;;) {
@@ -412,17 +390,17 @@ void item_t::parse_main(view_t& view) {
                 break;
             } else if (starts_with(view, "[")) {
                 view.remove_prefix(1);
-                brackets = parse_keys(view);
+                std::vector<key_t> brackets = parse_keys(view);
 
                 skip_space(view, " \t", false);
                 if (starts_with(view, "]")) {
                     view.remove_prefix(1);
-                    if (std::find(stored_brackets.begin(), stored_brackets.end(), brackets) == stored_brackets.end()) {
-                        stored_brackets.push_back(brackets);
+                    if (brackets_set.insert(brackets).second) {
+                        // OK. now registered
                     } else {
                         throw parse_error("duplicate table");
                     }
-                    insert_empty_table(brackets);
+                    p_brackets_end = insert_brackets_table(std::move(brackets));
                     ini_state = false;
                 } else {
                     throw parse_error("expected ']'");
@@ -438,7 +416,7 @@ void item_t::parse_main(view_t& view) {
                 }
 
                 skip_space(view, " \t", false);
-                insert_new_table(brackets, std::move(keys), parse_item(view));
+                insert_keys_table(p_brackets_end, std::move(keys), parse_item(view));
                 ini_state = false;
             }
         } else {

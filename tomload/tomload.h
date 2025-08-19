@@ -262,8 +262,8 @@ class item_t {
 
  private:
     item_t* push(const key_t& key, item_t val);
-    void insert_empty_table(const std::vector<key_t>& brackets);
-    void insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val);
+    item_t* insert_brackets_table(const std::vector<key_t>& brackets);
+    void insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t val);
     void parse_main(view_t& view);
     /////////////////////////////////////////////////////////////////////////////
 
