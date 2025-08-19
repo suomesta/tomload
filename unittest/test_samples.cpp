@@ -710,11 +710,9 @@ TEST_CASE("Table_5.toml") {
 }
 
 TEST_CASE("Table_6.toml") {
-/*
     std::string content = load_file("Table_6.toml");
 
     CHECK_THROWS_AS(item_t t(view_t{content.c_str()}), parse_error&);
-*/
 }
 
 TEST_CASE("Table_7.toml") {

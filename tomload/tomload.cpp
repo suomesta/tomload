@@ -400,6 +400,7 @@ void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<ke
 /////////////////////////////////////////////////////////////////////////////
 
 void item_t::parse_main(view_t& view) {
+    std::vector<std::vector<key_t>> stored_brackets;
     std::vector<key_t> brackets;
 
     bool ini_state = true;
@@ -416,6 +417,11 @@ void item_t::parse_main(view_t& view) {
                 skip_space(view, " \t", false);
                 if (starts_with(view, "]")) {
                     view.remove_prefix(1);
+                    if (std::find(stored_brackets.begin(), stored_brackets.end(), brackets) == stored_brackets.end()) {
+                        stored_brackets.push_back(brackets);
+                    } else {
+                        throw parse_error("duplicate table");
+                    }
                     insert_empty_table(brackets);
                     ini_state = false;
                 } else {
