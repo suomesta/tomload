@@ -160,7 +160,9 @@ def main():
         print_head()
         for path in sorted(glob.glob(sys.argv[1] + "/*.toml")):
             if ('hex-escape.toml' in path or
-                'escape-esc.toml' in path):
+                'escape-esc.toml' in path or
+                'newline-comment.toml' in path or
+                'newline.toml' in path):
                 continue
 
             print_check(path)

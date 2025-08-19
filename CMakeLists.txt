@@ -10,6 +10,7 @@ add_executable(unittest
     unittest/toml-test_runs/valid/integer.cpp unittest/toml-test_runs/invalid/integer.cpp
     unittest/toml-test_runs/valid/float.cpp unittest/toml-test_runs/invalid/float.cpp
     unittest/toml-test_runs/valid/string.cpp unittest/toml-test_runs/invalid/string.cpp
+    unittest/toml-test_runs/valid/inline-table.cpp unittest/toml-test_runs/invalid/inline-table.cpp
     tomload/tomload.h tomload/tomload.cpp
     tomload/parser.h tomload/parser.cpp
     tomload/detail_string.h tomload/detail_string.cpp

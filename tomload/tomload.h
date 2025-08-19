@@ -105,7 +105,7 @@ class item_t {
     explicit item_t(float_t val) noexcept;
     explicit item_t(string_t&& val) noexcept;
     explicit item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
-    explicit item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table = false) noexcept;
+    explicit item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -147,6 +147,15 @@ class item_t {
      * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
      */
     size_t size(void) const;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @brief check the array or table is empty or not.
+     * @return bool: array or table is empty.
+     * @throw type_error: if the type is neither array nor table.
+     * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+     */
+    bool empty(void) const;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -237,10 +246,18 @@ class item_t {
      * @brief Insert a value at the [keys] spot.
      * @param keys[in]: appointed spot to be inserted.
      * @param val[in]: A value to be inserted.
-     * @throw parse_error: [keys] spot is inappropreate.
+     * @throw parse_error: type is not table, or [keys] spot is inappropreate.
      * @note this method is intended to be used in parsing process.
      */
-    void merge(std::vector<key_t> keys, item_t val);
+    void insert_inline_table_key_value(std::vector<key_t> keys, item_t val);
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @brief Specify own table as an inline table.
+     * @throw parse_error: type is not table.
+     * @note this method is intended to be used in parsing process.
+     */
+    void specify_as_inline_table(void);
     /////////////////////////////////////////////////////////////////////////////
 
  private:

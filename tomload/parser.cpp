@@ -96,7 +96,7 @@ item_t parse_array(view_t& view) {
 /////////////////////////////////////////////////////////////////////////////
 
 item_t parse_inline_table(view_t& view) {
-    item_t ret{std::make_shared<std::map<key_t, item_t>>(), true};
+    item_t ret{std::make_shared<std::map<key_t, item_t>>()};
 
     view.remove_prefix(1);
 
@@ -115,7 +115,8 @@ item_t parse_inline_table(view_t& view) {
         if (view.empty()) {
             throw parse_error("imcomplete inline table");
         } else if (starts_with(view, "}")) {
-            if ((status == wait_key) || (status == wait_comma)) {
+            if (((status == wait_key) && ret.empty()) ||
+                (status == wait_comma)) {
                 view.remove_prefix(1);
                 status = closed;
             } else {
@@ -132,7 +133,7 @@ item_t parse_inline_table(view_t& view) {
                 throw parse_error("missing \"=\" in inline table");
             }
         } else if (status == wait_value) {
-            ret.merge(std::move(keys), parse_item(view));
+            ret.insert_inline_table_key_value(std::move(keys), parse_item(view));
             status = wait_comma;
         } else if (status == wait_comma) {
             if (starts_with(view, ",")) {
@@ -145,6 +146,8 @@ item_t parse_inline_table(view_t& view) {
             throw parse_error("unknown error");
         }
     }
+
+    ret.specify_as_inline_table();
 
     return ret;
 }

@@ -687,6 +687,11 @@ TEST_CASE("testing parse_item(inline table)") {
         CHECK(result["a"].get_integer() == 10);
         CHECK(src.empty());
     }
+    {
+        view_t src = "{a=10,}";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
 }
 
 TEST_CASE("testing parse()") {

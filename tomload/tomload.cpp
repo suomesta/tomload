@@ -49,10 +49,10 @@ item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val, bool is_inline_table/* = false*/) noexcept:
+item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {
-    u.is_inline_table = is_inline_table;
+    u.is_inline_table = false;  // default false
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -129,6 +129,23 @@ size_t item_t::size(void) const {
         return v->size();
     } else if (type == TYPE_TABLE) {
         return m->size();
+    } else {
+        throw type_error("neither array nor table");
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @brief check the array or table is empty or not.
+ * @return bool: array or table is empty.
+ * @throw type_error: if the type is neither array nor table.
+ * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+ */
+bool item_t::empty(void) const {
+    if (type == TYPE_ARRAY) {
+        return v->empty();
+    } else if (type == TYPE_TABLE) {
+        return m->empty();
     } else {
         throw type_error("neither array nor table");
     }
@@ -277,10 +294,10 @@ const table_range_t item_t::table_range(void) const {
  * @brief Insert a value at the [keys] spot.
  * @param keys[in]: appointed spot to be inserted.
  * @param val[in]: A value to be inserted.
- * @throw parse_error: [keys] spot is inappropreate.
+ * @throw parse_error: type is not table, or [keys] spot is inappropreate.
  * @note this method is intended to be used in parsing process.
  */
-void item_t::merge(std::vector<key_t> keys, item_t val) {
+void item_t::insert_inline_table_key_value(std::vector<key_t> keys, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
@@ -290,6 +307,10 @@ void item_t::merge(std::vector<key_t> keys, item_t val) {
 
     item_t* p_item = this;
     for (const key_t& key : keys) {
+        if (p_item->u.is_inline_table) {
+            throw parse_error("inline table error");
+        }
+
         if (&key != &keys.back()) {
             auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
             p_item = p_item->push(key, next_table);
@@ -307,6 +328,20 @@ void item_t::merge(std::vector<key_t> keys, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @brief Specify own table as an inline table.
+ * @throw parse_error: type is not table.
+ * @note this method is intended to be used in parsing process.
+ */
+void item_t::specify_as_inline_table(void) {
+    if (type != TYPE_TABLE) {
+        throw parse_error("not table");
+    }
+
+    u.is_inline_table = true;
+}
+/////////////////////////////////////////////////////////////////////////////
+
 tomload::item_t* item_t::push(const key_t& key, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
@@ -319,6 +354,10 @@ tomload::item_t* item_t::push(const key_t& key, item_t val) {
 void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
+        if (p_item->u.is_inline_table) {
+            throw parse_error("inline table error");
+        }
+
         auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
         p_item = p_item->push(key, next_table);
         if (not p_item->is_table()) {
@@ -331,6 +370,10 @@ void item_t::insert_empty_table(const std::vector<key_t>& brackets) {
 void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<key_t> keys, item_t val) {
     item_t* p_item = this;
     for (const key_t& key : brackets) {
+        if (p_item->u.is_inline_table) {
+            throw parse_error("inline table error");
+        }
+
         auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
         p_item = p_item->push(key, next_table);
         if (not p_item->is_table()) {
@@ -338,17 +381,14 @@ void item_t::insert_new_table(const std::vector<key_t>& brackets, std::vector<ke
         }
     }
     for (const key_t& key : keys) {
+        if (p_item->u.is_inline_table) {
+            throw parse_error("inline table error");
+        }
+
         if (&key != &keys.back()) {
             auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
             p_item = p_item->push(key, next_table);
-            if (not p_item->is_table()) {
-                throw parse_error("expected table");
-            }
         } else {
-            if (p_item->u.is_inline_table) {
-                throw parse_error("inline table error");
-            }
-
             if (not p_item->contains(key)) {
                 p_item = p_item->push(key, val);
             } else {
