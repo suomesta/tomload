@@ -292,32 +292,22 @@ const table_range_t item_t::table_range(void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 /*
- * @brief Insert a value at the [keys] spot.
- * @param keys[in]: appointed spot to be inserted.
- * @param val[in]: A value to be inserted.
+ * @brief Construct inline table from multiple keys-value pairs.
+ * @param key_vals[in]: keys-value pairs..
  * @throw parse_error: type is not table, or [keys] spot is inappropreate.
  * @note this method is intended to be used in parsing process.
  */
-void item_t::insert_inline_table_key_value(std::vector<key_t> keys, item_t val) {
+void item_t::set_inline_table_keys_value(std::vector<std::pair<std::vector<key_t>, item_t>> key_vals) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
     }
-    if (keys.empty()) {
-        throw parse_error("no keys");
-    }
 
-    insert_keys_table(this, std::move(keys), val);
-}
-/////////////////////////////////////////////////////////////////////////////
+    for (std::pair<std::vector<key_t>, item_t>& key_val : key_vals) {
+        if (key_val.first.empty()) {
+            throw parse_error("no keys");
+        }
 
-/*
- * @brief Specify own table as an inline table.
- * @throw parse_error: type is not table.
- * @note this method is intended to be used in parsing process.
- */
-void item_t::specify_as_inline_table(void) {
-    if (type != TYPE_TABLE) {
-        throw parse_error("not table");
+        insert_keys_table(this, std::move(key_val.first), key_val.second);
     }
 
     u.is_inline_table = true;

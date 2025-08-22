@@ -101,6 +101,8 @@ item_t parse_inline_table(view_t& view) {
     view.remove_prefix(1);
 
     std::vector<key_t> keys;
+    std::vector<std::pair<std::vector<key_t>, item_t>> key_vals;
+
     enum {
         wait_key,
         wait_equal,
@@ -115,7 +117,7 @@ item_t parse_inline_table(view_t& view) {
         if (view.empty()) {
             throw parse_error("imcomplete inline table");
         } else if (starts_with(view, "}")) {
-            if (((status == wait_key) && ret.empty()) ||
+            if (((status == wait_key) && key_vals.empty()) ||
                 (status == wait_comma)) {
                 view.remove_prefix(1);
                 status = closed;
@@ -133,7 +135,7 @@ item_t parse_inline_table(view_t& view) {
                 throw parse_error("missing \"=\" in inline table");
             }
         } else if (status == wait_value) {
-            ret.insert_inline_table_key_value(std::move(keys), parse_item(view));
+            key_vals.emplace_back(std::move(keys), parse_item(view));
             status = wait_comma;
         } else if (status == wait_comma) {
             if (starts_with(view, ",")) {
@@ -147,7 +149,7 @@ item_t parse_inline_table(view_t& view) {
         }
     }
 
-    ret.specify_as_inline_table();
+    ret.set_inline_table_keys_value(std::move(key_vals));
 
     return ret;
 }
