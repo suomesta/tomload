@@ -715,4 +715,10 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"]["bb"].is_boolean() == true);
         CHECK(result["aa"]["bb"].get_boolean() == false);
     }
+    {
+        view_t src = "[a.b.c.d]\n  z = 9\n\n[a]\n  b.c.d.k.t = \"Using dotted keys to add to [a.b.c.d] after explicitly defining it above is not allowed\"\n";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
 }
+
