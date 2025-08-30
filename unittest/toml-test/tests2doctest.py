@@ -116,6 +116,8 @@ def print_accessor(tom, keys=tuple()):
             print_accessor(v, list(keys) + [k])
     elif type(tom) in (int, float, bool, str):
         print(''.join(check_val(keys, tom)))
+    else:
+        raise RuntimeError('detect unsupported type (must be date)')
 
 
 def print_check(path, keys=tuple()):
@@ -164,6 +166,10 @@ def main():
                 'newline-comment.toml' in path or
                 'newline.toml' in path):
                 continue
+
+            with open(path, encoding='utf8') as file:
+                if '[[' in file.read():
+                    continue
 
             print_check(path)
 
