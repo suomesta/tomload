@@ -500,7 +500,6 @@ TEST_CASE("Boolean_1.toml") {
 }
 
 TEST_CASE("Array_1.toml") {
-/*
     std::string content = load_file("Array_1.toml");
     item_t t(view_t{content.c_str()});
 
@@ -590,7 +589,6 @@ TEST_CASE("Array_1.toml") {
     CHECK(t["contributors"][1]["email"].get_string() == "bazqux@example.com");
     CHECK(t["contributors"][1]["url"].is_string() == true);
     CHECK(t["contributors"][1]["url"].get_string() == "https://example.com/bazqux");
-*/
 }
 
 TEST_CASE("Array_2.toml") {
