@@ -137,7 +137,7 @@ class item_t {
      * @tparam PARAM: should one of boolean_t, integer_t, float_t, string_t or other integer or float types.
      */
     template <class PARAM>
-    bool get(PARAM& val) const noexcept;
+    bool get(PARAM& val) const;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -287,7 +287,7 @@ class item_t {
  * @brief This is the template specialization when PARAM is string_t.
  */
 template <>
-bool item_t::get<string_t>(string_t& val) const noexcept;
+bool item_t::get<string_t>(string_t& val) const;
 /////////////////////////////////////////////////////////////////////////////
 
 /*
@@ -298,7 +298,7 @@ bool item_t::get<string_t>(string_t& val) const noexcept;
  * @note When PARAM is string_t, then get<string_t>() is called instead.
  */
 template <class PARAM>
-bool item_t::get(PARAM& val) const noexcept {
+bool item_t::get(PARAM& val) const {
     if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
         val = u.b;
     } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
