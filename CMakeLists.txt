@@ -25,6 +25,6 @@ target_include_directories(unittest PUBLIC
 )
 
 target_compile_definitions(unittest PRIVATE
-    SAMPLES_DIR="${CMAKE_SOURCE_DIR}/unittest/samples/"
+    SAMPLES_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
     TOML_TEST_DIR="${CMAKE_SOURCE_DIR}/unittest/toml-test/tests/"
 )
