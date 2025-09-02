@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 14)  # set 17 if you want std::string_view
 
 add_executable(unittest
     unittest/main.cpp unittest/test_accessor.cpp unittest/test_functions.cpp unittest/test_samples.cpp
-    unittest/toml-test_runs/valid/bool.cpp unittest/toml-test_runs/invalid/bool.cpp
-    unittest/toml-test_runs/valid/integer.cpp unittest/toml-test_runs/invalid/integer.cpp
-    unittest/toml-test_runs/valid/float.cpp unittest/toml-test_runs/invalid/float.cpp
-    unittest/toml-test_runs/valid/string.cpp unittest/toml-test_runs/invalid/string.cpp
-    unittest/toml-test_runs/valid/inline-table.cpp unittest/toml-test_runs/invalid/inline-table.cpp
-    unittest/toml-test_runs/valid/table.cpp unittest/toml-test_runs/invalid/table.cpp
+    unittest/test_toml-test/valid/bool.cpp unittest/test_toml-test/invalid/bool.cpp
+    unittest/test_toml-test/valid/integer.cpp unittest/test_toml-test/invalid/integer.cpp
+    unittest/test_toml-test/valid/float.cpp unittest/test_toml-test/invalid/float.cpp
+    unittest/test_toml-test/valid/string.cpp unittest/test_toml-test/invalid/string.cpp
+    unittest/test_toml-test/valid/inline-table.cpp unittest/test_toml-test/invalid/inline-table.cpp
+    unittest/test_toml-test/valid/table.cpp unittest/test_toml-test/invalid/table.cpp
     tomload/tomload.h tomload/tomload.cpp
     tomload/parser.h tomload/parser.cpp
     tomload/detail_string.h tomload/detail_string.cpp
