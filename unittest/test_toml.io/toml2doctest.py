@@ -16,7 +16,7 @@ HEAD = """\
 namespace {
 
 std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+    std::ifstream file(std::string(TOML_IO_DIR) + filename);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
@@ -161,10 +161,7 @@ def main():
     if len(sys.argv) >= 2:
         print_head()
         for path in sorted(glob.glob(sys.argv[1] + "/*.toml")):
-            if ('hex-escape.toml' in path or  # TOML 1.1.0
-                'escape-esc.toml' in path or  # TOML 1.1.0
-                'newline-comment.toml' in path or  # TOML 1.1.0
-                'newline.toml' in path):  # TOML 1.1.0
+            if ('Table_10.toml' in path):  # Date
                 continue
 
             with open(path, encoding='utf8') as file:

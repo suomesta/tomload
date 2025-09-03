@@ -5,7 +5,18 @@ project(tomload CXX)
 set(CMAKE_CXX_STANDARD 14)  # set 17 if you want std::string_view
 
 add_executable(unittest
-    unittest/main.cpp unittest/test_accessor.cpp unittest/test_functions.cpp unittest/test_samples.cpp
+    unittest/main.cpp
+    unittest/test_accessor.cpp unittest/test_functions.cpp
+    unittest/test_toml.io/valid/Array.cpp
+    unittest/test_toml.io/valid/Boolean.cpp
+    unittest/test_toml.io/valid/Comment.cpp
+    unittest/test_toml.io/valid/Float.cpp unittest/test_toml.io/invalid/Float.cpp
+    unittest/test_toml.io/valid/InlineTable.cpp unittest/test_toml.io/invalid/InlineTable.cpp
+    unittest/test_toml.io/valid/Integer.cpp
+    unittest/test_toml.io/valid/Key_Value_Pair.cpp unittest/test_toml.io/invalid/Key_Value_Pair.cpp
+    unittest/test_toml.io/valid/Keys.cpp unittest/test_toml.io/invalid/Keys.cpp
+    unittest/test_toml.io/valid/String.cpp
+    unittest/test_toml.io/valid/Table.cpp unittest/test_toml.io/invalid/Table.cpp
     unittest/test_toml-test/valid/bool.cpp unittest/test_toml-test/invalid/bool.cpp
     unittest/test_toml-test/valid/integer.cpp unittest/test_toml-test/invalid/integer.cpp
     unittest/test_toml-test/valid/float.cpp unittest/test_toml-test/invalid/float.cpp
@@ -26,5 +37,6 @@ target_include_directories(unittest PUBLIC
 
 target_compile_definitions(unittest PRIVATE
     SAMPLES_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
+    TOML_IO_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
     TOML_TEST_DIR="${CMAKE_SOURCE_DIR}/unittest/toml-test/tests/"
 )
