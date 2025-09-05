@@ -18,6 +18,11 @@ std::string load_file(const std::string& filename) {
     return buffer.str();
 }
 
+struct rhs_nan {};
+bool operator==(tomload::float_t f, rhs_nan) {
+    return std::isnan(f);
+}
+
 }  // namespace
 
 using namespace tomload;

@@ -30,17 +30,13 @@ using namespace tomload;
 TEST_CASE("invalid/table/append-with-dotted-keys-01.toml") {
     std::string content = load_file("invalid/table/append-with-dotted-keys-01.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/append-with-dotted-keys-02.toml") {
     std::string content = load_file("invalid/table/append-with-dotted-keys-02.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/append-with-dotted-keys-04.toml") {
@@ -106,17 +102,13 @@ TEST_CASE("invalid/table/duplicate-key-02.toml") {
 TEST_CASE("invalid/table/duplicate-key-04.toml") {
     std::string content = load_file("invalid/table/duplicate-key-04.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/duplicate-key-05.toml") {
     std::string content = load_file("invalid/table/duplicate-key-05.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/duplicate-key-08.toml") {
@@ -278,17 +270,13 @@ TEST_CASE("invalid/table/redefine-01.toml") {
 TEST_CASE("invalid/table/redefine-02.toml") {
     std::string content = load_file("invalid/table/redefine-02.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/redefine-03.toml") {
     std::string content = load_file("invalid/table/redefine-03.toml");
 
-/*
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-*/
+//    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
 TEST_CASE("invalid/table/super-twice.toml") {

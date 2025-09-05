@@ -307,46 +307,6 @@ TEST_CASE("valid/inline-table/key-dotted-3.toml") {
     CHECK(t["tbl"]["x"]["a"]["b"]["c"]["d"]["e"].get_integer() == 1);
 }
 
-TEST_CASE("valid/inline-table/key-dotted-4.toml") {
-/*
-    std::string content = load_file("valid/inline-table/key-dotted-4.toml");
-    item_t t(view_t{content.c_str()});
-
-    CHECK(t.is_table() == true);
-    CHECK(t.size() == 1);
-    CHECK(t["arr"].is_array() == true);
-    CHECK(t["arr"].size() == 2);
-    CHECK(t["arr"][0].is_table() == true);
-    CHECK(t["arr"][0].size() == 2);
-    CHECK(t["arr"][0]["t"].is_table() == true);
-    CHECK(t["arr"][0]["t"].size() == 1);
-    CHECK(t["arr"][0]["t"]["a"].is_table() == true);
-    CHECK(t["arr"][0]["t"]["a"].size() == 1);
-    CHECK(t["arr"][0]["t"]["a"]["b"].is_integer() == true);
-    CHECK(t["arr"][0]["t"]["a"]["b"].get_integer() == 1);
-    CHECK(t["arr"][0]["T"].is_table() == true);
-    CHECK(t["arr"][0]["T"].size() == 1);
-    CHECK(t["arr"][0]["T"]["a"].is_table() == true);
-    CHECK(t["arr"][0]["T"]["a"].size() == 1);
-    CHECK(t["arr"][0]["T"]["a"]["b"].is_integer() == true);
-    CHECK(t["arr"][0]["T"]["a"]["b"].get_integer() == 1);
-    CHECK(t["arr"][1].is_table() == true);
-    CHECK(t["arr"][1].size() == 2);
-    CHECK(t["arr"][1]["t"].is_table() == true);
-    CHECK(t["arr"][1]["t"].size() == 1);
-    CHECK(t["arr"][1]["t"]["a"].is_table() == true);
-    CHECK(t["arr"][1]["t"]["a"].size() == 1);
-    CHECK(t["arr"][1]["t"]["a"]["b"].is_integer() == true);
-    CHECK(t["arr"][1]["t"]["a"]["b"].get_integer() == 2);
-    CHECK(t["arr"][1]["T"].is_table() == true);
-    CHECK(t["arr"][1]["T"].size() == 1);
-    CHECK(t["arr"][1]["T"]["a"].is_table() == true);
-    CHECK(t["arr"][1]["T"]["a"].size() == 1);
-    CHECK(t["arr"][1]["T"]["a"]["b"].is_integer() == true);
-    CHECK(t["arr"][1]["T"]["a"]["b"].get_integer() == 2);
-*/
-}
-
 TEST_CASE("valid/inline-table/key-dotted-5.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-5.toml");
     item_t t(view_t{content.c_str()});

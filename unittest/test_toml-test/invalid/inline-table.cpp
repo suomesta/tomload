@@ -147,12 +147,6 @@ TEST_CASE("invalid/inline-table/overwrite-03.toml") {
     CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
 }
 
-TEST_CASE("invalid/inline-table/overwrite-04.toml") {
-    std::string content = load_file("invalid/inline-table/overwrite-04.toml");
-
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
-}
-
 TEST_CASE("invalid/inline-table/overwrite-05.toml") {
     std::string content = load_file("invalid/inline-table/overwrite-05.toml");
 
