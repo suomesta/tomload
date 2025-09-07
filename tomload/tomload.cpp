@@ -349,37 +349,41 @@ item_t* item_t::push(const key_t& key, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t* item_t::insert_brackets_table(const std::vector<key_t>& brackets, const std::vector<std::vector<key_t>>& brackets_set) {
+item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& brackets_set) {
+    std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
+    std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
+    const std::vector<key_t>& latest = brackets_set.back();
+
     // check identical bracket is already defined or not
-    if (std::find(brackets_set.cbegin(), brackets_set.cend(), brackets) != brackets_set.cend()) {
+    if (std::find(begin, end, latest) != end) {
         throw parse_error("duplicate bracket table");
     }
 
     // check the table is already registered or not. super-table is allowed
     bool super_table = false;
-    for (const auto& other : brackets_set) {
-        if ((brackets.size() < other.size()) &&
-            std::equal(brackets.cbegin(), brackets.cend(), other.cbegin())) {
+    for (decltype(begin) it = begin; it != end; ++it) {
+        if ((latest.size() < it->size()) &&
+            std::equal(latest.cbegin(), latest.cend(), it->cbegin())) {
             super_table = true;
             break;
         }
     }
     if (not super_table) {
         item_t* p_item = this;
-        std::vector<key_t>::const_iterator it = brackets.cbegin();
-        for (; it != brackets.cend(); ++it) {
+        std::vector<key_t>::const_iterator it = latest.cbegin();
+        for (; it != latest.cend(); ++it) {
             if (not (p_item->is_table() && p_item->contains(*it))) {
                 break;
             }
             p_item = &(p_item->m->find(*it)->second);
         }
-        if (it == brackets.cend()) {
+        if (it == latest.cend()) {
             throw parse_error("the table already registered");
         }
     }
 
     item_t* p_item = this;
-    for (const key_t& key : brackets) {
+    for (const key_t& key : latest) {
         if (p_item->u.is_inline_table) {
             throw parse_error("inline table error");
         }
@@ -438,9 +442,9 @@ void item_t::parse_main(view_t& view) {
 
                 skip_space(view, " \t", false);
                 if (starts_with(view, "]")) {
-                    p_brackets_end = insert_brackets_table(brackets, brackets_set);
-                    view.remove_prefix(1);
                     brackets_set.push_back(std::move(brackets));
+                    p_brackets_end = insert_brackets_table(brackets_set);
+                    view.remove_prefix(1);
                     ini_state = false;
                 } else {
                     throw parse_error("expected ']'");
