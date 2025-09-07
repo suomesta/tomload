@@ -4,6 +4,32 @@
 
 namespace tomload {
 
+std::ostream& operator<<(std::ostream& os, const item_t& item) {
+    if (item.is_array()) {
+        os << '[';
+        for (const auto& i: item.array_range()) {
+            os << i << ", ";
+        }
+        os << ']';
+    } else  if (item.is_table()) {
+        os << '{';
+        for (const auto& i: item.table_range()) {
+            os << i.first << ": " << i.second << ", ";
+        }
+        os << '}';
+    } else if (item.is_boolean()) {
+        os << (item.get_boolean() ? "true" : "false");
+    } else if (item.is_integer()) {
+        os << item.get_integer();
+    } else if (item.is_float()) {
+        os << item.get_float();
+    } else if (item.is_string()) {
+        os << "\"" << item.get_string() << "\"" ;
+    }
+    return os;
+}
+/////////////////////////////////////////////////////////////////////////////
+
 /*
  * @brief Constructor that initializes item_t from a view_t which holds TOML raw string.
  * @param view[in]: The view_t object containing raw TOML string.
