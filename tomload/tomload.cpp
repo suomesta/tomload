@@ -1,5 +1,5 @@
+#include <iostream>
 #include "tomload/tomload.h"
-#include <set>
 #include "tomload/parser.h"
 
 namespace tomload {
@@ -323,7 +323,35 @@ item_t* item_t::push(const key_t& key, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t* item_t::insert_brackets_table(const std::vector<key_t>& brackets) {
+item_t* item_t::insert_brackets_table(const std::vector<key_t>& brackets, const std::vector<std::vector<key_t>>& brackets_set) {
+    // check identical bracket is already defined or not
+    if (std::find(brackets_set.cbegin(), brackets_set.cend(), brackets) != brackets_set.cend()) {
+        throw parse_error("duplicate bracket table");
+    }
+
+    // check the table is already registered or not. super-table is allowed
+    bool super_table = false;
+    for (const auto& other : brackets_set) {
+        if ((brackets.size() < other.size()) &&
+            std::equal(brackets.cbegin(), brackets.cend(), other.cbegin())) {
+            super_table = true;
+            break;
+        }
+    }
+    if (not super_table) {
+        item_t* p_item = this;
+        std::vector<key_t>::const_iterator it = brackets.cbegin();
+        for (; it != brackets.cend(); ++it) {
+            if (not (p_item->is_table() && p_item->contains(*it))) {
+                break;
+            }
+            p_item = &(p_item->m->find(*it)->second);
+        }
+        if (it == brackets.cend()) {
+            throw parse_error("the table already registered");
+        }
+    }
+
     item_t* p_item = this;
     for (const key_t& key : brackets) {
         if (p_item->u.is_inline_table) {
@@ -369,7 +397,7 @@ void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t 
 /////////////////////////////////////////////////////////////////////////////
 
 void item_t::parse_main(view_t& view) {
-    std::set<std::vector<key_t>> brackets_set;
+    std::vector<std::vector<key_t>> brackets_set;
     item_t* p_brackets_end = this;
     bool ini_state = true;
 
@@ -384,13 +412,9 @@ void item_t::parse_main(view_t& view) {
 
                 skip_space(view, " \t", false);
                 if (starts_with(view, "]")) {
+                    p_brackets_end = insert_brackets_table(brackets, brackets_set);
                     view.remove_prefix(1);
-                    if (brackets_set.insert(brackets).second) {
-                        // OK. now registered
-                    } else {
-                        throw parse_error("duplicate table");
-                    }
-                    p_brackets_end = insert_brackets_table(std::move(brackets));
+                    brackets_set.push_back(std::move(brackets));
                     ini_state = false;
                 } else {
                     throw parse_error("expected ']'");

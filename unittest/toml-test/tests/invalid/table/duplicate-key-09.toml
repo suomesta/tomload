@@ -1,5 +1,5 @@
-[a]
+[add]
 foo="bar"
-[a.b]
+[add.b]
 foo="bar"
-[a]
+[add]
