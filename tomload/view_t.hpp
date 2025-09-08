@@ -8,7 +8,7 @@
 #ifndef TOMLOAD_VIEW_T_HPP
 #define TOMLOAD_VIEW_T_HPP
 
-#include <initializer_list>
+#include <algorithm>
 
 #if __cpp_lib_string_view
 #include <string_view>
@@ -52,12 +52,9 @@ inline bool contains(view_t view, view_t x) {
  * @brief Util function like Python str.startswith([list]).
  */
 inline bool starts_with(view_t view, std::initializer_list<const char*> list) {
-    for (const char* str : list) {
-        if (starts_with(view, str)) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(list.begin(), list.end(), [view](const char* str) -> bool {
+        return starts_with(view, str);
+    });
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -65,12 +62,9 @@ inline bool starts_with(view_t view, std::initializer_list<const char*> list) {
  * @brief Util function like Python str.endswith([list]).
  */
 inline bool ends_with(view_t view, std::initializer_list<const char*> list) {
-    for (const char* str : list) {
-        if (ends_with(view, str)) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(list.begin(), list.end(), [view](const char* str) -> bool {
+        return ends_with(view, str);
+    });
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -78,12 +72,9 @@ inline bool ends_with(view_t view, std::initializer_list<const char*> list) {
  * @brief Util function, expand list.
  */
 inline bool contains(view_t view, std::initializer_list<const char*> list) {
-    for (const char* str : list) {
-        if (contains(view, str)) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(list.begin(), list.end(), [view](const char* str) -> bool {
+        return contains(view, str);
+    });
 }
 /////////////////////////////////////////////////////////////////////////////
 
