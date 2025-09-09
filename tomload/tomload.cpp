@@ -4,6 +4,26 @@
 
 namespace tomload {
 
+void check_duplex_keys(const std::vector<key_t>& keys, const std::vector<std::vector<key_t>>& brackets_set) {
+// # See: https://github.com/toml-lang/toml/issues/846
+// #      https://github.com/toml-lang/toml/pull/859
+    if (not brackets_set.empty()) {
+        std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
+        std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
+        const std::vector<key_t>& lastst = brackets_set.back();
+
+        for (decltype(begin) it = begin; it != end; ++it) {
+            if ((lastst.size() < it->size()) &&
+                std::equal(lastst.cbegin(), lastst.cend(), it->cbegin()) &&
+                (it->size() < (lastst.size() + keys.size())) &&
+                std::equal(it->cbegin() + lastst.size(), it->cend(), keys.cbegin())) {
+                throw parse_error("found duplex key");
+            }
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
 std::ostream& operator<<(std::ostream& os, const item_t& item) {
     if (item.is_array()) {
         os << '[';
@@ -458,6 +478,8 @@ void item_t::parse_main(view_t& view) {
                 } else {
                     throw parse_error("expected '='");
                 }
+
+                check_duplex_keys(keys, brackets_set);
 
                 skip_space(view, " \t", false);
                 insert_keys_table(p_brackets_end, std::move(keys), parse_item(view));
