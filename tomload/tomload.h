@@ -12,6 +12,7 @@
 #include <exception>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -281,6 +282,16 @@ class item_t {
     std::shared_ptr<std::map<key_t, item_t>> m;
     /////////////////////////////////////////////////////////////////////////////
 };
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @brief JSON format out-stream.
+ * @param os[in,out]: out-stream.
+ * @param item[in]: TOML data.
+ * @note supported escape characters are only '\"', '\t', '\n', '\r', and '\\'.
+ * @return `os`
+ */
+std::ostream& operator<<(std::ostream& os, const item_t& item);
 /////////////////////////////////////////////////////////////////////////////
 
 /*

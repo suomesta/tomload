@@ -1,54 +1,8 @@
-#include <iostream>
 #include "tomload/tomload.h"
+#include <utility>
 #include "tomload/parser.h"
 
 namespace tomload {
-
-void check_duplex_keys(const std::vector<key_t>& keys, const std::vector<std::vector<key_t>>& brackets_set) {
-// # See: https://github.com/toml-lang/toml/issues/846
-// #      https://github.com/toml-lang/toml/pull/859
-    if (not brackets_set.empty()) {
-        std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
-        std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
-        const std::vector<key_t>& lastst = brackets_set.back();
-
-        for (decltype(begin) it = begin; it != end; ++it) {
-            if ((lastst.size() < it->size()) &&
-                std::equal(lastst.cbegin(), lastst.cend(), it->cbegin()) &&
-                (it->size() < (lastst.size() + keys.size())) &&
-                std::equal(it->cbegin() + lastst.size(), it->cend(), keys.cbegin())) {
-                throw parse_error("found duplex key");
-            }
-        }
-    }
-}
-/////////////////////////////////////////////////////////////////////////////
-
-std::ostream& operator<<(std::ostream& os, const item_t& item) {
-    if (item.is_array()) {
-        os << '[';
-        for (const auto& i: item.array_range()) {
-            os << i << ", ";
-        }
-        os << ']';
-    } else  if (item.is_table()) {
-        os << '{';
-        for (const auto& i: item.table_range()) {
-            os << i.first << ": " << i.second << ", ";
-        }
-        os << '}';
-    } else if (item.is_boolean()) {
-        os << (item.get_boolean() ? "true" : "false");
-    } else if (item.is_integer()) {
-        os << item.get_integer();
-    } else if (item.is_float()) {
-        os << item.get_float();
-    } else if (item.is_string()) {
-        os << "\"" << item.get_string() << "\"" ;
-    }
-    return os;
-}
-/////////////////////////////////////////////////////////////////////////////
 
 /*
  * @brief Constructor that initializes item_t from a view_t which holds TOML raw string.
@@ -493,6 +447,65 @@ void item_t::parse_main(view_t& view) {
             }
         }
     }
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @brief JSON format out-stream.
+ * @param os[in,out]: out-stream.
+ * @param item[in]: TOML data.
+ * @note supported escape characters are only '\"', '\t', '\n', '\r', and '\\'.
+ * @return `os`
+ */
+std::ostream& operator<<(std::ostream& os, const item_t& item) {
+    if (item.is_array()) {
+        bool start = true;
+        os << '[';
+        for (const auto& i: item.array_range()) {
+            if (std::exchange(start, false)) {
+                os << i;
+            } else {
+                os << ", " << i;
+            }
+        }
+        os << ']';
+    } else  if (item.is_table()) {
+        bool start = true;
+        os << '{';
+        for (const auto& i: item.table_range()) {
+            if (std::exchange(start, false)) {
+                os << i.first << ": " << i.second;
+            } else {
+                os << ", " << i.first << ": " << i.second;
+            }
+        }
+        os << '}';
+    } else if (item.is_boolean()) {
+        os << (item.get_boolean() ? "true" : "false");
+    } else if (item.is_integer()) {
+        os << item.get_integer();
+    } else if (item.is_float()) {
+        os << item.get_float();
+    } else if (item.is_string()) {
+        os << '\"';
+        for (char c: item.get_string()) {
+            if (c == '\"') {
+                os << "\\\"";
+            } else if (c == '\t') {
+                os << "\\t";
+            } else if (c == '\n') {
+                os << "\\n";
+            } else if (c == '\r') {
+                os << "\\r";
+            } else if (c == '\\') {
+                os << "\\\\";
+            } else {
+                os << c;
+            }
+        }
+        os << '\"';
+    }
+    return os;
 }
 /////////////////////////////////////////////////////////////////////////////
 

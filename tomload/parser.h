@@ -27,6 +27,9 @@ item_t parse_item(view_t& view);
 std::vector<key_t> parse_keys(view_t& view);
 /////////////////////////////////////////////////////////////////////////////
 
+void check_duplex_keys(const std::vector<key_t>& keys, const std::vector<std::vector<key_t>>& brackets_set);
+/////////////////////////////////////////////////////////////////////////////
+
 }  // namespace tomload
 
 #endif  // TOMLOAD_PARSER_H

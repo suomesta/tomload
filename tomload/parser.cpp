@@ -281,4 +281,24 @@ std::vector<key_t> parse_keys(view_t& view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+void check_duplex_keys(const std::vector<key_t>& keys, const std::vector<std::vector<key_t>>& brackets_set) {
+// # See: https://github.com/toml-lang/toml/issues/846
+// #      https://github.com/toml-lang/toml/pull/859
+    if (not brackets_set.empty()) {
+        std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
+        std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
+        const std::vector<key_t>& lastst = brackets_set.back();
+
+        for (decltype(begin) it = begin; it != end; ++it) {
+            if ((lastst.size() < it->size()) &&
+                std::equal(lastst.cbegin(), lastst.cend(), it->cbegin()) &&
+                (it->size() < (lastst.size() + keys.size())) &&
+                std::equal(it->cbegin() + lastst.size(), it->cend(), keys.cbegin())) {
+                throw parse_error("found duplex key");
+            }
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
 }  // namespace tomload
