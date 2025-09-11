@@ -459,25 +459,19 @@ void item_t::parse_main(view_t& view) {
  */
 std::ostream& operator<<(std::ostream& os, const item_t& item) {
     if (item.is_array()) {
-        bool start = true;
+        std::string sep = "";
         os << '[';
         for (const auto& i: item.array_range()) {
-            if (std::exchange(start, false)) {
-                os << i;
-            } else {
-                os << ", " << i;
-            }
+            os << sep << i;
+            sep = ", ";
         }
         os << ']';
     } else  if (item.is_table()) {
-        bool start = true;
+        std::string sep = "";
         os << '{';
         for (const auto& i: item.table_range()) {
-            if (std::exchange(start, false)) {
-                os << i.first << ": " << i.second;
-            } else {
-                os << ", " << i.first << ": " << i.second;
-            }
+            os << sep << i.first << ": " << i.second;
+            sep = ", ";
         }
         os << '}';
     } else if (item.is_boolean()) {
