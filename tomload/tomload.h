@@ -267,13 +267,13 @@ class item_t {
         TYPE_STRING,
         TYPE_ARRAY,
         TYPE_TABLE,
+        TYPE_INLINE_TABLE,
     } type;
 
     union {
         boolean_t b;
         integer_t i;
         float_t d;
-        bool is_inline_table;  // internal status for table data
     } u = {false};
     // to keep source code clean, string, array and table are not in union.
     // if you want to use union, you can use std::variant instead, but it requires C++17.

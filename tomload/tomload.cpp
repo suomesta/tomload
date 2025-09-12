@@ -53,7 +53,6 @@ item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
 item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {
-    u.is_inline_table = false;  // default false
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +82,7 @@ bool item_t::is_array(void) const noexcept {
 /////////////////////////////////////////////////////////////////////////////
 
 bool item_t::is_table(void) const noexcept {
-    return type == TYPE_TABLE;
+    return (type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE);
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -128,7 +127,7 @@ string_t item_t::get_string(void) const {
 size_t item_t::size(void) const {
     if (type == TYPE_ARRAY) {
         return v->size();
-    } else if (type == TYPE_TABLE) {
+    } else if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->size();
     } else {
         throw type_error("neither array nor table");
@@ -145,7 +144,7 @@ size_t item_t::size(void) const {
 bool item_t::empty(void) const {
     if (type == TYPE_ARRAY) {
         return v->empty();
-    } else if (type == TYPE_TABLE) {
+    } else if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->empty();
     } else {
         throw type_error("neither array nor table");
@@ -177,7 +176,7 @@ const item_t& item_t::operator[](size_t index) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 const item_t& item_t::operator[](const key_t& key) const {
-    if (type == TYPE_TABLE) {
+    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->at(key);
     } else {
         throw type_error("not table");
@@ -193,7 +192,7 @@ const item_t& item_t::operator[](const key_t& key) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 bool item_t::contains(const key_t& key) const {
-    if (type == TYPE_TABLE) {
+    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->find(key) != m->cend();
     } else {
         throw type_error("not table");
@@ -238,7 +237,7 @@ array_iterator item_t::array_end(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 table_iterator item_t::table_begin(void) const {
-    if (type == TYPE_TABLE) {
+    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->begin();
     } else {
         throw type_error("not table");
@@ -253,7 +252,7 @@ table_iterator item_t::table_begin(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 table_iterator item_t::table_end(void) const {
-    if (type == TYPE_TABLE) {
+    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return m->end();
     } else {
         throw type_error("not table");
@@ -283,7 +282,7 @@ const array_range_t item_t::array_range(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 const table_range_t item_t::table_range(void) const {
-    if (type == TYPE_TABLE) {
+    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
         return table_range_t(m->begin(), m->end());
     } else {
         throw type_error("not table");
@@ -310,7 +309,7 @@ void item_t::set_inline_table_keys_value(std::vector<std::pair<std::vector<key_t
         insert_keys_table(this, std::move(key_val.first), key_val.second);
     }
 
-    u.is_inline_table = true;
+    type = TYPE_INLINE_TABLE;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -358,7 +357,7 @@ item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& bra
 
     item_t* p_item = this;
     for (const key_t& key : latest) {
-        if (p_item->u.is_inline_table) {
+        if (type == TYPE_INLINE_TABLE) {
             throw parse_error("inline table error");
         }
 
@@ -379,7 +378,7 @@ void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t 
 
     item_t* p_item = p_begin;
     for (const key_t& key : keys) {
-        if (p_item->u.is_inline_table) {
+        if (type == TYPE_INLINE_TABLE) {
             throw parse_error("inline table error");
         }
 
