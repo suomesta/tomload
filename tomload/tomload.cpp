@@ -87,7 +87,7 @@ bool item_t::is_table(void) const noexcept {
 /////////////////////////////////////////////////////////////////////////////
 
 boolean_t item_t::get_boolean(void) const {
-    if (type != TYPE_BOOLEAN) {
+    if (not is_boolean()) {
         throw type_error("type mismatch");
     }
     return u.b;
@@ -95,7 +95,7 @@ boolean_t item_t::get_boolean(void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 integer_t item_t::get_integer(void) const {
-    if (type != TYPE_INTEGER) {
+    if (not is_integer()) {
         throw type_error("type mismatch");
     }
     return u.i;
@@ -103,7 +103,7 @@ integer_t item_t::get_integer(void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 float_t item_t::get_float(void) const {
-    if (type != TYPE_FLOAT) {
+    if (not is_float()) {
         throw type_error("type mismatch");
     }
     return u.d;
@@ -111,7 +111,7 @@ float_t item_t::get_float(void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 string_t item_t::get_string(void) const {
-    if (type != TYPE_STRING) {
+    if (not is_string()) {
         throw type_error("type mismatch");
     }
     return s;
@@ -125,9 +125,9 @@ string_t item_t::get_string(void) const {
  * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
  */
 size_t item_t::size(void) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return v->size();
-    } else if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    } else if (is_table()) {
         return m->size();
     } else {
         throw type_error("neither array nor table");
@@ -142,9 +142,9 @@ size_t item_t::size(void) const {
  * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
  */
 bool item_t::empty(void) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return v->empty();
-    } else if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    } else if (is_table()) {
         return m->empty();
     } else {
         throw type_error("neither array nor table");
@@ -160,7 +160,7 @@ bool item_t::empty(void) const {
  * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
  */
 const item_t& item_t::operator[](size_t index) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return v->at(index);
     } else {
         throw type_error("not array");
@@ -176,7 +176,7 @@ const item_t& item_t::operator[](size_t index) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 const item_t& item_t::operator[](const key_t& key) const {
-    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    if (is_table()) {
         return m->at(key);
     } else {
         throw type_error("not table");
@@ -192,7 +192,7 @@ const item_t& item_t::operator[](const key_t& key) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 bool item_t::contains(const key_t& key) const {
-    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    if (is_table()) {
         return m->find(key) != m->cend();
     } else {
         throw type_error("not table");
@@ -207,7 +207,7 @@ bool item_t::contains(const key_t& key) const {
  * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
  */
 array_iterator item_t::array_begin(void) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return v->begin();
     } else {
         throw type_error("not array");
@@ -222,7 +222,7 @@ array_iterator item_t::array_begin(void) const {
  * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
  */
 array_iterator item_t::array_end(void) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return v->end();
     } else {
         throw type_error("not array");
@@ -237,7 +237,7 @@ array_iterator item_t::array_end(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 table_iterator item_t::table_begin(void) const {
-    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    if (is_table()) {
         return m->begin();
     } else {
         throw type_error("not table");
@@ -252,7 +252,7 @@ table_iterator item_t::table_begin(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 table_iterator item_t::table_end(void) const {
-    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    if (is_table()) {
         return m->end();
     } else {
         throw type_error("not table");
@@ -267,7 +267,7 @@ table_iterator item_t::table_end(void) const {
  * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
  */
 const array_range_t item_t::array_range(void) const {
-    if (type == TYPE_ARRAY) {
+    if (is_array()) {
         return array_range_t(v->begin(), v->end());
     } else {
         throw type_error("not array");
@@ -282,7 +282,7 @@ const array_range_t item_t::array_range(void) const {
  * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
  */
 const table_range_t item_t::table_range(void) const {
-    if ((type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE)) {
+    if (is_table()) {
         return table_range_t(m->begin(), m->end());
     } else {
         throw type_error("not table");
@@ -504,7 +504,7 @@ std::ostream& operator<<(std::ostream& os, const item_t& item) {
 
 template <>
 bool item_t::get<string_t>(string_t& val) const {
-    if (type == TYPE_STRING) {
+    if (is_string()) {
         val = s;
     } else {
         return false;

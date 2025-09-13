@@ -310,19 +310,19 @@ bool item_t::get<string_t>(string_t& val) const;
  */
 template <class PARAM>
 bool item_t::get(PARAM& val) const {
-    if (std::is_same<PARAM, boolean_t>() && type == TYPE_BOOLEAN) {
+    if (std::is_same<PARAM, boolean_t>() && is_boolean()) {
         val = u.b;
-    } else if (std::is_same<PARAM, integer_t>() && type == TYPE_INTEGER) {
+    } else if (std::is_same<PARAM, integer_t>() && is_integer()) {
         val = u.i;
-    } else if (std::is_same<PARAM, float_t>() && type == TYPE_FLOAT) {
+    } else if (std::is_same<PARAM, float_t>() && is_float()) {
         val = u.d;
-    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_INTEGER) {
+    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && is_integer()) {
         val = static_cast<PARAM>(u.i);
-    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && type == TYPE_FLOAT) {
+    } else if (std::is_integral<PARAM>() && not std::is_same<PARAM, boolean_t>() && is_float()) {
         val = static_cast<PARAM>(u.d);
-    } else if (std::is_floating_point<PARAM>() && type == TYPE_INTEGER) {
+    } else if (std::is_floating_point<PARAM>() && is_integer()) {
         val = static_cast<PARAM>(u.i);
-    } else if (std::is_floating_point<PARAM>() && type == TYPE_FLOAT) {
+    } else if (std::is_floating_point<PARAM>() && is_float()) {
         val = static_cast<PARAM>(u.d);
     } else {
         return false;
