@@ -164,7 +164,9 @@ def main():
             if ('hex-escape.toml' in path or  # TOML 1.1.0
                 'escape-esc.toml' in path or  # TOML 1.1.0
                 'newline-comment.toml' in path or  # TOML 1.1.0
-                'newline.toml' in path):  # TOML 1.1.0
+                'newline.toml' in path or  # TOML 1.1.0
+                'example.toml' in path or  # date
+                'spec-example-1.toml' in path):  # date
                 continue
 
             with open(path, encoding='utf8') as file:

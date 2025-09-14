@@ -18,6 +18,7 @@ add_executable(unittest
     unittest/test_toml.io/valid/String.cpp
     unittest/test_toml.io/valid/Table.cpp unittest/test_toml.io/invalid/Table.cpp
     unittest/test_toml-test/valid/bool.cpp unittest/test_toml-test/invalid/bool.cpp
+    unittest/test_toml-test/valid/root.cpp
     unittest/test_toml-test/valid/integer.cpp unittest/test_toml-test/invalid/integer.cpp
     unittest/test_toml-test/valid/float.cpp unittest/test_toml-test/invalid/float.cpp
     unittest/test_toml-test/valid/string.cpp unittest/test_toml-test/invalid/string.cpp
