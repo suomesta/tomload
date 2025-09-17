@@ -20,37 +20,37 @@ item_t::item_t(view_t view) :
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(boolean_t val) noexcept :
+item_t::item_t(single_construct_t, boolean_t val) noexcept :
     type(TYPE_BOOLEAN) {
     u.b = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(integer_t val) noexcept :
+item_t::item_t(single_construct_t, integer_t val) noexcept :
     type(TYPE_INTEGER) {
     u.i = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(float_t val) noexcept :
+item_t::item_t(single_construct_t, float_t val) noexcept :
     type(TYPE_FLOAT) {
     u.d = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(string_t&& val) noexcept :
+item_t::item_t(single_construct_t, string_t&& val) noexcept :
     type(TYPE_STRING),
     s(std::move(val)) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(std::shared_ptr<std::vector<item_t>> val) noexcept :
+item_t::item_t(single_construct_t, std::shared_ptr<std::vector<item_t>> val) noexcept :
     type(TYPE_ARRAY),
     v(val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-item_t::item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
+item_t::item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {
 }
@@ -361,7 +361,7 @@ item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& bra
             throw parse_error("inline table error");
         }
 
-        auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+        auto next_table = item_t{single_construct, std::make_shared<std::map<key_t, item_t>>()};
         p_item = p_item->push(key, next_table);
         if (not p_item->is_table()) {
             throw parse_error("expected table");
@@ -383,7 +383,7 @@ void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t 
         }
 
         if (&key != &keys.back()) {
-            auto next_table = item_t{std::make_shared<std::map<key_t, item_t>>()};
+            auto next_table = item_t{single_construct, std::make_shared<std::map<key_t, item_t>>()};
             p_item = p_item->push(key, next_table);
             if (not p_item->is_table()) {
                 throw parse_error("expected table");

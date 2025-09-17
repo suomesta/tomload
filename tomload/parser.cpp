@@ -91,12 +91,12 @@ item_t parse_array(view_t& view) {
         }
     }
 
-    return item_t{v};
+    return item_t{single_construct, v};
 }
 /////////////////////////////////////////////////////////////////////////////
 
 item_t parse_inline_table(view_t& view) {
-    item_t ret{std::make_shared<std::map<key_t, item_t>>()};
+    item_t ret{single_construct, std::make_shared<std::map<key_t, item_t>>()};
 
     view.remove_prefix(1);
 
@@ -157,14 +157,14 @@ item_t parse_inline_table(view_t& view) {
 
 item_t parse_item(view_t& view) {
     const std::pair<view_t, item_t> fixed_values[8] = {
-        {"true", item_t{true}},
-        {"false", item_t{false}},
-        {"inf", item_t{std::numeric_limits<double>::infinity()}},
-        {"+inf", item_t{std::numeric_limits<double>::infinity()}},
-        {"-inf", item_t{-std::numeric_limits<double>::infinity()}},
-        {"nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
-        {"+nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
-        {"-nan", item_t{std::numeric_limits<double>::quiet_NaN()}},
+        {"true", item_t{single_construct, true}},
+        {"false", item_t{single_construct, false}},
+        {"inf", item_t{single_construct, std::numeric_limits<double>::infinity()}},
+        {"+inf", item_t{single_construct, std::numeric_limits<double>::infinity()}},
+        {"-inf", item_t{single_construct, -std::numeric_limits<double>::infinity()}},
+        {"nan", item_t{single_construct, std::numeric_limits<double>::quiet_NaN()}},
+        {"+nan", item_t{single_construct, std::numeric_limits<double>::quiet_NaN()}},
+        {"-nan", item_t{single_construct, std::numeric_limits<double>::quiet_NaN()}},
     };
 
     for (const auto& pair : fixed_values) {
@@ -179,7 +179,7 @@ item_t parse_item(view_t& view) {
         integer_t i = parse_radix_value(view, length);
 
         view.remove_prefix(length);
-        return item_t{i};
+        return item_t{single_construct, i};
     } else if (starts_with(view, {"+", "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"})) {
         view_t::size_type integer_length = get_integer_length(view);
         view_t::size_type float_length = get_float_length(view);
@@ -187,37 +187,37 @@ item_t parse_item(view_t& view) {
             float_t d = parse_float(view, float_length);
 
             view.remove_prefix(float_length);
-            return item_t{d};
+            return item_t{single_construct, d};
         } else {
             integer_t i = parse_integer(view, integer_length);
 
             view.remove_prefix(integer_length);
-            return item_t{i};
+            return item_t{single_construct, i};
         }
     } else if (starts_with(view, "'''")) {
         view_t::size_type length = get_multi_literal_string_length(view);
         string_t str = parse_multi_literal_string(view, length);
 
         view.remove_prefix(length);
-        return item_t{std::move(str)};
+        return item_t{single_construct, std::move(str)};
     } else if (starts_with(view, "'")) {
         view_t::size_type length = get_literal_string_length(view);
         string_t str = parse_literal_string(view, length);
 
         view.remove_prefix(length);
-        return item_t{std::move(str)};
+        return item_t{single_construct, std::move(str)};
     } else if (starts_with(view, "\"\"\"")) {
         view_t::size_type length = get_multi_string_length(view);
         string_t str = parse_multi_string(view, length);
 
         view.remove_prefix(length);
-        return item_t{std::move(str)};
+        return item_t{single_construct, std::move(str)};
     } else if (starts_with(view, "\"")) {
         view_t::size_type length = get_string_length(view);
         string_t str = parse_string(view, length);
 
         view.remove_prefix(length);
-        return item_t{std::move(str)};
+        return item_t{single_construct, std::move(str)};
     } else if (starts_with(view, "[")) {
         return parse_array(view);
     } else if (starts_with(view, "{")) {

@@ -1,7 +1,17 @@
 /*
  * @file tomload.h
  * @brief Header file for tomload library.
- * @details This file defines the item_t class and its methods for parsing and handling TOML-like data.
+ * @details This file defines the item_t class and its methods for parsing and handling TOML data.
+ *          `tomload::item_t` is main class of this library.
+ *          typical usage is shown in example.
+ * @example
+ *      tomload::item_t item("[root]\r\narray = [1, 2, 3]\r\n");
+ *      for (auto i : item) {
+ *          std::cout << i.first;  // => "root"
+ *          for (auto j : item.second) {
+ *              std::cout << j.get_integer();  // => 1, 2, 3 
+ *          }
+ *      }
  */
 
 #ifndef TOMLOAD_TOMLOAD_H
@@ -80,6 +90,8 @@ using table_iterator = std::map<key_t, item_t>::const_iterator;
 using array_range_t = range_t<array_iterator>;
 using table_range_t = range_t<table_iterator>;
 static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be 8");
+struct single_construct_t { explicit single_construct_t() = default; };
+constexpr single_construct_t single_construct;
 
 class item_t {
  public:
@@ -101,12 +113,12 @@ class item_t {
      * @brief Constructors for each types (boolean, integer, float, string, array, and table).
      * @note Main purpose of these constructors are testing. Most users does not need use these.
      */
-    explicit item_t(boolean_t val) noexcept;
-    explicit item_t(integer_t val) noexcept;
-    explicit item_t(float_t val) noexcept;
-    explicit item_t(string_t&& val) noexcept;
-    explicit item_t(std::shared_ptr<std::vector<item_t>> val) noexcept;
-    explicit item_t(std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
+    item_t(single_construct_t, boolean_t val) noexcept;
+    item_t(single_construct_t, integer_t val) noexcept;
+    item_t(single_construct_t, float_t val) noexcept;
+    item_t(single_construct_t, string_t&& val) noexcept;
+    item_t(single_construct_t, std::shared_ptr<std::vector<item_t>> val) noexcept;
+    item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     /*

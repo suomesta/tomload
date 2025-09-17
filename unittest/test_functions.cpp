@@ -696,8 +696,7 @@ TEST_CASE("testing parse_item(inline table)") {
 
 TEST_CASE("testing parse()") {
     {
-        view_t src = "[aa]  #comm\n";
-        item_t result(src);
+        item_t result("[aa]  #comm\n");
 
         CHECK(result.is_table() == true);
         CHECK(result.size() == 1);
@@ -706,8 +705,7 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"].size() == 0);
     }
     {
-        view_t src = "[aa]  #comm\nbb = false\n";
-        item_t result(src);
+        item_t result("[aa]  #comm\nbb = false\n");
 
         CHECK(result.is_table() == true);
         CHECK(result.size() == 1);
@@ -716,9 +714,9 @@ TEST_CASE("testing parse()") {
         CHECK(result["aa"]["bb"].get_boolean() == false);
     }
     {
-        view_t src = "[a.b.c.d]\n  z = 9\n\n[a]\n  b.c.d.k.t = \"Using dotted keys to add to [a.b.c.d] after explicitly defining it above is not allowed\"\n";
+        const char src[] = "[a.b.c.d]\n  z = 9\n\n[a]\n  b.c.d.k.t = \"Using dotted keys to add to [a.b.c.d] after explicitly defining it above is not allowed\"\n";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS((item_t(src)), parse_error&);
     }
 }
 

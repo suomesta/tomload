@@ -4,7 +4,7 @@
 using namespace tomload;
 
 TEST_CASE("testing boolean item accessors") {
-    item_t item(true);
+    item_t item{single_construct, true};
 
     CHECK(item.is_boolean() == true);
     CHECK(item.is_integer() == false);
@@ -42,7 +42,7 @@ TEST_CASE("testing boolean item accessors") {
 }
 
 TEST_CASE("testing integer item accessors") {
-    item_t item(static_cast<integer_t>(123));
+    item_t item{single_construct, static_cast<integer_t>(123)};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == true);
@@ -81,7 +81,7 @@ TEST_CASE("testing integer item accessors") {
 }
 
 TEST_CASE("testing float item accessors") {
-    item_t item(static_cast<float_t>(1.5));
+    item_t item{single_construct, static_cast<float_t>(1.5)};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -120,7 +120,7 @@ TEST_CASE("testing float item accessors") {
 }
 
 TEST_CASE("testing string item accessors") {
-    item_t item(string_t{"abc"});
+    item_t item{single_construct, string_t{"abc"}};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -159,11 +159,11 @@ TEST_CASE("testing string item accessors") {
 
 TEST_CASE("testing array item accessors") {
     auto ptr = std::make_shared<std::vector<item_t>>();
-    ptr->push_back(item_t(true));
-    ptr->push_back(item_t(static_cast<integer_t>(1)));
-    ptr->push_back(item_t(1.5));
-    ptr->push_back(item_t(string_t("abc")));
-    item_t item(ptr);
+    ptr->push_back(item_t{single_construct, true});
+    ptr->push_back(item_t{single_construct, static_cast<integer_t>(1)});
+    ptr->push_back(item_t{single_construct, 1.5});
+    ptr->push_back(item_t{single_construct, string_t("abc")});
+    item_t item{single_construct, ptr};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -235,11 +235,11 @@ TEST_CASE("testing array item accessors") {
 
 TEST_CASE("testing table item accessors") {
     auto ptr = std::make_shared<std::map<tomload::key_t, item_t>>();
-    ptr->insert({"1st", item_t(true)});
-    ptr->insert({"2nd", item_t(static_cast<integer_t>(1))});
-    ptr->insert({"3rd", item_t(1.5)});
-    ptr->insert({"4th", item_t(string_t("abc"))});
-    item_t item(ptr);
+    ptr->insert({"1st", item_t{single_construct, true}});
+    ptr->insert({"2nd", item_t{single_construct, static_cast<integer_t>(1)}});
+    ptr->insert({"3rd", item_t{single_construct, 1.5}});
+    ptr->insert({"4th", item_t{single_construct, string_t("abc")}});
+    item_t item{single_construct, ptr};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
