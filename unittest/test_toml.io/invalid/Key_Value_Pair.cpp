@@ -30,12 +30,12 @@ using namespace tomload;
 TEST_CASE("invalid/Key_Value_Pair/Key_Value_Pair_2.toml") {
     std::string content = load_file("invalid/Key_Value_Pair/Key_Value_Pair_2.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 
 TEST_CASE("invalid/Key_Value_Pair/Key_Value_Pair_3.toml") {
     std::string content = load_file("invalid/Key_Value_Pair/Key_Value_Pair_3.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 

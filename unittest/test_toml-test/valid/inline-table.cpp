@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/inline-table/array-01.toml") {
     std::string content = load_file("valid/inline-table/array-01.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -67,7 +67,7 @@ TEST_CASE("valid/inline-table/array-01.toml") {
 
 TEST_CASE("valid/inline-table/array-02.toml") {
     std::string content = load_file("valid/inline-table/array-02.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -79,7 +79,7 @@ TEST_CASE("valid/inline-table/array-02.toml") {
 
 TEST_CASE("valid/inline-table/array-03.toml") {
     std::string content = load_file("valid/inline-table/array-03.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -101,7 +101,7 @@ TEST_CASE("valid/inline-table/array-03.toml") {
 
 TEST_CASE("valid/inline-table/bool.toml") {
     std::string content = load_file("valid/inline-table/bool.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -115,7 +115,7 @@ TEST_CASE("valid/inline-table/bool.toml") {
 
 TEST_CASE("valid/inline-table/empty.toml") {
     std::string content = load_file("valid/inline-table/empty.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -157,7 +157,7 @@ TEST_CASE("valid/inline-table/empty.toml") {
 
 TEST_CASE("valid/inline-table/end-in-bool.toml") {
     std::string content = load_file("valid/inline-table/end-in-bool.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -173,7 +173,7 @@ TEST_CASE("valid/inline-table/end-in-bool.toml") {
 
 TEST_CASE("valid/inline-table/inline-table.toml") {
     std::string content = load_file("valid/inline-table/inline-table.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -211,7 +211,7 @@ TEST_CASE("valid/inline-table/inline-table.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-1.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -249,7 +249,7 @@ TEST_CASE("valid/inline-table/key-dotted-1.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-2.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -277,7 +277,7 @@ TEST_CASE("valid/inline-table/key-dotted-2.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-3.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-3.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -309,7 +309,7 @@ TEST_CASE("valid/inline-table/key-dotted-3.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-5.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-5.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -365,7 +365,7 @@ TEST_CASE("valid/inline-table/key-dotted-5.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-6.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-6.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -395,7 +395,7 @@ TEST_CASE("valid/inline-table/key-dotted-6.toml") {
 
 TEST_CASE("valid/inline-table/key-dotted-7.toml") {
     std::string content = load_file("valid/inline-table/key-dotted-7.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -417,7 +417,7 @@ TEST_CASE("valid/inline-table/key-dotted-7.toml") {
 
 TEST_CASE("valid/inline-table/multiline.toml") {
     std::string content = load_file("valid/inline-table/multiline.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -435,7 +435,7 @@ TEST_CASE("valid/inline-table/multiline.toml") {
 
 TEST_CASE("valid/inline-table/nest.toml") {
     std::string content = load_file("valid/inline-table/nest.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -495,7 +495,7 @@ TEST_CASE("valid/inline-table/nest.toml") {
 
 TEST_CASE("valid/inline-table/spaces.toml") {
     std::string content = load_file("valid/inline-table/spaces.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);

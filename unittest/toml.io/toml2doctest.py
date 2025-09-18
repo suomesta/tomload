@@ -71,7 +71,7 @@ def print_load(argv1):
 
     print(f'TEST_CASE("{filename}") {{')
     print(f'    std::string content = load_file("{filename}");')
-    print('    item_t t(view_t{content.c_str()});')
+    print('    item_t t{content.c_str()};')
     print('')
 
 

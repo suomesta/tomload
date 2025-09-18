@@ -30,24 +30,24 @@ using namespace tomload;
 TEST_CASE("invalid/Float/Float_2.toml") {
     std::string content = load_file("invalid/Float/Float_2.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 
 TEST_CASE("invalid/Float/Float_2_1.toml") {
     std::string content = load_file("invalid/Float/Float_2_1.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 
 TEST_CASE("invalid/Float/Float_2_2.toml") {
     std::string content = load_file("invalid/Float/Float_2_2.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 
 TEST_CASE("invalid/Float/Float_2_3.toml") {
     std::string content = load_file("invalid/Float/Float_2_3.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 

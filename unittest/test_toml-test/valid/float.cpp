@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/float/exponent.toml") {
     std::string content = load_file("valid/float/exponent.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 8);
@@ -53,7 +53,7 @@ TEST_CASE("valid/float/exponent.toml") {
 
 TEST_CASE("valid/float/float.toml") {
     std::string content = load_file("valid/float/float.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -71,7 +71,7 @@ TEST_CASE("valid/float/float.toml") {
 
 TEST_CASE("valid/float/inf-and-nan.toml") {
     std::string content = load_file("valid/float/inf-and-nan.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 6);
@@ -91,7 +91,7 @@ TEST_CASE("valid/float/inf-and-nan.toml") {
 
 TEST_CASE("valid/float/long.toml") {
     std::string content = load_file("valid/float/long.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -103,7 +103,7 @@ TEST_CASE("valid/float/long.toml") {
 
 TEST_CASE("valid/float/max-int.toml") {
     std::string content = load_file("valid/float/max-int.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -115,7 +115,7 @@ TEST_CASE("valid/float/max-int.toml") {
 
 TEST_CASE("valid/float/underscore.toml") {
     std::string content = load_file("valid/float/underscore.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -129,7 +129,7 @@ TEST_CASE("valid/float/underscore.toml") {
 
 TEST_CASE("valid/float/zero.toml") {
     std::string content = load_file("valid/float/zero.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);

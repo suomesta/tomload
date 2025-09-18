@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/Integer/Integer_1.toml") {
     std::string content = load_file("valid/Integer/Integer_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -45,7 +45,7 @@ TEST_CASE("valid/Integer/Integer_1.toml") {
 
 TEST_CASE("valid/Integer/Integer_2.toml") {
     std::string content = load_file("valid/Integer/Integer_2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -61,7 +61,7 @@ TEST_CASE("valid/Integer/Integer_2.toml") {
 
 TEST_CASE("valid/Integer/Integer_3.toml") {
     std::string content = load_file("valid/Integer/Integer_3.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 6);

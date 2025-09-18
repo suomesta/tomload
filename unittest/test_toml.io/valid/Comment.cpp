@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/Comment/Comment_1.toml") {
     std::string content = load_file("valid/Comment/Comment_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);

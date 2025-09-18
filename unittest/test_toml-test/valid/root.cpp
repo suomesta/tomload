@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/empty-crlf.toml") {
     std::string content = load_file("valid/empty-crlf.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 0);
@@ -37,7 +37,7 @@ TEST_CASE("valid/empty-crlf.toml") {
 
 TEST_CASE("valid/empty-lf.toml") {
     std::string content = load_file("valid/empty-lf.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 0);
@@ -45,7 +45,7 @@ TEST_CASE("valid/empty-lf.toml") {
 
 TEST_CASE("valid/empty-nothing.toml") {
     std::string content = load_file("valid/empty-nothing.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 0);
@@ -53,7 +53,7 @@ TEST_CASE("valid/empty-nothing.toml") {
 
 TEST_CASE("valid/empty-space.toml") {
     std::string content = load_file("valid/empty-space.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 0);
@@ -61,7 +61,7 @@ TEST_CASE("valid/empty-space.toml") {
 
 TEST_CASE("valid/empty-tab.toml") {
     std::string content = load_file("valid/empty-tab.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 0);
@@ -69,7 +69,7 @@ TEST_CASE("valid/empty-tab.toml") {
 
 TEST_CASE("valid/implicit-and-explicit-after.toml") {
     std::string content = load_file("valid/implicit-and-explicit-after.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -87,7 +87,7 @@ TEST_CASE("valid/implicit-and-explicit-after.toml") {
 
 TEST_CASE("valid/implicit-and-explicit-before.toml") {
     std::string content = load_file("valid/implicit-and-explicit-before.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -105,7 +105,7 @@ TEST_CASE("valid/implicit-and-explicit-before.toml") {
 
 TEST_CASE("valid/implicit-groups.toml") {
     std::string content = load_file("valid/implicit-groups.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -121,7 +121,7 @@ TEST_CASE("valid/implicit-groups.toml") {
 
 TEST_CASE("valid/multibyte.toml") {
     std::string content = load_file("valid/multibyte.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -159,7 +159,7 @@ TEST_CASE("valid/multibyte.toml") {
 
 TEST_CASE("valid/newline-crlf.toml") {
     std::string content = load_file("valid/newline-crlf.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -171,7 +171,7 @@ TEST_CASE("valid/newline-crlf.toml") {
 
 TEST_CASE("valid/newline-lf.toml") {
     std::string content = load_file("valid/newline-lf.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);

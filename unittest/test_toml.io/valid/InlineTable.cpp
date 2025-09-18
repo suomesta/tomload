@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/InlineTable/InlineTable_1.toml") {
     std::string content = load_file("valid/InlineTable/InlineTable_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -55,7 +55,7 @@ TEST_CASE("valid/InlineTable/InlineTable_1.toml") {
 
 TEST_CASE("valid/InlineTable/InlineTable_2.toml") {
     std::string content = load_file("valid/InlineTable/InlineTable_2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -69,7 +69,7 @@ TEST_CASE("valid/InlineTable/InlineTable_2.toml") {
 
 TEST_CASE("valid/InlineTable/InlineTable_3.toml") {
     std::string content = load_file("valid/InlineTable/InlineTable_3.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);

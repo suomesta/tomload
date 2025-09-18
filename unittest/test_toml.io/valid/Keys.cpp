@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/Keys/Keys_1.toml") {
     std::string content = load_file("valid/Keys/Keys_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -45,7 +45,7 @@ TEST_CASE("valid/Keys/Keys_1.toml") {
 
 TEST_CASE("valid/Keys/Keys_10.toml") {
     std::string content = load_file("valid/Keys/Keys_10.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -69,7 +69,7 @@ TEST_CASE("valid/Keys/Keys_10.toml") {
 
 TEST_CASE("valid/Keys/Keys_11.toml") {
     std::string content = load_file("valid/Keys/Keys_11.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -93,7 +93,7 @@ TEST_CASE("valid/Keys/Keys_11.toml") {
 
 TEST_CASE("valid/Keys/Keys_12.toml") {
     std::string content = load_file("valid/Keys/Keys_12.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -105,7 +105,7 @@ TEST_CASE("valid/Keys/Keys_12.toml") {
 
 TEST_CASE("valid/Keys/Keys_2.toml") {
     std::string content = load_file("valid/Keys/Keys_2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -123,7 +123,7 @@ TEST_CASE("valid/Keys/Keys_2.toml") {
 
 TEST_CASE("valid/Keys/Keys_3_fix1.toml") {
     std::string content = load_file("valid/Keys/Keys_3_fix1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -133,7 +133,7 @@ TEST_CASE("valid/Keys/Keys_3_fix1.toml") {
 
 TEST_CASE("valid/Keys/Keys_3_fix2.toml") {
     std::string content = load_file("valid/Keys/Keys_3_fix2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -143,7 +143,7 @@ TEST_CASE("valid/Keys/Keys_3_fix2.toml") {
 
 TEST_CASE("valid/Keys/Keys_4.toml") {
     std::string content = load_file("valid/Keys/Keys_4.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -163,7 +163,7 @@ TEST_CASE("valid/Keys/Keys_4.toml") {
 
 TEST_CASE("valid/Keys/Keys_5.toml") {
     std::string content = load_file("valid/Keys/Keys_5.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -179,7 +179,7 @@ TEST_CASE("valid/Keys/Keys_5.toml") {
 
 TEST_CASE("valid/Keys/Keys_8.toml") {
     std::string content = load_file("valid/Keys/Keys_8.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);

@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/Table/Table_1.toml") {
     std::string content = load_file("valid/Table/Table_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -39,7 +39,7 @@ TEST_CASE("valid/Table/Table_1.toml") {
 
 TEST_CASE("valid/Table/Table_11.toml") {
     std::string content = load_file("valid/Table/Table_11.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -57,7 +57,7 @@ TEST_CASE("valid/Table/Table_11.toml") {
 
 TEST_CASE("valid/Table/Table_12.toml") {
     std::string content = load_file("valid/Table/Table_12.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -79,7 +79,7 @@ TEST_CASE("valid/Table/Table_12.toml") {
 
 TEST_CASE("valid/Table/Table_2.toml") {
     std::string content = load_file("valid/Table/Table_2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -99,7 +99,7 @@ TEST_CASE("valid/Table/Table_2.toml") {
 
 TEST_CASE("valid/Table/Table_3.toml") {
     std::string content = load_file("valid/Table/Table_3.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -115,7 +115,7 @@ TEST_CASE("valid/Table/Table_3.toml") {
 
 TEST_CASE("valid/Table/Table_4.toml") {
     std::string content = load_file("valid/Table/Table_4.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -147,7 +147,7 @@ TEST_CASE("valid/Table/Table_4.toml") {
 
 TEST_CASE("valid/Table/Table_5.toml") {
     std::string content = load_file("valid/Table/Table_5.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -163,7 +163,7 @@ TEST_CASE("valid/Table/Table_5.toml") {
 
 TEST_CASE("valid/Table/Table_8.toml") {
     std::string content = load_file("valid/Table/Table_8.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -179,7 +179,7 @@ TEST_CASE("valid/Table/Table_8.toml") {
 
 TEST_CASE("valid/Table/Table_9.toml") {
     std::string content = load_file("valid/Table/Table_9.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);

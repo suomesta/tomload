@@ -145,9 +145,9 @@ def print_check(path, keys=tuple()):
 
     if invalid:
         print('')
-        print('    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);')
+        print('    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);')
     else:
-        print('    item_t t(view_t{content.c_str()});')
+        print('    item_t t{content.c_str()};')
         print('')
 
         print_accessor(tom)

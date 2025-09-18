@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/Array/Array_1.toml") {
     std::string content = load_file("valid/Array/Array_1.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -121,7 +121,7 @@ TEST_CASE("valid/Array/Array_1.toml") {
 
 TEST_CASE("valid/Array/Array_2.toml") {
     std::string content = load_file("valid/Array/Array_2.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);

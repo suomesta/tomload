@@ -30,12 +30,12 @@ using namespace tomload;
 TEST_CASE("invalid/Table/Table_6.toml") {
     std::string content = load_file("invalid/Table/Table_6.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 
 TEST_CASE("invalid/Table/Table_7.toml") {
     std::string content = load_file("invalid/Table/Table_7.toml");
 
-    CHECK_THROWS_AS(item_t(view_t{content.c_str()}), parse_error&);
+    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);
 }
 

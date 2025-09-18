@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/integer/float64-max.toml") {
     std::string content = load_file("valid/integer/float64-max.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -41,7 +41,7 @@ TEST_CASE("valid/integer/float64-max.toml") {
 
 TEST_CASE("valid/integer/integer.toml") {
     std::string content = load_file("valid/integer/integer.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -57,7 +57,7 @@ TEST_CASE("valid/integer/integer.toml") {
 
 TEST_CASE("valid/integer/literals.toml") {
     std::string content = load_file("valid/integer/literals.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 9);
@@ -83,7 +83,7 @@ TEST_CASE("valid/integer/literals.toml") {
 
 TEST_CASE("valid/integer/long.toml") {
     std::string content = load_file("valid/integer/long.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -95,7 +95,7 @@ TEST_CASE("valid/integer/long.toml") {
 
 TEST_CASE("valid/integer/underscore.toml") {
     std::string content = load_file("valid/integer/underscore.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -107,7 +107,7 @@ TEST_CASE("valid/integer/underscore.toml") {
 
 TEST_CASE("valid/integer/zero.toml") {
     std::string content = load_file("valid/integer/zero.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 12);

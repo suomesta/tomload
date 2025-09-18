@@ -29,7 +29,7 @@ using namespace tomload;
 
 TEST_CASE("valid/string/basic-escape-01.toml") {
     std::string content = load_file("valid/string/basic-escape-01.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -39,7 +39,7 @@ TEST_CASE("valid/string/basic-escape-01.toml") {
 
 TEST_CASE("valid/string/basic-escape-02.toml") {
     std::string content = load_file("valid/string/basic-escape-02.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -49,7 +49,7 @@ TEST_CASE("valid/string/basic-escape-02.toml") {
 
 TEST_CASE("valid/string/basic-escape-03.toml") {
     std::string content = load_file("valid/string/basic-escape-03.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -59,7 +59,7 @@ TEST_CASE("valid/string/basic-escape-03.toml") {
 
 TEST_CASE("valid/string/empty.toml") {
     std::string content = load_file("valid/string/empty.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -69,7 +69,7 @@ TEST_CASE("valid/string/empty.toml") {
 
 TEST_CASE("valid/string/ends-in-whitespace-escape.toml") {
     std::string content = load_file("valid/string/ends-in-whitespace-escape.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -79,7 +79,7 @@ TEST_CASE("valid/string/ends-in-whitespace-escape.toml") {
 
 TEST_CASE("valid/string/escape-tricky.toml") {
     std::string content = load_file("valid/string/escape-tricky.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -101,7 +101,7 @@ TEST_CASE("valid/string/escape-tricky.toml") {
 
 TEST_CASE("valid/string/escaped-escape.toml") {
     std::string content = load_file("valid/string/escaped-escape.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -111,7 +111,7 @@ TEST_CASE("valid/string/escaped-escape.toml") {
 
 TEST_CASE("valid/string/escapes.toml") {
     std::string content = load_file("valid/string/escapes.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 13);
@@ -145,7 +145,7 @@ TEST_CASE("valid/string/escapes.toml") {
 
 TEST_CASE("valid/string/multibyte-escape.toml") {
     std::string content = load_file("valid/string/multibyte-escape.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -161,7 +161,7 @@ TEST_CASE("valid/string/multibyte-escape.toml") {
 
 TEST_CASE("valid/string/multibyte.toml") {
     std::string content = load_file("valid/string/multibyte.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -177,7 +177,7 @@ TEST_CASE("valid/string/multibyte.toml") {
 
 TEST_CASE("valid/string/multiline-empty.toml") {
     std::string content = load_file("valid/string/multiline-empty.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -193,7 +193,7 @@ TEST_CASE("valid/string/multiline-empty.toml") {
 
 TEST_CASE("valid/string/multiline-escaped-crlf.toml") {
     std::string content = load_file("valid/string/multiline-escaped-crlf.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -203,7 +203,7 @@ TEST_CASE("valid/string/multiline-escaped-crlf.toml") {
 
 TEST_CASE("valid/string/multiline-quotes.toml") {
     std::string content = load_file("valid/string/multiline-quotes.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 13);
@@ -237,7 +237,7 @@ TEST_CASE("valid/string/multiline-quotes.toml") {
 
 TEST_CASE("valid/string/multiline.toml") {
     std::string content = load_file("valid/string/multiline.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 9);
@@ -263,7 +263,7 @@ TEST_CASE("valid/string/multiline.toml") {
 
 TEST_CASE("valid/string/nl.toml") {
     std::string content = load_file("valid/string/nl.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -281,7 +281,7 @@ TEST_CASE("valid/string/nl.toml") {
 
 TEST_CASE("valid/string/quoted-unicode.toml") {
     std::string content = load_file("valid/string/quoted-unicode.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -297,7 +297,7 @@ TEST_CASE("valid/string/quoted-unicode.toml") {
 
 TEST_CASE("valid/string/raw-empty.toml") {
     std::string content = load_file("valid/string/raw-empty.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -307,7 +307,7 @@ TEST_CASE("valid/string/raw-empty.toml") {
 
 TEST_CASE("valid/string/raw-multiline.toml") {
     std::string content = load_file("valid/string/raw-multiline.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -325,7 +325,7 @@ TEST_CASE("valid/string/raw-multiline.toml") {
 
 TEST_CASE("valid/string/raw.toml") {
     std::string content = load_file("valid/string/raw.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 8);
@@ -349,7 +349,7 @@ TEST_CASE("valid/string/raw.toml") {
 
 TEST_CASE("valid/string/simple.toml") {
     std::string content = load_file("valid/string/simple.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -359,7 +359,7 @@ TEST_CASE("valid/string/simple.toml") {
 
 TEST_CASE("valid/string/start-mb.toml") {
     std::string content = load_file("valid/string/start-mb.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -381,7 +381,7 @@ TEST_CASE("valid/string/start-mb.toml") {
 
 TEST_CASE("valid/string/unicode-escape.toml") {
     std::string content = load_file("valid/string/unicode-escape.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 14);
@@ -417,7 +417,7 @@ TEST_CASE("valid/string/unicode-escape.toml") {
 
 TEST_CASE("valid/string/with-pound.toml") {
     std::string content = load_file("valid/string/with-pound.toml");
-    item_t t(view_t{content.c_str()});
+    item_t t{content.c_str()};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
