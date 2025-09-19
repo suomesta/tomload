@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(tomload CXX)
 
-set(CMAKE_CXX_STANDARD 14)  # set 17 if you want std::string_view
+set(CMAKE_CXX_STANDARD 14)
 
 add_executable(unittest
     unittest/main.cpp
@@ -37,7 +37,6 @@ target_include_directories(unittest PUBLIC
 )
 
 target_compile_definitions(unittest PRIVATE
-    SAMPLES_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
     TOML_IO_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
     TOML_TEST_DIR="${CMAKE_SOURCE_DIR}/unittest/toml-test/tests/"
 )

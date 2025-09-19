@@ -9,20 +9,11 @@
 #define TOMLOAD_VIEW_T_HPP
 
 #include <algorithm>
-
-#if __cpp_lib_string_view
-#include <string_view>
-#else
 #include "include/string_view14.hpp"
-#endif
 
 namespace tomload {
 
-#if __cpp_lib_string_view
-using view_t = std::string_view;
-#else
 using view_t = string_view14;
-#endif
 
 /* 
  * @brief Same as std::string_view::starts_with() in C++ 20.
