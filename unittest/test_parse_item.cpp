@@ -1,0 +1,662 @@
+#include "doctest/doctest.h"
+#include <cmath>
+#include <iterator>
+#include "tomload/tomload.h"
+#include "tomload/parser.h"
+
+using namespace tomload;
+
+TEST_CASE("testing parse_item(invalid)") {
+    {
+        view_t src = "";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "True";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(bool)") {
+    {
+        view_t src = "true";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_boolean() == true);
+        CHECK(result.get_boolean() == true);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "false";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_boolean() == true);
+        CHECK(result.get_boolean() == false);
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(special_float)") {
+    {
+        view_t src = "inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-inf";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == -std::numeric_limits<double>::infinity());
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(std::isnan(result.get_float()));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(std::isnan(result.get_float()));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-nan";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(std::isnan(result.get_float()));
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(radix)") {
+    {
+        view_t src = "0xF_f";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 255LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "0o77_7";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 511LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "0b11110000";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 240LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "0xFFFF_FFFF_FFFF_FFFF";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x_F_F";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x_F_F";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0xz";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0o99";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0b24";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "0x";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(''')") {
+    {
+        view_t src = "''''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'''A\r\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\r\na");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "''''A\r\na''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "'A\r\na'");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'''''A\r\na'''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "''A\r\na''");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "''''''A\r\na''''''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.compare("A\r\na''''''") == 0);
+    }
+    {
+        view_t src = "'''\r\nA\r\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\r\na");
+        CHECK(src.compare("") == 0);
+    }
+    {
+        view_t src = "'''\nA\na'''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "A\na");
+        CHECK(src.compare("") == 0);
+    }
+    {
+        view_t src = "'''\nA\na''";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(')") {
+    {
+        view_t src = "''";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'a\"b'";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "a\"b");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "'a\r\nb'";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "'a\"b";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(\"\"\")") {
+    {
+        view_t src = "\"\"\"\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"abc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\n\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\nabc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\r\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\r\n\r\nabc\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\r\nabc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\\\nedf\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abcedf");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\"\"\nabc\\\n \n\t\nedf\"\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abcedf");
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(\")") {
+    {
+        view_t src = "\"\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"abc\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "abc");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\\\\\\"\\r\\n\\t\\b \t\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "\\\"\r\n\t\b \t");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\u3042\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "あ");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\U00003044\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == "い");
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\u0000\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == std::string(1, '\0'));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\u123\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\U0000001F\"";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_string() == true);
+        CHECK(result.get_string() == std::string(1, '\x1f'));
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "\"\\U1234567\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"\\\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"abc\r\ndef\"";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "\"abc";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(integer)") {
+    {
+        view_t src = "123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == -123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+123";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 123LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == -0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+0";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 0LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "00";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "-0_0";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+0_0_0";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+9223372036854775807";  // 0x7FFF_FFFF_FFFF_FFFF
+        item_t result = parse_item(src);
+
+        CHECK(result.is_integer() == true);
+        CHECK(result.get_integer() == 9223372036854775807LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "+9223372036854775808";  // 0x8000_0000_0000_0000
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+12__3";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+12_3_";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+    {
+        view_t src = "+_12_3";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}
+
+TEST_CASE("testing parse_item(float)") {
+    {
+        view_t src = "1.5";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == 1.5);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "-0.25e002";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_float() == true);
+        CHECK(result.get_float() == -25.0);
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(array)") {
+    {
+        view_t src = "[]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 0);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "[ \t \n ]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 0);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "[0xff]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "[0xff,]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "[0xff , ]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 1);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "[0xff,true]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 2);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(result[1].is_boolean() == true);
+        CHECK(result[1].get_boolean() == true);
+        CHECK(src.empty());
+        for (array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
+            if (std::distance(result.array_begin(), i) == 0) {
+                CHECK(i->is_integer() == true);
+                CHECK(i->get_integer() == 255LL);
+            } else if (std::distance(result.array_begin(), i) == 1) {
+                CHECK(i->is_boolean() == true);
+                CHECK(i->get_boolean() == true);
+            }
+        }
+        int i = 0;
+        for (auto r : result.array_range()) {
+            if (i == 0) {
+                CHECK(r.is_integer() == true);
+                CHECK(r.get_integer() == 255LL);
+            } else if (i == 1) {
+                CHECK(r.is_boolean() == true);
+                CHECK(r.get_boolean() == true);
+            }
+            i++;
+        }
+    }
+    {
+        view_t src = "[0xff , true , ]";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_array() == true);
+        CHECK(result.size() == 2);
+        CHECK(result[0].is_integer() == true);
+        CHECK(result[0].get_integer() == 255LL);
+        CHECK(result[1].is_boolean() == true);
+        CHECK(result[1].get_boolean() == true);
+        CHECK(src.empty());
+    }
+}
+
+TEST_CASE("testing parse_item(inline table)") {
+    {
+        view_t src = "{}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 0);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{a=10}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{a=10, \"22\".b=true}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 2);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(result["22"].is_table() == true);
+        CHECK(result["22"].size() == 1);
+        CHECK(result["22"]["b"].is_boolean() == true);
+        CHECK(result["22"]["b"].get_boolean() == true);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{ \t \t a=10\t\t\t}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{ \t \t a=10\t\t\t}";
+        item_t result = parse_item(src);
+
+        CHECK(result.is_table() == true);
+        CHECK(result.size() == 1);
+        CHECK(result["a"].is_integer() == true);
+        CHECK(result["a"].get_integer() == 10);
+        CHECK(src.empty());
+    }
+    {
+        view_t src = "{a=10,}";
+
+        CHECK_THROWS_AS(parse_item(src), parse_error&);
+    }
+}

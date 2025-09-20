@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(unittest
     unittest/main.cpp
-    unittest/test_accessor.cpp unittest/test_functions.cpp
+    unittest/test_accessor.cpp
+    unittest/test_functions.cpp
+    unittest/test_parse_item.cpp
     unittest/test_toml.io/valid/Array.cpp
     unittest/test_toml.io/valid/Boolean.cpp
     unittest/test_toml.io/valid/Comment.cpp
