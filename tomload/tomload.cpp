@@ -20,36 +20,72 @@ item_t::item_t(view_t view) :
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with boolean.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in]: input boolean.
+ */
 item_t::item_t(single_construct_t, boolean_t val) noexcept :
     type(TYPE_BOOLEAN) {
     u.b = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with integer.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in]: input integer.
+ */
 item_t::item_t(single_construct_t, integer_t val) noexcept :
     type(TYPE_INTEGER) {
     u.i = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with float.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in]: input float.
+ */
 item_t::item_t(single_construct_t, float_t val) noexcept :
     type(TYPE_FLOAT) {
     u.d = val;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with string.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in,out]: input string.
+ */
 item_t::item_t(single_construct_t, string_t&& val) noexcept :
     type(TYPE_STRING),
     s(std::move(val)) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with array.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in]: pointer of input array.
+ */
 item_t::item_t(single_construct_t, std::shared_ptr<std::vector<item_t>> val) noexcept :
     type(TYPE_ARRAY),
     v(val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup SingleConstruct
+ * @brief Constructor with table.
+ * @param single_construct_t[in]: placeholder.
+ * @param val[in]: pointer of input table.
+ */
 item_t::item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val) noexcept:
     type(TYPE_TABLE),
     m(val) {

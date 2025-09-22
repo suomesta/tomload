@@ -109,15 +109,64 @@ class item_t {
     explicit item_t(view_t view);
     /////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @defgroup SingleConstruct Constructors with Single Element
+     * @brief A set of constructors used to create item_t with single element.
+     *
+     * Main purpose of these constructors are testing. Most users does not need use these.
+     */
+
     /*
-     * @brief Constructors for each types (boolean, integer, float, string, array, and table).
-     * @note Main purpose of these constructors are testing. Most users does not need use these.
+     * @ingroup SingleConstruct
+     * @brief Constructor with boolean.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input boolean.
      */
     item_t(single_construct_t, boolean_t val) noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup SingleConstruct
+     * @brief Constructor with integer.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input integer.
+     */
     item_t(single_construct_t, integer_t val) noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup SingleConstruct
+     * @brief Constructor with float.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input float.
+     */
     item_t(single_construct_t, float_t val) noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup SingleConstruct
+     * @brief Constructor with array.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input array.
+     */
     item_t(single_construct_t, string_t&& val) noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup SingleConstruct
+     * @brief Constructor with table.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input table.
+     */
     item_t(single_construct_t, std::shared_ptr<std::vector<item_t>> val) noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup SingleConstruct
+     * @brief Constructor with table.
+     * @param single_construct_t[in]: placeholder.
+     * @param val[in]: pointer of input table.
+     */
     item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
