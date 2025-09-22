@@ -121,14 +121,53 @@ class item_t {
     item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @defgroup TypeCheckers Type Checking Functions
+     * @brief A set of functions used to determine the type of an item.
+     *
+     * These functions allow you to check whether an item is of a specific type,
+     * such as boolean, integer, float, string, array, or table.
+     */
+
     /*
-     * @brief Type checker for each types (boolean, integer, float, string, array, and table).
+     * @ingroup TypeCheckers
+     * @brief Type checker for boolean.
      */
     bool is_boolean(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup TypeCheckers
+     * @brief Type checker for integer.
+     */
     bool is_integer(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup TypeCheckers
+     * @brief Type checker for float.
+     */
     bool is_float(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup TypeCheckers
+     * @brief Type checker for string.
+     */
     bool is_string(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup TypeCheckers
+     * @brief Type checker for array.
+     */
     bool is_array(void) const noexcept;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup TypeCheckers
+     * @brief Type checker for table.
+     */
     bool is_table(void) const noexcept;
     /////////////////////////////////////////////////////////////////////////////
 

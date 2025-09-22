@@ -56,31 +56,55 @@ item_t::item_t(single_construct_t, std::shared_ptr<std::map<key_t, item_t>> val)
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for boolean.
+ */
 bool item_t::is_boolean(void) const noexcept {
     return type == TYPE_BOOLEAN;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for integer.
+ */
 bool item_t::is_integer(void) const noexcept {
     return type == TYPE_INTEGER;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for float.
+ */
 bool item_t::is_float(void) const noexcept {
     return type == TYPE_FLOAT;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for string.
+ */
 bool item_t::is_string(void) const noexcept {
     return type == TYPE_STRING;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for array.
+ */
 bool item_t::is_array(void) const noexcept {
     return type == TYPE_ARRAY;
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup TypeCheckers
+ * @brief Type checker for table.
+ */
 bool item_t::is_table(void) const noexcept {
     return (type == TYPE_TABLE) || (type == TYPE_INLINE_TABLE);
 }
