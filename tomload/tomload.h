@@ -220,18 +220,58 @@ class item_t {
     bool is_table(void) const noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @defgroup Getters Get the Value
+     * @brief A set of functions used to get the specified typed value.
+     *
+     * These functions allow you to get value an item is of a specific type,
+     * such as boolean, integer, float, string.
+     *
+     * A tomload::type_error is raised when the type is mismatched.
+     */
+
     /*
-     * @brief Getter of single value (boolean, integer, float, and string).
-     * @throw type_error: if type of item_t does not match with the type specified by getter.
-     * @pre To prevent throwing exceptions, call `is_boolean()`, `is_integer()`, `is_float()`, or `is_string()` and confirm the return value.
+     * @ingroup Getters
+     * @brief Getter of boolean value.
+     * @return boolean value.
+     * @throw tomload::type_error: when type is mismatched.
+     * @pre in order to prevent throw, call is_boolean() and confirm its return value.
      */
     boolean_t get_boolean(void) const;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup Getters
+     * @brief Getter of integer value.
+     * @return integer value.
+     * @throw tomload::type_error: when type is mismatched.
+     * @pre in order to prevent throw, call is_integer() and confirm its return value.
+     */
     integer_t get_integer(void) const;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup Getters
+     * @brief Getter of float value.
+     * @return float value.
+     * @throw tomload::type_error: when type is mismatched.
+     * @pre in order to prevent throw, call is_float() and confirm its return value.
+     */
     float_t get_float(void) const;
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @ingroup Getters
+     * @brief Getter of string value.
+     * @return string value.
+     * @throw tomload::type_error: when type is mismatched.
+     * @pre in order to prevent throw, call is_string() and confirm its return value.
+     */
     string_t get_string(void) const;
     /////////////////////////////////////////////////////////////////////////////
 
     /*
+     * @ingroup Getters
      * @brief Getter of param[out] version. supported types are boolean, integer, float, and string.
      * @param val[out]: gotten value to be loaded.
      * @return true/false: success/fail to get.
@@ -245,7 +285,7 @@ class item_t {
      * @brief get size of array or table.
      * @return size_t: size of array or table.
      * @throw type_error: if the type is neither array nor table.
-     * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm its return value.
      */
     size_t size(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -254,7 +294,7 @@ class item_t {
      * @brief check the array or table is empty or not.
      * @return bool: array or table is empty.
      * @throw type_error: if the type is neither array nor table.
-     * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm its return value.
      */
     bool empty(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -264,7 +304,7 @@ class item_t {
      * @param index[in]: appointed index of array.
      * @throw type_error: if the type is not array.
      * @throw std::out_of_range: if `index` is out of range of array.
-     * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
      */
     const item_t& operator[](size_t index) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -274,7 +314,7 @@ class item_t {
      * @param key[in]: appointed key of table.
      * @throw type_error: if the type is not table.
      * @throw std::out_of_range: if `key` is not found in the table.
-     * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
     const item_t& operator[](const key_t& key) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -284,7 +324,7 @@ class item_t {
      * @param key[in]: The key to check for existence in the table.
      * @return true if the key exists in the table, false otherwise.
      * @throw type_error: if the type is not table.
-     * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
     bool contains(const key_t& key) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -293,7 +333,7 @@ class item_t {
      * @brief Get an iterator to the beginning of the array.
      * @return array_iterator: an iterator pointing to the first element of the array.
      * @throw type_error: if the type is not array.
-     * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
      */
     array_iterator array_begin(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -302,7 +342,7 @@ class item_t {
      * @brief Get an iterator to the end of the array.
      * @return array_iterator: an iterator pointing to the end of the array.
      * @throw type_error: if the type is not array.
-     * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
      */
     array_iterator array_end(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -311,7 +351,7 @@ class item_t {
      * @brief Get an iterator to the beginning of the table.
      * @return table_iterator: an iterator pointing to the first element of the table.
      * @throw type_error: if the type is not table.
-     * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
     table_iterator table_begin(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -320,7 +360,7 @@ class item_t {
      * @brief Get an iterator to the end of the table.
      * @return table_iterator: an iterator pointing to the end of the table.
      * @throw type_error: if the type is not table.
-     * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
     table_iterator table_end(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -329,7 +369,7 @@ class item_t {
      * @brief Get a range of the array.
      * @return array_range_t: a range object containing iterators to the beginning and end of the array.
      * @throw type_error: if the type is not array.
-     * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
      */
     const array_range_t array_range(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -338,7 +378,7 @@ class item_t {
      * @brief Get a range of the table.
      * @return table_range_t: a range object containing iterators to the beginning and end of the table.
      * @throw type_error: if the type is not table.
-     * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+     * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
     const table_range_t table_range(void) const;
     /////////////////////////////////////////////////////////////////////////////
@@ -395,6 +435,7 @@ std::ostream& operator<<(std::ostream& os, const item_t& item);
 /////////////////////////////////////////////////////////////////////////////
 
 /*
+ * @ingroup Getters
  * @brief This is the template specialization when PARAM is string_t.
  */
 template <>
@@ -402,6 +443,7 @@ bool item_t::get<string_t>(string_t& val) const;
 /////////////////////////////////////////////////////////////////////////////
 
 /*
+ * @ingroup Getters
  * @brief Getter of param[out] version. supported types are boolean, integer, float, and string.
  * @param val[out]: gotten value to be loaded.
  * @return true/false: success/fail to get.

@@ -146,6 +146,13 @@ bool item_t::is_table(void) const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup Getters
+ * @brief Getter of boolean value.
+ * @return boolean value.
+ * @throw tomload::type_error: when type is mismatched.
+ * @pre in order to prevent throw, call is_boolean() and confirm its return value.
+ */
 boolean_t item_t::get_boolean(void) const {
     if (not is_boolean()) {
         throw type_error("type mismatch");
@@ -154,6 +161,13 @@ boolean_t item_t::get_boolean(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup Getters
+ * @brief Getter of integer value.
+ * @return integer value.
+ * @throw tomload::type_error: when type is mismatched.
+ * @pre in order to prevent throw, call is_integer() and confirm its return value.
+ */
 integer_t item_t::get_integer(void) const {
     if (not is_integer()) {
         throw type_error("type mismatch");
@@ -162,6 +176,13 @@ integer_t item_t::get_integer(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup Getters
+ * @brief Getter of float value.
+ * @return float value.
+ * @throw tomload::type_error: when type is mismatched.
+ * @pre in order to prevent throw, call is_float() and confirm its return value.
+ */
 float_t item_t::get_float(void) const {
     if (not is_float()) {
         throw type_error("type mismatch");
@@ -170,6 +191,13 @@ float_t item_t::get_float(void) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup Getters
+ * @brief Getter of string value.
+ * @return string value.
+ * @throw tomload::type_error: when type is mismatched.
+ * @pre in order to prevent throw, call is_string() and confirm its return value.
+ */
 string_t item_t::get_string(void) const {
     if (not is_string()) {
         throw type_error("type mismatch");
@@ -182,7 +210,7 @@ string_t item_t::get_string(void) const {
  * @brief get size of array or table.
  * @return size_t: size of array or table.
  * @throw type_error: if the type is neither array nor table.
- * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm its return value.
  */
 size_t item_t::size(void) const {
     if (is_array()) {
@@ -199,7 +227,7 @@ size_t item_t::size(void) const {
  * @brief check the array or table is empty or not.
  * @return bool: array or table is empty.
  * @throw type_error: if the type is neither array nor table.
- * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()`, or `is_table()` and confirm its return value.
  */
 bool item_t::empty(void) const {
     if (is_array()) {
@@ -217,7 +245,7 @@ bool item_t::empty(void) const {
  * @param index[in]: appointed index of array.
  * @throw type_error: if the type is not array.
  * @throw std::out_of_range: if `index` is out of range of array.
- * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
  */
 const item_t& item_t::operator[](size_t index) const {
     if (is_array()) {
@@ -233,7 +261,7 @@ const item_t& item_t::operator[](size_t index) const {
  * @param key[in]: appointed key of table.
  * @throw type_error: if the type is not table.
  * @throw std::out_of_range: if `key` is not found in the table.
- * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
  */
 const item_t& item_t::operator[](const key_t& key) const {
     if (is_table()) {
@@ -249,7 +277,7 @@ const item_t& item_t::operator[](const key_t& key) const {
  * @param key[in]: The key to check for existence in the table.
  * @return true if the key exists in the table, false otherwise.
  * @throw type_error: if the type is not table.
- * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
  */
 bool item_t::contains(const key_t& key) const {
     if (is_table()) {
@@ -264,7 +292,7 @@ bool item_t::contains(const key_t& key) const {
  * @brief Get an iterator to the beginning of the array.
  * @return array_iterator: an iterator pointing to the first element of the array.
  * @throw type_error: if the type is not array.
- * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
  */
 array_iterator item_t::array_begin(void) const {
     if (is_array()) {
@@ -279,7 +307,7 @@ array_iterator item_t::array_begin(void) const {
  * @brief Get an iterator to the end of the array.
  * @return array_iterator: an iterator pointing to the end of the array.
  * @throw type_error: if the type is not array.
- * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
  */
 array_iterator item_t::array_end(void) const {
     if (is_array()) {
@@ -294,7 +322,7 @@ array_iterator item_t::array_end(void) const {
  * @brief Get an iterator to the beginning of the table.
  * @return table_iterator: an iterator pointing to the first element of the table.
  * @throw type_error: if the type is not table.
- * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
  */
 table_iterator item_t::table_begin(void) const {
     if (is_table()) {
@@ -309,7 +337,7 @@ table_iterator item_t::table_begin(void) const {
  * @brief Get an iterator to the end of the table.
  * @return table_iterator: an iterator pointing to the end of the table.
  * @throw type_error: if the type is not table.
- * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
  */
 table_iterator item_t::table_end(void) const {
     if (is_table()) {
@@ -324,7 +352,7 @@ table_iterator item_t::table_end(void) const {
  * @brief Get a range of the array.
  * @return array_range_t: a range object containing iterators to the beginning and end of the array.
  * @throw type_error: if the type is not array.
- * @pre To prevent throwing exceptions, call `is_array()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
  */
 const array_range_t item_t::array_range(void) const {
     if (is_array()) {
@@ -339,7 +367,7 @@ const array_range_t item_t::array_range(void) const {
  * @brief Get a range of the table.
  * @return table_range_t: a range object containing iterators to the beginning and end of the table.
  * @throw type_error: if the type is not table.
- * @pre To prevent throwing exceptions, call `is_table()` and confirm the return value.
+ * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
  */
 const table_range_t item_t::table_range(void) const {
     if (is_table()) {
