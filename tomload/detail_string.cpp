@@ -1,3 +1,8 @@
+/*
+ * @file tomload/detail_string.cpp
+ * @note target version of C++ is C++14. 
+ */
+
 #include "tomload/detail_string.h"
 
 namespace tomload {

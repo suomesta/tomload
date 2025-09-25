@@ -1,4 +1,10 @@
-#include "doctest/doctest.h"
+/*
+ * @file unittest/test_accessor.cpp
+ * @brief testing item_t accesors using doctest.
+ * @note target version of C++ is C++14. 
+ */
+
+#include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 using namespace tomload;

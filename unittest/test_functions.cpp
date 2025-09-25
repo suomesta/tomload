@@ -1,8 +1,15 @@
-#include "doctest/doctest.h"
+/*
+ * @file unittest/test_functions.cpp
+ * @brief testing some functions regarding item_t using doctest.
+ * @note target version of C++ is C++14. 
+ */
+
 #include <cmath>
 #include <iterator>
+#include <doctest/doctest.h>
 #include "tomload/tomload.h"
 #include "tomload/parser.h"
+#include "tomload/view_t.h"
 
 using namespace tomload;
 

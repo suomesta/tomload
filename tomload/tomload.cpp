@@ -1,3 +1,9 @@
+/*
+ * @file tomload/tomload.cpp
+ * @brief implement tomload::item_t.
+ * @note target version of C++ is C++14. 
+ */
+
 #include "tomload/tomload.h"
 #include <utility>
 #include "tomload/parser.h"

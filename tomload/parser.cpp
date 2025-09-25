@@ -1,3 +1,8 @@
+/*
+ * @file tomload/parser.cpp
+ * @note target version of C++ is C++14. 
+ */
+
 #include "tomload/parser.h"
 #include "tomload/detail_number.h"
 #include "tomload/detail_string.h"

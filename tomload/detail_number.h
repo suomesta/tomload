@@ -1,8 +1,13 @@
+/*
+ * @file tomload/detail_number.h
+ * @note target version of C++ is C++14. 
+ */
+
 #ifndef TOMLOAD_DETAIL_NUMBER_H
 #define TOMLOAD_DETAIL_NUMBER_H
 
 #include "tomload/tomload.h"
-#include "tomload/view_t.hpp"
+#include "tomload/view_t.h"
 
 namespace tomload {
 

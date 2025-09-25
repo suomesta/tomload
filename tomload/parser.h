@@ -1,8 +1,13 @@
+/*
+ * @file tomload/parser.h
+ * @note target version of C++ is C++14. 
+ */
+
 #ifndef TOMLOAD_PARSER_H
 #define TOMLOAD_PARSER_H
 
 #include "tomload/tomload.h"
-#include "tomload/view_t.hpp"
+#include "tomload/view_t.h"
 
 namespace tomload {
 

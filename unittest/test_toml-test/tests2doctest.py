@@ -6,11 +6,11 @@ import sys
 import tomllib
 
 HEAD = """\
-#include "doctest/doctest.h"
 #include <cmath>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {

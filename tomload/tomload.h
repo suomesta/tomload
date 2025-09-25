@@ -1,15 +1,19 @@
 /*
- * @file tomload.h
+ * @file tomload/tomload.h
  * @brief Header file for tomload library.
  * @details This file defines the item_t class and its methods for parsing and handling TOML data.
  *          `tomload::item_t` is main class of this library.
  *          typical usage is shown in example.
+ * @note target version of C++ is C++14. 
  * @example
  *      tomload::item_t item("[root]\r\narray = [1, 2, 3]\r\n");
  *      for (auto i : item) {
  *          std::cout << i.first;  // => "root"
- *          for (auto j : item.second) {
- *              std::cout << j.get_integer();  // => 1, 2, 3 
+ *          for (auto j : i.second) {
+ *              std::cout << j.first;  // => "array"
+ *              for (auto k : j.second) {
+ *                  std::cout << k.get_integer();  // => 1, 2, 3 
+ *              }
  *          }
  *      }
  */
@@ -26,7 +30,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "tomload/view_t.hpp"
+#include "tomload/view_t.h"
 
 namespace tomload {
 

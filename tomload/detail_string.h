@@ -1,10 +1,15 @@
+/*
+ * @file tomload/detail_string.h
+ * @note target version of C++ is C++14. 
+ */
+
 #ifndef TOMLOAD_DETAIL_STRING_H
 #define TOMLOAD_DETAIL_STRING_H
 
 #include <cstdint>
 #include <string>
 #include "tomload/tomload.h"
-#include "tomload/view_t.hpp"
+#include "tomload/view_t.h"
 
 namespace tomload {
 
