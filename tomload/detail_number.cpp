@@ -4,6 +4,7 @@
  */
 
 #include "tomload/detail_number.h"
+#include <algorithm>
 
 namespace tomload {
 
@@ -16,10 +17,7 @@ view_t::size_type get_radix_length(view_t view) {
                           starts_with(view, "0b") ? "01_" : "";
 
     view_t::size_type pos = view.find_first_not_of(allowed, 2);
-    if (pos == view_t::npos) {
-        pos = view.size();
-    }
-    return pos;
+    return (pos != view_t::npos) ? pos : view.size();
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -39,11 +37,8 @@ integer_t parse_radix_value(view_t view, view_t::size_type length) {
     }
 
     std::string str;
-    for (char c : sub) {
-        if (c != '_') {
-            str.push_back(c);
-        }
-    }
+    std::copy_if(sub.begin(), sub.end(), std::back_inserter(str),
+                 [](char c) { return c != '_'; });
 
     integer_t ret = 0;
     try {
@@ -62,10 +57,7 @@ integer_t parse_radix_value(view_t view, view_t::size_type length) {
  */
 view_t::size_type get_integer_length(view_t view) {
     view_t::size_type pos = view.find_first_not_of("0123456789_", 1);
-    if (pos == view_t::npos) {
-        pos = view.size();
-    }
-    return pos;
+    return (pos != view_t::npos) ? pos : view.size();
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -81,11 +73,8 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
     }
 
     std::string str;
-    for (char c : sub) {
-        if (c != '_') {
-            str.push_back(c);
-        }
-    }
+    std::copy_if(sub.begin(), sub.end(), std::back_inserter(str),
+                 [](char c) { return c != '_'; });
 
     view_t ref{str.c_str()};
     if (starts_with(ref, {"+", "-"})) {
@@ -120,10 +109,7 @@ view_t::size_type get_float_length(view_t view) {
         if (decimal_pos == pos) {
             throw parse_error("must digit after '.'");
         }
-        if (decimal_pos == view_t::npos) {
-            decimal_pos = view.size();
-        }
-        pos = decimal_pos;
+        pos = (decimal_pos != view_t::npos) ? decimal_pos : view.size();
     }
 
     if (pos < view.size() && (view[pos] == 'e' || view[pos] == 'E')) {
@@ -136,10 +122,7 @@ view_t::size_type get_float_length(view_t view) {
         if (expo_pos == pos) {
             throw parse_error("must digit after 'e' or 'E'");
         }
-        if (expo_pos == view_t::npos) {
-            expo_pos = view.size();
-        }
-        pos = expo_pos;
+        pos = (expo_pos != view_t::npos) ? expo_pos : view.size();
     }
 
     return pos;
@@ -158,11 +141,8 @@ float_t parse_float(view_t view, view_t::size_type length) {
     }
 
     std::string str;
-    for (char c : sub) {
-        if (c != '_') {
-            str.push_back(c);
-        }
-    }
+    std::copy_if(sub.begin(), sub.end(), std::back_inserter(str),
+                 [](char c) { return c != '_'; });
 
     view_t ref{str.c_str()};
     if (starts_with(ref, {"+", "-"})) {
