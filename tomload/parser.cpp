@@ -38,7 +38,7 @@ void skip_space(view_t& view, view_t spaces, bool skip_comment) {
         view = view_t{};
     } else if (pos > 0) {
         view.remove_prefix(pos);
-        go_recurrsive = true;
+        go_recurrsive = skip_comment;
     }
 
     if (skip_comment) {

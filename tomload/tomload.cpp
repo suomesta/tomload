@@ -496,49 +496,44 @@ void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t 
 void item_t::parse_main(view_t& view) {
     std::vector<std::vector<key_t>> brackets_set;
     item_t* p_brackets_end = this;
-    bool ini_state = true;
 
-    for (;;) {
-        if (ini_state) {
-            skip_space(view, " \t\r\n", true);
-            if (view.empty()) {
-                break;
-            } else if (starts_with(view, "[")) {
+    skip_space(view, " \t\r\n", true);
+    while (not view.empty()) {
+        if (starts_with(view, "[")) {  // parse "[brackets]" line
+            view.remove_prefix(1);
+            std::vector<key_t> brackets = parse_keys(view);
+
+            skip_space(view, " \t", false);
+            if (starts_with(view, "]")) {
+                brackets_set.push_back(std::move(brackets));
+                p_brackets_end = insert_brackets_table(brackets_set);
                 view.remove_prefix(1);
-                std::vector<key_t> brackets = parse_keys(view);
-
-                skip_space(view, " \t", false);
-                if (starts_with(view, "]")) {
-                    brackets_set.push_back(std::move(brackets));
-                    p_brackets_end = insert_brackets_table(brackets_set);
-                    view.remove_prefix(1);
-                    ini_state = false;
-                } else {
-                    throw parse_error("expected ']'");
-                }
             } else {
-                std::vector<key_t> keys = parse_keys(view);
-
-                skip_space(view, " \t", false);
-                if (starts_with(view, "=")) {
-                    view.remove_prefix(1);
-                } else {
-                    throw parse_error("expected '='");
-                }
-
-                check_duplex_keys(keys, brackets_set);
-
-                skip_space(view, " \t", false);
-                insert_keys_table(p_brackets_end, std::move(keys), parse_item(view));
-                ini_state = false;
+                throw parse_error("expected ']'");
             }
-        } else {
-            if (wait_newline(view)) {
-                ini_state = true;
+        } else {  // parse "key = value" line
+            std::vector<key_t> keys = parse_keys(view);
+
+            skip_space(view, " \t", false);
+            if (starts_with(view, "=")) {
+                view.remove_prefix(1);
             } else {
-                throw parse_error("expected newline");
+                throw parse_error("expected '='");
             }
+
+            check_duplex_keys(keys, brackets_set);
+
+            skip_space(view, " \t", false);
+            insert_keys_table(p_brackets_end, std::move(keys), parse_item(view));
         }
+
+        // wait new line (allow end of text)
+        if (wait_newline(view)) {
+        } else {
+            throw parse_error("expected newline");
+        }
+
+        skip_space(view, " \t\r\n", true);
     }
 }
 /////////////////////////////////////////////////////////////////////////////
