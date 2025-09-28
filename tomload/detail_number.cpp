@@ -40,15 +40,13 @@ integer_t parse_radix_value(view_t view, view_t::size_type length) {
     std::copy_if(sub.begin(), sub.end(), std::back_inserter(str),
                  [](char c) { return c != '_'; });
 
-    integer_t ret = 0;
     try {
-        ret = std::stoll(str, nullptr, base);
+        return std::stoll(str, nullptr, base);
     } catch (std::out_of_range& err) {
         throw parse_error("out_of_range");
     } catch (std::invalid_argument& err) {
         throw parse_error("invalid_argument");
     }
-    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -84,15 +82,13 @@ integer_t parse_integer(view_t view, view_t::size_type length) {
         throw parse_error("starts with 0");
     }
 
-    integer_t ret = 0;
     try {
-        ret = std::stoll(str, nullptr, 10);
+        return std::stoll(str, nullptr, 10);
     } catch (std::out_of_range& err) {
         throw parse_error("out_of_range");
     } catch (std::invalid_argument& err) {
         throw parse_error("invalid_argument");
     }
-    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -155,15 +151,13 @@ float_t parse_float(view_t view, view_t::size_type length) {
         throw parse_error("missing integer digits");
     }
 
-    float_t ret = 0;
     try {
-        ret = std::stod(str, nullptr);
+        return std::stod(str, nullptr);
     } catch (std::out_of_range& err) {
         throw parse_error("out_of_range");
     } catch (std::invalid_argument& err) {
         throw parse_error("invalid_argument");
     }
-    return ret;
 }
 /////////////////////////////////////////////////////////////////////////////
 
