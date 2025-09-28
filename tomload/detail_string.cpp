@@ -38,11 +38,9 @@ view_t::size_type get_multi_literal_string_length(view_t view) {
         throw parse_error("not closed by '''");
     }
 
-    view_t::size_type pos5 = view.find("'''''", 3);
-    view_t::size_type pos4 = view.find("''''", 3);
-    if (pos == pos5) {
+    if (pos == view.find("'''''", 3)) {
         pos += 2;
-    } else if (pos == pos4) {
+    } else if (pos == view.find("''''", 3)) {
         pos += 1;
     }
 
@@ -298,10 +296,7 @@ string_t parse_string(view_t view, view_t::size_type length) {
  */
 view_t::size_type get_bare_length(view_t view) {
     view_t::size_type pos = view.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-", 1);
-    if (pos == view_t::npos) {
-        pos = view.size();
-    }
-    return pos;
+    return (pos != view_t::npos) ? pos : view.size();
 }
 /////////////////////////////////////////////////////////////////////////////
 
