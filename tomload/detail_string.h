@@ -23,12 +23,11 @@ namespace tomload {
  * - 3 bytes for code points in [U+0800, U+FFFF]
  * - 4 bytes for code points in [U+10000, U+10FFFF]
  *
- * If the code point is outside the valid Unicode range (greater than U+10FFFF),
- * an empty string is returned.
+ * If the code point is outside the valid Unicode range (greater than U+10FFFF).
  *
  * @param codepoint The Unicode code point to encode.
- * @return A UTF-8 encoded string representing the input code point,
- *         or an empty string if the code point is invalid.
+ * @return A UTF-8 encoded string representing the input code point.
+ * @throw parse_error: when detect invalid unicode escape or surrogate pair in 2 bytes.
  */
 std::string utf8_encode(uint32_t codepoint);
 /////////////////////////////////////////////////////////////////////////////

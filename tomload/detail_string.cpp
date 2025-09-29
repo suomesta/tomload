@@ -17,12 +17,11 @@ namespace tomload {
  * - 3 bytes for code points in [U+0800, U+FFFF]
  * - 4 bytes for code points in [U+10000, U+10FFFF]
  *
- * If the code point is outside the valid Unicode range (greater than U+10FFFF),
- * an empty string is returned.
+ * If the code point is outside the valid Unicode range (greater than U+10FFFF).
  *
  * @param codepoint The Unicode code point to encode.
- * @return A UTF-8 encoded string representing the input code point,
- *         or an empty string if the code point is invalid.
+ * @return A UTF-8 encoded string representing the input code point.
+ * @throw parse_error: when detect invalid unicode escape or surrogate pair in 2 bytes.
  */
 std::string utf8_encode(uint32_t codepoint) {
     if (codepoint <= 0x7F) {  // 1-byte UTF-8
@@ -31,6 +30,9 @@ std::string utf8_encode(uint32_t codepoint) {
         return {static_cast<char>(0xC0 | (codepoint >> 6)),
                 static_cast<char>(0x80 | (codepoint & 0x3F))};
     } else if (codepoint <= 0xFFFF) {  // 3-byte UTF-8
+        if ((0xD800 <= codepoint) && (codepoint <= 0xDFFF)) {  // U+D800 ～ U+DFFF
+            throw parse_error("detect surrogate pair in 2bytes (U+D800 - U+DFFF)");
+        }
         return {static_cast<char>(0xE0 | (codepoint >> 12)),
                 static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F)),
                 static_cast<char>(0x80 | (codepoint & 0x3F))};
@@ -40,7 +42,7 @@ std::string utf8_encode(uint32_t codepoint) {
                 static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F)),
                 static_cast<char>(0x80 | (codepoint & 0x3F))};  
     } else {
-        return {};  // Invalid code point
+        throw parse_error("invalid unicode escape sequence");  // Invalid code point
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -123,15 +125,8 @@ std::string parse_unicode_escape(const view_t& view, int size) {
     if (not std::all_of(view.data(), view.data() + size, is_hex)) {
         throw parse_error("invalid unicode escape sequence");
     }
-    uint32_t code_point = static_cast<uint32_t>(std::stoul(std::string(view.data(), size), nullptr, 16));
-    if ((0xD800 <= code_point) && (code_point <= 0xDFFF)) {  // U+D800 ～ U+DFFF
-        throw parse_error("detect surrogate pair in 2bytes (U+D800 - U+DFFF)");
-    }
-    std::string chars = utf8_encode(code_point);
-    if (chars.empty()) {
-        throw parse_error("invalid unicode escape sequence");
-    }
-    return chars;
+    uint32_t codepoint = static_cast<uint32_t>(std::stoul(std::string(view.data(), size), nullptr, 16));
+    return utf8_encode(codepoint);
 }
 /////////////////////////////////////////////////////////////////////////////
 
