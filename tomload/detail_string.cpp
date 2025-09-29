@@ -7,6 +7,23 @@
 
 namespace tomload {
 
+/**
+ * @brief Encodes a Unicode code point into its UTF-8 string representation.
+ *
+ * This function takes a 32-bit Unicode code point and converts it into a UTF-8 encoded string.
+ * UTF-8 encoding uses 1 to 4 bytes depending on the value of the code point:
+ * - 1 byte for code points in [U+0000, U+007F]
+ * - 2 bytes for code points in [U+0080, U+07FF]
+ * - 3 bytes for code points in [U+0800, U+FFFF]
+ * - 4 bytes for code points in [U+10000, U+10FFFF]
+ *
+ * If the code point is outside the valid Unicode range (greater than U+10FFFF),
+ * an empty string is returned.
+ *
+ * @param codepoint The Unicode code point to encode.
+ * @return A UTF-8 encoded string representing the input code point,
+ *         or an empty string if the code point is invalid.
+ */
 std::string utf8_encode(uint32_t codepoint) {
     if (codepoint <= 0x7F) {  // 1-byte UTF-8
         return {static_cast<char>(codepoint)};
@@ -48,6 +65,9 @@ view_t::size_type get_multi_literal_string_length(view_t view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must start with "'''"
+ */
 string_t parse_multi_literal_string(view_t& view, view_t::size_type length) {
     if (starts_with(view, "'''\r\n")) {
         return string_t(view.data() + 5, length - 8);
@@ -81,11 +101,17 @@ view_t::size_type get_literal_string_length(view_t view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must start with "'"
+ */
 string_t parse_literal_string(view_t& view, view_t::size_type length) {
     return string_t(view.data() + 1, length - 2);
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must starts with 4 or 8 digits hex
+ */
 std::string parse_unicode_escape(const view_t& view, int size) {
     auto is_hex = [](char c) {  // avoid to use std::isxdigit() because that depends on the locale
         return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
@@ -170,6 +196,9 @@ view_t::size_type get_multi_string_length(view_t view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must start with '"""'
+ */
 string_t parse_multi_string(view_t view, view_t::size_type length) {
     std::string ret;
 
@@ -254,6 +283,9 @@ view_t::size_type get_string_length(view_t view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre `view` must start with '"'
+ */
 string_t parse_string(view_t view, view_t::size_type length) {
     std::string ret;
 
