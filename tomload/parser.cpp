@@ -9,6 +9,14 @@
 
 namespace tomload {
 
+/**
+ * @brief Checks for a newline at the beginning of the input view.
+ *
+ * This function skips leading whitespace characters (`' '`, `'\t'`, `'\r'`) and comments in the input view.
+ *
+ * @param view[in,out]: A reference to the input view to be examined and potentially modified.
+ * @return true if a newline was found and handled; false otherwise.
+ */
 bool wait_newline(view_t& view) {
     skip_space(view, " \t\r", false);
     if (view.empty()) {
@@ -18,11 +26,7 @@ bool wait_newline(view_t& view) {
         return true;
     } else if (starts_with(view, "#")) {
         view_t::size_type lf_pos = view.find('\n');
-        if (lf_pos == view_t::npos) {
-            view = view_t{};
-        } else {
-            view.remove_prefix(lf_pos);
-        }
+        view.remove_prefix((lf_pos != view_t::npos) ? lf_pos : view.size());
         return true;
     } else {
         return false;
@@ -30,30 +34,32 @@ bool wait_newline(view_t& view) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief Skips leading whitespace and optionally comments in the input view.
+ *
+ * This function removes leading characters from the input view that match any character
+ * in the `spaces` set. If `skip_comment` is true and the view starts with a comment
+ * character (`'#'`), it removes all characters up to and including the next newline.
+ * The function may call itself recursively if a comment is removed and further whitespace
+ * or comments may follow.
+ *
+ * @param view[in,out]: A reference to the input view to be modified.
+ * @param spaces[in]: A set of characters considered as whitespace (e.g., " \t\r").
+ * @param skip_comment[in]: If true, lines starting with '#' are treated as comments and skipped.
+ */
 void skip_space(view_t& view, view_t spaces, bool skip_comment) {
-    bool go_recurrsive = false;
-
     view_t::size_type pos = view.find_first_not_of(spaces);
     if (pos == view_t::npos) {
         view = view_t{};
     } else if (pos > 0) {
         view.remove_prefix(pos);
-        go_recurrsive = skip_comment;
     }
 
-    if (skip_comment) {
-        if (starts_with(view, "#")) {
-            view_t::size_type lf_pos = view.find('\n');
-            if (lf_pos == view_t::npos) {
-                view = view_t{};
-            } else {
-                view.remove_prefix(lf_pos);
-                go_recurrsive = true;
-            }
-        }
-    }
+    if (skip_comment && starts_with(view, "#")) {
+        view_t::size_type lf_pos = view.find('\n');
+        view.remove_prefix((lf_pos != view_t::npos) ? lf_pos : view.size());
 
-    if (go_recurrsive) {
+        // go to recurrsive call, because current `view` may start with `spaces`
         skip_space(view, spaces, skip_comment);
     }
 }
@@ -227,9 +233,9 @@ item_t parse_item(view_t& view) {
         return parse_array(view);
     } else if (starts_with(view, "{")) {
         return parse_inline_table(view);
+    } else {
+        throw parse_error("not hit item");
     }
-
-    throw parse_error("not hit item");
 }
 /////////////////////////////////////////////////////////////////////////////
 

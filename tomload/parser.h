@@ -11,9 +11,30 @@
 
 namespace tomload {
 
+/**
+ * @brief Checks for a newline at the beginning of the input view.
+ *
+ * This function skips leading whitespace characters (`' '`, `'\t'`, `'\r'`) and comments in the input view.
+ *
+ * @param view[in,out]: A reference to the input view to be examined and potentially modified.
+ * @return true if a newline was found and handled; false otherwise.
+ */
 bool wait_newline(view_t& view);
 /////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief Skips leading whitespace and optionally comments in the input view.
+ *
+ * This function removes leading characters from the input view that match any character
+ * in the `spaces` set. If `skip_comment` is true and the view starts with a comment
+ * character (`'#'`), it removes all characters up to and including the next newline.
+ * The function may call itself recursively if a comment is removed and further whitespace
+ * or comments may follow.
+ *
+ * @param view[in,out]: A reference to the input view to be modified.
+ * @param spaces[in]: A set of characters considered as whitespace (e.g., " \t\r").
+ * @param skip_comment[in]: If true, lines starting with '#' are treated as comments and skipped.
+ */
 void skip_space(view_t& view, view_t spaces, bool skip_comment);
 /////////////////////////////////////////////////////////////////////////////
 
