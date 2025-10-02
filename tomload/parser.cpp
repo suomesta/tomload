@@ -49,11 +49,7 @@ bool wait_newline(view_t& view) {
  */
 void skip_space(view_t& view, view_t spaces, bool skip_comment) {
     view_t::size_type pos = view.find_first_not_of(spaces);
-    if (pos == view_t::npos) {
-        view = view_t{};
-    } else if (pos > 0) {
-        view.remove_prefix(pos);
-    }
+    view.remove_prefix((pos != view_t::npos) ? pos : view.size());
 
     if (skip_comment && starts_with(view, "#")) {
         view_t::size_type lf_pos = view.find('\n');
