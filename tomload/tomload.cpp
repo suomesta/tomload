@@ -407,6 +407,11 @@ void item_t::set_inline_table_keys_value(std::vector<std::pair<std::vector<key_t
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @throw parse_error: thrown if the this->type is not TYPE_TABLE.
+ * @return A pointer to the inserted `val`. If the `key` is already registered, `val` will not be inserted;
+ *         instead, a pointer to the already registered `item_t` is returned.
+ */
 item_t* item_t::push(const key_t& key, item_t val) {
     if (type != TYPE_TABLE) {
         throw parse_error("not table");
@@ -416,6 +421,9 @@ item_t* item_t::push(const key_t& key, item_t val) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @pre brackets_set.empty() == false.
+ */
 item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& brackets_set) {
     std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
     std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
