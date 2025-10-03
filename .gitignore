@@ -1,3 +1,4 @@
 build
 cmake_init.sh
 cmake_run.sh
+.vscode
