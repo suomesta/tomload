@@ -411,7 +411,7 @@ class item_t {
     item_t* insert_brackets_table(const std::vector<std::vector<key_t>>& brackets_set);
     /////////////////////////////////////////////////////////////////////////////
 
-    void insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t val);
+    void insert_keys_val(item_t* p_begin, std::vector<key_t> keys, item_t val);
     void parse_main(view_t& view);
     /////////////////////////////////////////////////////////////////////////////
 

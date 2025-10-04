@@ -400,7 +400,7 @@ void item_t::set_inline_table_keys_value(std::vector<std::pair<std::vector<key_t
             throw parse_error("no keys");
         }
 
-        insert_keys_table(this, std::move(key_val.first), key_val.second);
+        insert_keys_val(this, std::move(key_val.first), key_val.second);
     }
 
     type = TYPE_INLINE_TABLE;
@@ -425,6 +425,10 @@ item_t* item_t::push(const key_t& key, item_t val) {
  * @pre brackets_set.empty() == false.
  */
 item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& brackets_set) {
+    if (type == TYPE_INLINE_TABLE) {
+        throw parse_error("inline table error");
+    }
+
     std::vector<std::vector<key_t>>::const_iterator begin = brackets_set.cbegin();
     std::vector<std::vector<key_t>>::const_iterator end = brackets_set.cend() - 1;
     const std::vector<key_t>& latest = brackets_set.back();
@@ -459,10 +463,6 @@ item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& bra
 
     item_t* p_item = this;
     for (const key_t& key : latest) {
-        if (type == TYPE_INLINE_TABLE) {
-            throw parse_error("inline table error");
-        }
-
         auto next_table = item_t{single_construct, std::make_shared<std::map<key_t, item_t>>()};
         p_item = p_item->push(key, next_table);
         if (not p_item->is_table()) {
@@ -473,17 +473,16 @@ item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& bra
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::insert_keys_table(item_t* p_begin, std::vector<key_t> keys, item_t val) {
+void item_t::insert_keys_val(item_t* p_begin, std::vector<key_t> keys, item_t val) {
     if (p_begin == nullptr) {
         throw parse_error("unknown error");
+    }
+    if (type == TYPE_INLINE_TABLE) {
+        throw parse_error("inline table error");
     }
 
     item_t* p_item = p_begin;
     for (const key_t& key : keys) {
-        if (type == TYPE_INLINE_TABLE) {
-            throw parse_error("inline table error");
-        }
-
         if (&key != &keys.back()) {
             auto next_table = item_t{single_construct, std::make_shared<std::map<key_t, item_t>>()};
             p_item = p_item->push(key, next_table);
@@ -532,7 +531,7 @@ void item_t::parse_main(view_t& view) {
             check_duplex_keys(keys, brackets_set);
 
             skip_space(view, " \t", false);
-            insert_keys_table(p_brackets_end, std::move(keys), parse_item(view));
+            insert_keys_val(p_brackets_end, std::move(keys), parse_item(view));
         }
 
         // wait new line (allow end of text)
@@ -599,6 +598,10 @@ std::ostream& operator<<(std::ostream& os, const item_t& item) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @ingroup Getters
+ * @brief This is the template specialization when PARAM is string_t.
+ */
 template <>
 bool item_t::get<string_t>(string_t& val) const {
     if (is_string()) {
