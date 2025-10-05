@@ -473,15 +473,17 @@ item_t* item_t::insert_brackets_table(const std::vector<std::vector<key_t>>& bra
 }
 /////////////////////////////////////////////////////////////////////////////
 
-void item_t::insert_keys_val(item_t* p_begin, std::vector<key_t> keys, item_t val) {
-    if (p_begin == nullptr) {
+/*
+ * @pre p_item != nullptr.
+ */
+void item_t::insert_keys_val(item_t* p_item, std::vector<key_t> keys, item_t val) {
+    if (p_item == nullptr) {
         throw parse_error("unknown error");
     }
     if (type == TYPE_INLINE_TABLE) {
         throw parse_error("inline table error");
     }
 
-    item_t* p_item = p_begin;
     for (const key_t& key : keys) {
         if (&key != &keys.back()) {
             auto next_table = item_t{single_construct, std::make_shared<std::map<key_t, item_t>>()};
@@ -500,6 +502,9 @@ void item_t::insert_keys_val(item_t* p_begin, std::vector<key_t> keys, item_t va
 }
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+ * @param view[in,out]: toml string.
+ */
 void item_t::parse_main(view_t& view) {
     std::vector<std::vector<key_t>> brackets_set;
     item_t* p_brackets_end = this;

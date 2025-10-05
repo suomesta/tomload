@@ -411,7 +411,15 @@ class item_t {
     item_t* insert_brackets_table(const std::vector<std::vector<key_t>>& brackets_set);
     /////////////////////////////////////////////////////////////////////////////
 
-    void insert_keys_val(item_t* p_begin, std::vector<key_t> keys, item_t val);
+    /*
+    * @pre p_item != nullptr.
+    */
+    void insert_keys_val(item_t* p_item, std::vector<key_t> keys, item_t val);
+    /////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * @param view[in,out]: toml string.
+     */
     void parse_main(view_t& view);
     /////////////////////////////////////////////////////////////////////////////
 
