@@ -18,8 +18,8 @@
  *      }
  */
 
-#ifndef TOMLOAD_TOMLOAD_H
-#define TOMLOAD_TOMLOAD_H
+#ifndef TOMLOAD_TOMLOAD_H_
+#define TOMLOAD_TOMLOAD_H_
 
 #include <algorithm>
 #include <cstdint>
@@ -41,7 +41,7 @@ namespace tomload {
  */
 class parse_error : public std::runtime_error {
  public:
-    parse_error(const char* msg) :
+    explicit parse_error(const char* msg) :
         runtime_error(msg) {
     }
 };
@@ -54,7 +54,7 @@ class parse_error : public std::runtime_error {
  */
 class type_error : public std::runtime_error {
  public:
-    type_error(const char* msg) :
+    explicit type_error(const char* msg) :
         runtime_error(msg) {
     }
 };
@@ -500,4 +500,4 @@ bool item_t::get(PARAM& val) const {
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_TOMLOAD_H
+#endif  // TOMLOAD_TOMLOAD_H_

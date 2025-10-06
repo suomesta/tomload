@@ -4,6 +4,10 @@
  */
 
 #include "tomload/parser.h"
+#include <limits>
+#include <memory>
+#include <string>
+#include <utility>
 #include "tomload/detail_number.h"
 #include "tomload/detail_string.h"
 
@@ -256,7 +260,7 @@ std::vector<key_t> parse_keys(view_t& view) {
             } else if (starts_with(view, "'")) {
                 view_t::size_type length = get_literal_string_length(view);
                 key_t s = parse_literal_string(view, length);
- 
+
                 view.remove_prefix(length);
                 keys.push_back(std::move(s));
                 wait_dot = true;

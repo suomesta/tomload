@@ -561,7 +561,7 @@ std::ostream& operator<<(std::ostream& os, const item_t& item) {
     if (item.is_array()) {
         std::string sep = "";
         os << '[';
-        for (const auto& i: item.array_range()) {
+        for (const auto& i : item.array_range()) {
             os << sep << i;
             sep = ", ";
         }
@@ -569,7 +569,7 @@ std::ostream& operator<<(std::ostream& os, const item_t& item) {
     } else  if (item.is_table()) {
         std::string sep = "";
         os << '{';
-        for (const auto& i: item.table_range()) {
+        for (const auto& i : item.table_range()) {
             os << sep << i.first << ": " << i.second;
             sep = ", ";
         }
@@ -582,7 +582,7 @@ std::ostream& operator<<(std::ostream& os, const item_t& item) {
         os << item.get_float();
     } else if (item.is_string()) {
         os << '\"';
-        for (char c: item.get_string()) {
+        for (char c : item.get_string()) {
             if (c == '\"') {
                 os << "\\\"";
             } else if (c == '\t') {

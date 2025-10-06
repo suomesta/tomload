@@ -5,6 +5,7 @@
 
 #include "tomload/detail_number.h"
 #include <algorithm>
+#include <string>
 
 namespace tomload {
 

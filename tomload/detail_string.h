@@ -3,8 +3,8 @@
  * @note target version of C++ is C++14. 
  */
 
-#ifndef TOMLOAD_DETAIL_STRING_H
-#define TOMLOAD_DETAIL_STRING_H
+#ifndef TOMLOAD_DETAIL_STRING_H_
+#define TOMLOAD_DETAIL_STRING_H_
 
 #include <cstdint>
 #include <string>
@@ -100,4 +100,4 @@ string_t parse_bare_value(view_t view, view_t::size_type length);
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_DETAIL_STRING_H
+#endif  // TOMLOAD_DETAIL_STRING_H_

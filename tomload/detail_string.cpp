@@ -40,7 +40,7 @@ std::string utf8_encode(uint32_t codepoint) {
         return {static_cast<char>(0xF0 | (codepoint >> 18)),
                 static_cast<char>(0x80 | ((codepoint >> 12) & 0x3F)),
                 static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F)),
-                static_cast<char>(0x80 | (codepoint & 0x3F))};  
+                static_cast<char>(0x80 | (codepoint & 0x3F))};
     } else {
         throw parse_error("invalid unicode escape sequence");  // Invalid code point
     }

@@ -3,9 +3,11 @@
  * @note target version of C++ is C++14. 
  */
 
-#ifndef TOMLOAD_PARSER_H
-#define TOMLOAD_PARSER_H
+#ifndef TOMLOAD_PARSER_H_
+#define TOMLOAD_PARSER_H_
 
+#include <map>
+#include <vector>
 #include "tomload/tomload.h"
 #include "tomload/view_t.h"
 
@@ -58,4 +60,4 @@ void check_duplex_keys(const std::vector<key_t>& keys, const std::vector<std::ve
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_PARSER_H
+#endif  // TOMLOAD_PARSER_H_

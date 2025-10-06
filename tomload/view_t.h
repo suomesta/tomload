@@ -6,8 +6,8 @@
  * @note target version of C++ is C++14. 
  */
 
-#ifndef TOMLOAD_VIEW_T_H
-#define TOMLOAD_VIEW_T_H
+#ifndef TOMLOAD_VIEW_T_H_
+#define TOMLOAD_VIEW_T_H_
 
 #include <algorithm>
 #include "tomload/string_view14.hpp"
@@ -55,4 +55,4 @@ bool contains(view_t view, std::initializer_list<const char*> list);
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_VIEW_T_H
+#endif  // TOMLOAD_VIEW_T_H_

@@ -3,8 +3,8 @@
  * @note target version of C++ is C++14. 
  */
 
-#ifndef TOMLOAD_DETAIL_NUMBER_H
-#define TOMLOAD_DETAIL_NUMBER_H
+#ifndef TOMLOAD_DETAIL_NUMBER_H_
+#define TOMLOAD_DETAIL_NUMBER_H_
 
 #include "tomload/tomload.h"
 #include "tomload/view_t.h"
@@ -49,4 +49,4 @@ float_t parse_float(view_t view, view_t::size_type length);
 
 }  // namespace tomload
 
-#endif  // TOMLOAD_DETAIL_NUMBER_H
+#endif  // TOMLOAD_DETAIL_NUMBER_H_
