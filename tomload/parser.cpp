@@ -1,3 +1,6 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
 /*
  * @file tomload/parser.cpp
  * @note target version of C++ is C++14. 

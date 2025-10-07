@@ -1,3 +1,6 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
 /*
  * @file tomload/tomload.h
  * @brief Header file for tomload library.

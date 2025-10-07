@@ -6,6 +6,11 @@ import sys
 import tomllib
 
 HEAD = """\
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -44,7 +49,8 @@ C_STR = {
 
 
 def c_str(s):
-    return '"' + ''.join(C_STR.get(c, c) for c in s) + '"'
+    u8 = '' if s.isascii() else 'u8'
+    return u8 + '"' + ''.join(C_STR.get(c, c) for c in s) + '"'
 
 
 def c_bool(b):
@@ -117,7 +123,7 @@ def print_accessor(tom, keys=tuple()):
     elif type(tom) in (int, float, bool, str):
         print(''.join(check_val(keys, tom)))
     else:
-        raise RuntimeError('detect unsupported type (must be date)')
+        raise RuntimeError('detect unsupported type (probably date)')
 
 
 def print_check(path, keys=tuple()):
@@ -150,7 +156,10 @@ def print_check(path, keys=tuple()):
         print('    item_t t{content.c_str()};')
         print('')
 
-        print_accessor(tom)
+        try:
+            print_accessor(tom)
+        except RuntimeError as err:
+            raise RuntimeError(path + ": " + str(err))
 
     print('}')
     print('')

@@ -1,3 +1,8 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -88,7 +93,7 @@ TEST_CASE("valid/string/escape-tricky.toml") {
     CHECK(t["lit_end_esc"].is_string() == true);
     CHECK(t["lit_end_esc"].get_string() == "String ends here\\");
     CHECK(t["multiline_unicode"].is_string() == true);
-    CHECK(t["multiline_unicode"].get_string() == " ");
+    CHECK(t["multiline_unicode"].get_string() == u8" ");
     CHECK(t["multiline_not_unicode"].is_string() == true);
     CHECK(t["multiline_not_unicode"].get_string() == "\\u0041");
     CHECK(t["multiline_end_esc"].is_string() == true);
@@ -150,13 +155,13 @@ TEST_CASE("valid/string/multibyte-escape.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
     CHECK(t["basic-1"].is_string() == true);
-    CHECK(t["basic-1"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["basic-1"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["ml-basic-1"].is_string() == true);
-    CHECK(t["ml-basic-1"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["ml-basic-1"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["basic-2"].is_string() == true);
-    CHECK(t["basic-2"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["basic-2"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["ml-basic-2"].is_string() == true);
-    CHECK(t["ml-basic-2"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["ml-basic-2"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
 }
 
 TEST_CASE("valid/string/multibyte.toml") {
@@ -166,13 +171,13 @@ TEST_CASE("valid/string/multibyte.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
     CHECK(t["basic"].is_string() == true);
-    CHECK(t["basic"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["basic"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["raw"].is_string() == true);
-    CHECK(t["raw"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["raw"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["ml-basic"].is_string() == true);
-    CHECK(t["ml-basic"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["ml-basic"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
     CHECK(t["ml-raw"].is_string() == true);
-    CHECK(t["ml-raw"].get_string() == "ɑ € 𐫱 ɑ€𐫱");
+    CHECK(t["ml-raw"].get_string() == u8"ɑ € 𐫱 ɑ€𐫱");
 }
 
 TEST_CASE("valid/string/multiline-empty.toml") {
@@ -286,13 +291,13 @@ TEST_CASE("valid/string/quoted-unicode.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
     CHECK(t["escaped_string"].is_string() == true);
-    CHECK(t["escaped_string"].get_string() == "" + std::string(1, '\0') + " \b  A   ÿ ퟿  ￿ 𐀀 􏿿");
+    CHECK(t["escaped_string"].get_string() == u8"" + std::string(1, '\0') + " \b  A   ÿ ퟿  ￿ 𐀀 􏿿");
     CHECK(t["not_escaped_string"].is_string() == true);
     CHECK(t["not_escaped_string"].get_string() == "\\u0000 \\u0008 \\u000c \\U00000041 \\u007f \\u0080 \\u00ff \\ud7ff \\ue000 \\uffff \\U00010000 \\U0010ffff");
     CHECK(t["basic_string"].is_string() == true);
-    CHECK(t["basic_string"].get_string() == "~  ÿ ퟿  ￿ 𐀀 􏿿");
+    CHECK(t["basic_string"].get_string() == u8"~  ÿ ퟿  ￿ 𐀀 􏿿");
     CHECK(t["literal_string"].is_string() == true);
-    CHECK(t["literal_string"].get_string() == "~  ÿ ퟿  ￿ 𐀀 􏿿");
+    CHECK(t["literal_string"].get_string() == u8"~  ÿ ퟿  ￿ 𐀀 􏿿");
 }
 
 TEST_CASE("valid/string/raw-empty.toml") {
@@ -364,19 +369,19 @@ TEST_CASE("valid/string/start-mb.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
     CHECK(t["s1"].is_string() == true);
-    CHECK(t["s1"].get_string() == "§");
+    CHECK(t["s1"].get_string() == u8"§");
     CHECK(t["s2"].is_string() == true);
-    CHECK(t["s2"].get_string() == "§");
+    CHECK(t["s2"].get_string() == u8"§");
     CHECK(t["s3"].is_string() == true);
-    CHECK(t["s3"].get_string() == "§");
+    CHECK(t["s3"].get_string() == u8"§");
     CHECK(t["s4"].is_string() == true);
-    CHECK(t["s4"].get_string() == "§");
+    CHECK(t["s4"].get_string() == u8"§");
     CHECK(t["s5"].is_string() == true);
-    CHECK(t["s5"].get_string() == "§");
+    CHECK(t["s5"].get_string() == u8"§");
     CHECK(t["s6"].is_string() == true);
-    CHECK(t["s6"].get_string() == "§");
+    CHECK(t["s6"].get_string() == u8"§");
     CHECK(t["s7"].is_string() == true);
-    CHECK(t["s7"].get_string() == "§");
+    CHECK(t["s7"].get_string() == u8"§");
 }
 
 TEST_CASE("valid/string/unicode-escape.toml") {
@@ -386,9 +391,9 @@ TEST_CASE("valid/string/unicode-escape.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 14);
     CHECK(t["delta-1"].is_string() == true);
-    CHECK(t["delta-1"].get_string() == "δ");
+    CHECK(t["delta-1"].get_string() == u8"δ");
     CHECK(t["delta-2"].is_string() == true);
-    CHECK(t["delta-2"].get_string() == "δ");
+    CHECK(t["delta-2"].get_string() == u8"δ");
     CHECK(t["a"].is_string() == true);
     CHECK(t["a"].get_string() == "a");
     CHECK(t["b"].is_string() == true);
@@ -400,9 +405,9 @@ TEST_CASE("valid/string/unicode-escape.toml") {
     CHECK(t["null-2"].is_string() == true);
     CHECK(t["null-2"].get_string() == "" + std::string(1, '\0') + "");
     CHECK(t["ml-delta-1"].is_string() == true);
-    CHECK(t["ml-delta-1"].get_string() == "δ");
+    CHECK(t["ml-delta-1"].get_string() == u8"δ");
     CHECK(t["ml-delta-2"].is_string() == true);
-    CHECK(t["ml-delta-2"].get_string() == "δ");
+    CHECK(t["ml-delta-2"].get_string() == u8"δ");
     CHECK(t["ml-a"].is_string() == true);
     CHECK(t["ml-a"].get_string() == "a");
     CHECK(t["ml-b"].is_string() == true);

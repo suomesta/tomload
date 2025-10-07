@@ -1,3 +1,8 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>

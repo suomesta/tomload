@@ -1,4 +1,5 @@
-﻿// Copyright (C) 2024 Furuno Electric Co.,Ltd. All Rights Reserved.
+﻿// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
 
 /**
  * @file    string_view14.hpp

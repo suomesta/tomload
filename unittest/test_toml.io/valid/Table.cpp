@@ -1,3 +1,8 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -139,10 +144,10 @@ TEST_CASE("valid/Table/Table_4.toml") {
     CHECK(t["g"]["h"]["i"].size() == 0);
     CHECK(t["j"].is_table() == true);
     CHECK(t["j"].size() == 1);
-    CHECK(t["j"]["ʞ"].is_table() == true);
-    CHECK(t["j"]["ʞ"].size() == 1);
-    CHECK(t["j"]["ʞ"]["l"].is_table() == true);
-    CHECK(t["j"]["ʞ"]["l"].size() == 0);
+    CHECK(t["j"][u8"ʞ"].is_table() == true);
+    CHECK(t["j"][u8"ʞ"].size() == 1);
+    CHECK(t["j"][u8"ʞ"]["l"].is_table() == true);
+    CHECK(t["j"][u8"ʞ"]["l"].size() == 0);
 }
 
 TEST_CASE("valid/Table/Table_5.toml") {

@@ -1,3 +1,6 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
 /*
  * @file unittest/test_parse_item.cpp
  * @brief testing parse_item() function using doctest.
@@ -348,7 +351,7 @@ TEST_CASE("testing parse_item(\")") {
         item_t result = parse_item(src);
 
         CHECK(result.is_string() == true);
-        CHECK(result.get_string() == "あ");
+        CHECK(result.get_string() == u8"あ");
         CHECK(src.empty());
     }
     {
@@ -356,7 +359,7 @@ TEST_CASE("testing parse_item(\")") {
         item_t result = parse_item(src);
 
         CHECK(result.is_string() == true);
-        CHECK(result.get_string() == "い");
+        CHECK(result.get_string() == u8"い");
         CHECK(src.empty());
     }
     {

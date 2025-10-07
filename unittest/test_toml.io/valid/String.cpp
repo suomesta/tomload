@@ -1,3 +1,8 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -34,7 +39,7 @@ TEST_CASE("valid/String/String_1.toml") {
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
     CHECK(t["str"].is_string() == true);
-    CHECK(t["str"].get_string() == "I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
+    CHECK(t["str"].get_string() == u8"I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
 }
 
 TEST_CASE("valid/String/String_2.toml") {

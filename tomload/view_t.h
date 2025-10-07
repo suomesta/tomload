@@ -1,3 +1,6 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
 /*
  * @file tomload/view_t.h
  * @brief Header file for view_t class.

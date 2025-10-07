@@ -1,3 +1,6 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
 /*
  * @file unittest/test_functions.cpp
  * @brief testing some functions regarding item_t using doctest.

@@ -1,3 +1,8 @@
+// Copyright (c) 2025 suomesta
+// Distributed under the MIT Software License
+
+// This file is generated automatically. Do not modify.
+
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -113,8 +118,8 @@ TEST_CASE("valid/Keys/Keys_2.toml") {
     CHECK(t["127.0.0.1"].get_string() == "value");
     CHECK(t["character encoding"].is_string() == true);
     CHECK(t["character encoding"].get_string() == "value");
-    CHECK(t["ʎǝʞ"].is_string() == true);
-    CHECK(t["ʎǝʞ"].get_string() == "value");
+    CHECK(t[u8"ʎǝʞ"].is_string() == true);
+    CHECK(t[u8"ʎǝʞ"].get_string() == "value");
     CHECK(t["key2"].is_string() == true);
     CHECK(t["key2"].get_string() == "value");
     CHECK(t["quoted \"value\""].is_string() == true);
