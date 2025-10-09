@@ -17,6 +17,39 @@
 namespace tomload {
 
 /**
+ * @brief Checks a string for disallowed control characters and single carriage returns.
+ *
+ * @param view The input string to be checked.
+ * @throw parse_error If any of the following characters or sequences are detected:
+ *        - Control characters in the range 0x00 to 0x08 (including NULL and BS, excluding HT).
+ *        - Control characters 0x0B (VT) and 0x0C (FF).
+ *        - Control characters in the range 0x0E to 0x1F (including SO and US, excluding LF and CR).
+ *        - The DEL character (0x7F).
+ *        - A solitary Carriage Return (CR, \r) that is not immediately followed by a Line Feed (\n).
+ * * @note This check specifically permits only the Horizontal Tab (HT: 0x09) and 
+ *         Line Feed (LF: 0x0A) as control characters, and allows CR (0x0D) only 
+ *         as part of the standard CR+LF (\r\n) sequence.
+ */
+void check_control_character(view_t view) {
+    for (char c : view) {
+        if (('\x00' <= c && c <= '\x08') ||
+            ('\x0b' <= c && c <= '\x0c') ||
+            ('\x0e' <= c && c <= '\x1f') ||
+            (c == '\x7f')) {
+                throw parse_error("detect disallowed character");
+        }
+    }
+
+    for (view_t::size_type i = 0; i < view.size(); ++i) {
+        if ((view[i] == '\r') &&
+            ((i + 1 == view.size()) || (view[i + 1] != '\n'))) {
+            throw parse_error("detect single CR");
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+
+/**
  * @brief Checks for a newline at the beginning of the input view.
  *
  * This function skips leading whitespace characters (`' '`, `'\t'`, `'\r'`) and comments in the input view.

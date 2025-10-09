@@ -5,22 +5,27 @@
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_TEST_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -33,8 +38,9 @@ bool operator==(tomload::float_t f, rhs_nan) {
 using namespace tomload;
 
 TEST_CASE("valid/array/bool.toml") {
-    std::string content = load_file("valid/array/bool.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/bool.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -47,8 +53,9 @@ TEST_CASE("valid/array/bool.toml") {
 }
 
 TEST_CASE("valid/array/mixed-int-array.toml") {
-    std::string content = load_file("valid/array/mixed-int-array.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/mixed-int-array.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -63,8 +70,9 @@ TEST_CASE("valid/array/mixed-int-array.toml") {
 }
 
 TEST_CASE("valid/array/mixed-int-float.toml") {
-    std::string content = load_file("valid/array/mixed-int-float.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/mixed-int-float.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -77,8 +85,9 @@ TEST_CASE("valid/array/mixed-int-float.toml") {
 }
 
 TEST_CASE("valid/array/mixed-int-string.toml") {
-    std::string content = load_file("valid/array/mixed-int-string.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/mixed-int-string.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -91,8 +100,9 @@ TEST_CASE("valid/array/mixed-int-string.toml") {
 }
 
 TEST_CASE("valid/array/mixed-string-table.toml") {
-    std::string content = load_file("valid/array/mixed-string-table.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/mixed-string-table.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -121,8 +131,9 @@ TEST_CASE("valid/array/mixed-string-table.toml") {
 }
 
 TEST_CASE("valid/array/nested-double.toml") {
-    std::string content = load_file("valid/array/nested-double.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/nested-double.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -147,8 +158,9 @@ TEST_CASE("valid/array/nested-double.toml") {
 }
 
 TEST_CASE("valid/array/nested-inline-table.toml") {
-    std::string content = load_file("valid/array/nested-inline-table.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/nested-inline-table.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -161,8 +173,9 @@ TEST_CASE("valid/array/nested-inline-table.toml") {
 }
 
 TEST_CASE("valid/array/nospaces.toml") {
-    std::string content = load_file("valid/array/nospaces.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/nospaces.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -177,8 +190,9 @@ TEST_CASE("valid/array/nospaces.toml") {
 }
 
 TEST_CASE("valid/array/string-quote-comma-2.toml") {
-    std::string content = load_file("valid/array/string-quote-comma-2.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/string-quote-comma-2.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -189,8 +203,9 @@ TEST_CASE("valid/array/string-quote-comma-2.toml") {
 }
 
 TEST_CASE("valid/array/string-quote-comma.toml") {
-    std::string content = load_file("valid/array/string-quote-comma.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/string-quote-comma.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -203,8 +218,9 @@ TEST_CASE("valid/array/string-quote-comma.toml") {
 }
 
 TEST_CASE("valid/array/string-with-comma-2.toml") {
-    std::string content = load_file("valid/array/string-with-comma-2.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/string-with-comma-2.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -217,8 +233,9 @@ TEST_CASE("valid/array/string-with-comma-2.toml") {
 }
 
 TEST_CASE("valid/array/string-with-comma.toml") {
-    std::string content = load_file("valid/array/string-with-comma.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/string-with-comma.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -231,8 +248,9 @@ TEST_CASE("valid/array/string-with-comma.toml") {
 }
 
 TEST_CASE("valid/array/strings.toml") {
-    std::string content = load_file("valid/array/strings.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/strings.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -249,8 +267,9 @@ TEST_CASE("valid/array/strings.toml") {
 }
 
 TEST_CASE("valid/array/table-array-string-backslash.toml") {
-    std::string content = load_file("valid/array/table-array-string-backslash.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/table-array-string-backslash.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -263,8 +282,9 @@ TEST_CASE("valid/array/table-array-string-backslash.toml") {
 }
 
 TEST_CASE("valid/array/trailing-comma.toml") {
-    std::string content = load_file("valid/array/trailing-comma.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/array/trailing-comma.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);

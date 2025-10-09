@@ -1,4 +1,3 @@
-
 import glob
 import math
 import os
@@ -13,22 +12,27 @@ HEAD = """\
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_IO_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_IO_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -147,13 +151,14 @@ def print_check(path, keys=tuple()):
 
     filename = os.sep.join(all_separated[-3:])
     print(f'TEST_CASE("{filename}") {{')
-    print(f'    std::string content = load_file("{filename}");')
+    print(f'    std::vector<char> content = load_file("{filename}");')
+    print('    view_t view{content.data(), content.size()};')
 
     if invalid:
         print('')
-        print('    CHECK_THROWS_AS(item_t{content.c_str()}, parse_error&);')
+        print('    CHECK_THROWS_AS(item_t{view}, parse_error&);')
     else:
-        print('    item_t t{content.c_str()};')
+        print('    item_t t{view};')
         print('')
 
         try:

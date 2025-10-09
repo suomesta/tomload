@@ -5,22 +5,27 @@
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_TEST_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -33,8 +38,9 @@ bool operator==(tomload::float_t f, rhs_nan) {
 using namespace tomload;
 
 TEST_CASE("valid/table/empty-name.toml") {
-    std::string content = load_file("valid/table/empty-name.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/empty-name.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -55,8 +61,9 @@ TEST_CASE("valid/table/empty-name.toml") {
 }
 
 TEST_CASE("valid/table/empty.toml") {
-    std::string content = load_file("valid/table/empty.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/empty.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -65,8 +72,9 @@ TEST_CASE("valid/table/empty.toml") {
 }
 
 TEST_CASE("valid/table/keyword-with-values.toml") {
-    std::string content = load_file("valid/table/keyword-with-values.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/keyword-with-values.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -89,8 +97,9 @@ TEST_CASE("valid/table/keyword-with-values.toml") {
 }
 
 TEST_CASE("valid/table/keyword.toml") {
-    std::string content = load_file("valid/table/keyword.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/keyword.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -105,8 +114,9 @@ TEST_CASE("valid/table/keyword.toml") {
 }
 
 TEST_CASE("valid/table/names-with-values.toml") {
-    std::string content = load_file("valid/table/names-with-values.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/names-with-values.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -165,8 +175,9 @@ TEST_CASE("valid/table/names-with-values.toml") {
 }
 
 TEST_CASE("valid/table/names.toml") {
-    std::string content = load_file("valid/table/names.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/names.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -209,8 +220,9 @@ TEST_CASE("valid/table/names.toml") {
 }
 
 TEST_CASE("valid/table/no-eol.toml") {
-    std::string content = load_file("valid/table/no-eol.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/no-eol.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -219,8 +231,9 @@ TEST_CASE("valid/table/no-eol.toml") {
 }
 
 TEST_CASE("valid/table/sub-empty.toml") {
-    std::string content = load_file("valid/table/sub-empty.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/sub-empty.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -231,8 +244,9 @@ TEST_CASE("valid/table/sub-empty.toml") {
 }
 
 TEST_CASE("valid/table/sub.toml") {
-    std::string content = load_file("valid/table/sub.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/sub.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -251,8 +265,9 @@ TEST_CASE("valid/table/sub.toml") {
 }
 
 TEST_CASE("valid/table/whitespace.toml") {
-    std::string content = load_file("valid/table/whitespace.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/whitespace.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -261,8 +276,9 @@ TEST_CASE("valid/table/whitespace.toml") {
 }
 
 TEST_CASE("valid/table/with-literal-string.toml") {
-    std::string content = load_file("valid/table/with-literal-string.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/with-literal-string.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -277,8 +293,9 @@ TEST_CASE("valid/table/with-literal-string.toml") {
 }
 
 TEST_CASE("valid/table/with-pound.toml") {
-    std::string content = load_file("valid/table/with-pound.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/with-pound.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -289,8 +306,9 @@ TEST_CASE("valid/table/with-pound.toml") {
 }
 
 TEST_CASE("valid/table/with-single-quotes.toml") {
-    std::string content = load_file("valid/table/with-single-quotes.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/with-single-quotes.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -305,8 +323,9 @@ TEST_CASE("valid/table/with-single-quotes.toml") {
 }
 
 TEST_CASE("valid/table/without-super-with-values.toml") {
-    std::string content = load_file("valid/table/without-super-with-values.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/without-super-with-values.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -329,8 +348,9 @@ TEST_CASE("valid/table/without-super-with-values.toml") {
 }
 
 TEST_CASE("valid/table/without-super.toml") {
-    std::string content = load_file("valid/table/without-super.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/table/without-super.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);

@@ -11,7 +11,7 @@ python3 tests2doctest.py ../toml-test/tests/valid/table/ > valid/table.cpp
 
 python3 tests2doctest.py ../toml-test/tests/invalid/array/ > invalid/array.cpp
 python3 tests2doctest.py ../toml-test/tests/invalid/bool/ > invalid/bool.cpp
-# python3 tests2doctest.py ../toml-test/tests/invalid/control/ > invalid/control.cpp
+python3 tests2doctest.py ../toml-test/tests/invalid/control/ > invalid/control.cpp
 python3 tests2doctest.py ../toml-test/tests/invalid/float/ > invalid/float.cpp
 # python3 tests2doctest.py ../toml-test/tests/invalid/encoding/ > invalid/encoding.cpp
 python3 tests2doctest.py ../toml-test/tests/invalid/inline-table/ > invalid/inline-table.cpp

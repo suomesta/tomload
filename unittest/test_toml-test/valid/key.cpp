@@ -5,22 +5,27 @@
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_TEST_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -33,8 +38,9 @@ bool operator==(tomload::float_t f, rhs_nan) {
 using namespace tomload;
 
 TEST_CASE("valid/key/alphanum.toml") {
-    std::string content = load_file("valid/key/alphanum.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/alphanum.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 10);
@@ -65,8 +71,9 @@ TEST_CASE("valid/key/alphanum.toml") {
 }
 
 TEST_CASE("valid/key/case-sensitive.toml") {
-    std::string content = load_file("valid/key/case-sensitive.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/case-sensitive.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -93,8 +100,9 @@ TEST_CASE("valid/key/case-sensitive.toml") {
 }
 
 TEST_CASE("valid/key/dotted-1.toml") {
-    std::string content = load_file("valid/key/dotted-1.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/dotted-1.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -117,8 +125,9 @@ TEST_CASE("valid/key/dotted-1.toml") {
 }
 
 TEST_CASE("valid/key/dotted-2.toml") {
-    std::string content = load_file("valid/key/dotted-2.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/dotted-2.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -151,8 +160,9 @@ TEST_CASE("valid/key/dotted-2.toml") {
 }
 
 TEST_CASE("valid/key/dotted-3.toml") {
-    std::string content = load_file("valid/key/dotted-3.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/dotted-3.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -183,8 +193,9 @@ TEST_CASE("valid/key/dotted-3.toml") {
 }
 
 TEST_CASE("valid/key/dotted-empty.toml") {
-    std::string content = load_file("valid/key/dotted-empty.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/dotted-empty.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
@@ -205,8 +216,9 @@ TEST_CASE("valid/key/dotted-empty.toml") {
 }
 
 TEST_CASE("valid/key/empty-1.toml") {
-    std::string content = load_file("valid/key/empty-1.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/empty-1.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -215,8 +227,9 @@ TEST_CASE("valid/key/empty-1.toml") {
 }
 
 TEST_CASE("valid/key/empty-2.toml") {
-    std::string content = load_file("valid/key/empty-2.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/empty-2.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -225,8 +238,9 @@ TEST_CASE("valid/key/empty-2.toml") {
 }
 
 TEST_CASE("valid/key/empty-3.toml") {
-    std::string content = load_file("valid/key/empty-3.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/empty-3.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -235,8 +249,9 @@ TEST_CASE("valid/key/empty-3.toml") {
 }
 
 TEST_CASE("valid/key/equals-nospace.toml") {
-    std::string content = load_file("valid/key/equals-nospace.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/equals-nospace.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -245,8 +260,9 @@ TEST_CASE("valid/key/equals-nospace.toml") {
 }
 
 TEST_CASE("valid/key/escapes.toml") {
-    std::string content = load_file("valid/key/escapes.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/escapes.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
@@ -271,8 +287,9 @@ TEST_CASE("valid/key/escapes.toml") {
 }
 
 TEST_CASE("valid/key/numeric-01.toml") {
-    std::string content = load_file("valid/key/numeric-01.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-01.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -281,8 +298,9 @@ TEST_CASE("valid/key/numeric-01.toml") {
 }
 
 TEST_CASE("valid/key/numeric-02.toml") {
-    std::string content = load_file("valid/key/numeric-02.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-02.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -293,8 +311,9 @@ TEST_CASE("valid/key/numeric-02.toml") {
 }
 
 TEST_CASE("valid/key/numeric-03.toml") {
-    std::string content = load_file("valid/key/numeric-03.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-03.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -303,8 +322,9 @@ TEST_CASE("valid/key/numeric-03.toml") {
 }
 
 TEST_CASE("valid/key/numeric-04.toml") {
-    std::string content = load_file("valid/key/numeric-04.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-04.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -315,8 +335,9 @@ TEST_CASE("valid/key/numeric-04.toml") {
 }
 
 TEST_CASE("valid/key/numeric-05.toml") {
-    std::string content = load_file("valid/key/numeric-05.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-05.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -327,8 +348,9 @@ TEST_CASE("valid/key/numeric-05.toml") {
 }
 
 TEST_CASE("valid/key/numeric-06.toml") {
-    std::string content = load_file("valid/key/numeric-06.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-06.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -337,8 +359,9 @@ TEST_CASE("valid/key/numeric-06.toml") {
 }
 
 TEST_CASE("valid/key/numeric-07.toml") {
-    std::string content = load_file("valid/key/numeric-07.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-07.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -347,8 +370,9 @@ TEST_CASE("valid/key/numeric-07.toml") {
 }
 
 TEST_CASE("valid/key/numeric-08.toml") {
-    std::string content = load_file("valid/key/numeric-08.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/numeric-08.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -359,8 +383,9 @@ TEST_CASE("valid/key/numeric-08.toml") {
 }
 
 TEST_CASE("valid/key/quoted-dots.toml") {
-    std::string content = load_file("valid/key/quoted-dots.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/quoted-dots.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -387,8 +412,9 @@ TEST_CASE("valid/key/quoted-dots.toml") {
 }
 
 TEST_CASE("valid/key/quoted-unicode.toml") {
-    std::string content = load_file("valid/key/quoted-unicode.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/quoted-unicode.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
@@ -405,8 +431,9 @@ TEST_CASE("valid/key/quoted-unicode.toml") {
 }
 
 TEST_CASE("valid/key/space.toml") {
-    std::string content = load_file("valid/key/space.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/space.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -423,8 +450,9 @@ TEST_CASE("valid/key/space.toml") {
 }
 
 TEST_CASE("valid/key/special-chars.toml") {
-    std::string content = load_file("valid/key/special-chars.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/special-chars.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -433,8 +461,9 @@ TEST_CASE("valid/key/special-chars.toml") {
 }
 
 TEST_CASE("valid/key/special-word.toml") {
-    std::string content = load_file("valid/key/special-word.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/special-word.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -449,8 +478,9 @@ TEST_CASE("valid/key/special-word.toml") {
 }
 
 TEST_CASE("valid/key/start.toml") {
-    std::string content = load_file("valid/key/start.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/start.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 10);
@@ -503,8 +533,9 @@ TEST_CASE("valid/key/start.toml") {
 }
 
 TEST_CASE("valid/key/zero.toml") {
-    std::string content = load_file("valid/key/zero.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/key/zero.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);

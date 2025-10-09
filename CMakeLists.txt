@@ -22,6 +22,7 @@ add_executable(unittest
     unittest/test_toml-test/valid/array.cpp unittest/test_toml-test/invalid/array.cpp
     unittest/test_toml-test/valid/bool.cpp unittest/test_toml-test/invalid/bool.cpp
     unittest/test_toml-test/valid/comment.cpp
+    unittest/test_toml-test/invalid/control.cpp
     unittest/test_toml-test/valid/float.cpp unittest/test_toml-test/invalid/float.cpp
     unittest/test_toml-test/valid/inline-table.cpp unittest/test_toml-test/invalid/inline-table.cpp
     unittest/test_toml-test/valid/integer.cpp unittest/test_toml-test/invalid/integer.cpp
@@ -35,7 +36,6 @@ add_executable(unittest
     tomload/detail_number.h tomload/detail_number.cpp
     tomload/view_t.h tomload/view_t.cpp tomload/string_view14.hpp
 )
-#    unittest/test_toml-test/invalid/control.cpp
 #    unittest/test_toml-test/invalid/encoding.cpp
 
 target_include_directories(unittest PUBLIC

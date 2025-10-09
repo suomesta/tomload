@@ -509,6 +509,8 @@ void item_t::insert_keys_val(item_t* p_item, std::vector<key_t> keys, item_t val
  * @param view[in,out]: toml string.
  */
 void item_t::parse_main(view_t& view) {
+    check_control_character(view);  // may throw
+
     std::vector<std::vector<key_t>> brackets_set;
     item_t* p_brackets_end = this;
 

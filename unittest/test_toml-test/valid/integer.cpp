@@ -5,22 +5,27 @@
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_TEST_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_TEST_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -33,8 +38,9 @@ bool operator==(tomload::float_t f, rhs_nan) {
 using namespace tomload;
 
 TEST_CASE("valid/integer/float64-max.toml") {
-    std::string content = load_file("valid/integer/float64-max.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/float64-max.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -45,8 +51,9 @@ TEST_CASE("valid/integer/float64-max.toml") {
 }
 
 TEST_CASE("valid/integer/integer.toml") {
-    std::string content = load_file("valid/integer/integer.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/integer.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -61,8 +68,9 @@ TEST_CASE("valid/integer/integer.toml") {
 }
 
 TEST_CASE("valid/integer/literals.toml") {
-    std::string content = load_file("valid/integer/literals.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/literals.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 9);
@@ -87,8 +95,9 @@ TEST_CASE("valid/integer/literals.toml") {
 }
 
 TEST_CASE("valid/integer/long.toml") {
-    std::string content = load_file("valid/integer/long.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/long.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -99,8 +108,9 @@ TEST_CASE("valid/integer/long.toml") {
 }
 
 TEST_CASE("valid/integer/underscore.toml") {
-    std::string content = load_file("valid/integer/underscore.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/underscore.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -111,8 +121,9 @@ TEST_CASE("valid/integer/underscore.toml") {
 }
 
 TEST_CASE("valid/integer/zero.toml") {
-    std::string content = load_file("valid/integer/zero.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/integer/zero.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 12);

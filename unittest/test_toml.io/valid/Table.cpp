@@ -5,22 +5,27 @@
 
 #include <cmath>
 #include <fstream>
-#include <sstream>
+#include <ios>
 #include <string>
+#include <vector>
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
 namespace {
 
-std::string load_file(const std::string& filename) {
-    std::ifstream file(std::string(TOML_IO_DIR) + filename);
+std::vector<char> load_file(const std::string& filename) {
+    std::ifstream file(std::string(TOML_IO_DIR) + filename, std::ios::binary | std::ios::ate);
     if (not file.is_open()) {
         throw std::runtime_error("Cannot open " + filename);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+    std::streamsize size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size); 
+
+    return buffer;
 }
 
 struct rhs_nan {};
@@ -33,8 +38,9 @@ bool operator==(tomload::float_t f, rhs_nan) {
 using namespace tomload;
 
 TEST_CASE("valid/Table/Table_1.toml") {
-    std::string content = load_file("valid/Table/Table_1.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_1.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -43,8 +49,9 @@ TEST_CASE("valid/Table/Table_1.toml") {
 }
 
 TEST_CASE("valid/Table/Table_11.toml") {
-    std::string content = load_file("valid/Table/Table_11.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_11.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -61,8 +68,9 @@ TEST_CASE("valid/Table/Table_11.toml") {
 }
 
 TEST_CASE("valid/Table/Table_12.toml") {
-    std::string content = load_file("valid/Table/Table_12.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_12.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -83,8 +91,9 @@ TEST_CASE("valid/Table/Table_12.toml") {
 }
 
 TEST_CASE("valid/Table/Table_2.toml") {
-    std::string content = load_file("valid/Table/Table_2.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_2.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -103,8 +112,9 @@ TEST_CASE("valid/Table/Table_2.toml") {
 }
 
 TEST_CASE("valid/Table/Table_3.toml") {
-    std::string content = load_file("valid/Table/Table_3.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_3.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -119,8 +129,9 @@ TEST_CASE("valid/Table/Table_3.toml") {
 }
 
 TEST_CASE("valid/Table/Table_4.toml") {
-    std::string content = load_file("valid/Table/Table_4.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_4.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
@@ -151,8 +162,9 @@ TEST_CASE("valid/Table/Table_4.toml") {
 }
 
 TEST_CASE("valid/Table/Table_5.toml") {
-    std::string content = load_file("valid/Table/Table_5.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_5.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
@@ -167,8 +179,9 @@ TEST_CASE("valid/Table/Table_5.toml") {
 }
 
 TEST_CASE("valid/Table/Table_8.toml") {
-    std::string content = load_file("valid/Table/Table_8.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_8.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
@@ -183,8 +196,9 @@ TEST_CASE("valid/Table/Table_8.toml") {
 }
 
 TEST_CASE("valid/Table/Table_9.toml") {
-    std::string content = load_file("valid/Table/Table_9.toml");
-    item_t t{content.c_str()};
+    std::vector<char> content = load_file("valid/Table/Table_9.toml");
+    view_t view{content.data(), content.size()};
+    item_t t{view};
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
