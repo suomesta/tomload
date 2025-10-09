@@ -1,16 +1,17 @@
-﻿// Copyright (c) 2025 suomesta
+// Copyright (c) 2025 suomesta
 // Distributed under the MIT Software License
 
 /**
- * @file    string_view14.hpp
+ * @file    tomload/string_view14.hpp
  * @brief   define string_view14 class.
  *          string_view14 is string_view class for C++14 compiler.
  * @remark  the target is C++14 or more.
  */
 
-#ifndef STRING_VIEW14_HPP
-#define STRING_VIEW14_HPP
+#ifndef TOMLOAD_STRING_VIEW14_HPP_
+#define TOMLOAD_STRING_VIEW14_HPP_
 
+#include <algorithm>
 #include <cstddef>
 #include <limits>
 #include <ostream>
@@ -87,7 +88,7 @@ class string_view14 {
     /////////////////////////////////////////////////////////////////////////////
 
     // Constant
-    static constexpr size_t npos{static_cast<size_t>(-1)};
+    static constexpr size_type npos{static_cast<size_type>(-1)};
     /////////////////////////////////////////////////////////////////////////////
 
  public:
@@ -95,7 +96,7 @@ class string_view14 {
     constexpr string_view14() noexcept = default;
     constexpr string_view14(const string_view14&) noexcept = default;
     constexpr string_view14(const char* str);
-    constexpr string_view14(const char* str, size_t len);
+    constexpr string_view14(const char* str, size_type len);
     string_view14& operator=(const string_view14&) = default;
     /////////////////////////////////////////////////////////////////////////////
 
@@ -111,35 +112,35 @@ class string_view14 {
     /////////////////////////////////////////////////////////////////////////////
 
     // Element access
-    constexpr const char& operator[](size_t pos) const;
-    constexpr const char& at(size_t pos) const;
+    constexpr const char& operator[](size_type pos) const;
+    constexpr const char& at(size_type pos) const;
     constexpr const char& front() const;
     constexpr const char& back() const;
     constexpr const char* data() const noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     // Capacity
-    constexpr size_t size() const noexcept;
-    constexpr size_t length() const noexcept;
-    constexpr size_t max_size() const noexcept;
+    constexpr size_type size() const noexcept;
+    constexpr size_type length() const noexcept;
+    constexpr size_type max_size() const noexcept;
     constexpr bool empty() const noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     // Modifiers
-    constexpr void remove_prefix(size_t n);
-    constexpr void remove_suffix(size_t n);
+    constexpr void remove_prefix(size_type n);
+    constexpr void remove_suffix(size_type n);
     constexpr void swap(string_view14& s) noexcept;
     /////////////////////////////////////////////////////////////////////////////
 
     // String operations
-    size_t copy(char* s, size_t n, size_t pos = 0) const;
-    constexpr string_view14 substr(size_t pos = 0, size_t n = npos) const;
+    size_type copy(char* s, size_type n, size_type pos = 0) const;
+    constexpr string_view14 substr(size_type pos = 0, size_type n = npos) const;
     constexpr int compare(string_view14 sv) const noexcept;
-    constexpr int compare(size_t pos1, size_t n1, string_view14 sv) const;
-    constexpr int compare(size_t pos1, size_t n1, string_view14 sv, size_t pos2, size_t n2) const;
+    constexpr int compare(size_type pos1, size_type n1, string_view14 sv) const;
+    constexpr int compare(size_type pos1, size_type n1, string_view14 sv, size_type pos2, size_type n2) const;
     constexpr int compare(const char* s) const;
-    constexpr int compare(size_t pos1, size_t n1, const char* s) const;
-    constexpr int compare(size_t pos1, size_t n1, const char* s, size_t n2) const;
+    constexpr int compare(size_type pos1, size_type n1, const char* s) const;
+    constexpr int compare(size_type pos1, size_type n1, const char* s, size_type n2) const;
     /////////////////////////////////////////////////////////////////////////////
 
     // Searching
@@ -152,35 +153,35 @@ class string_view14 {
     constexpr bool contains(string_view14 x) const noexcept;
     constexpr bool contains(char x) const noexcept;
     constexpr bool contains(const char* x) const;
-    constexpr size_t find(string_view14 sv, size_t pos = 0) const noexcept;
-    constexpr size_t find(char c, size_t pos = 0) const noexcept;
-    constexpr size_t find(const char* s, size_t pos, size_t n) const;
-    constexpr size_t find(const char* s, size_t pos = 0) const;
-    constexpr size_t rfind(string_view14 sv, size_t pos = npos) const noexcept;
-    constexpr size_t rfind(char c, size_t pos = npos) const noexcept;
-    constexpr size_t rfind(const char* s, size_t pos, size_t n) const;
-    constexpr size_t rfind(const char* s, size_t pos = npos) const;
-    constexpr size_t find_first_of(string_view14 sv, size_t pos = 0) const noexcept;
-    constexpr size_t find_first_of(char c, size_t pos = 0) const noexcept;
-    constexpr size_t find_first_of(const char* s, size_t pos, size_t n) const;
-    constexpr size_t find_first_of(const char* s, size_t pos = 0) const;
-    constexpr size_t find_last_of(string_view14 sv, size_t pos = npos) const noexcept;
-    constexpr size_t find_last_of(char c, size_t pos = npos) const noexcept;
-    constexpr size_t find_last_of(const char* s, size_t pos, size_t n) const;
-    constexpr size_t find_last_of(const char* s, size_t pos = npos) const;
-    constexpr size_t find_first_not_of(string_view14 sv, size_t pos = 0) const noexcept;
-    constexpr size_t find_first_not_of(char c, size_t pos = 0) const noexcept;
-    constexpr size_t find_first_not_of(const char* s, size_t pos, size_t n) const;
-    constexpr size_t find_first_not_of(const char* s, size_t pos = 0) const;
-    constexpr size_t find_last_not_of(string_view14 sv, size_t pos = npos) const noexcept;
-    constexpr size_t find_last_not_of(char c, size_t pos = npos) const noexcept;
-    constexpr size_t find_last_not_of(const char* s, size_t pos, size_t n) const;
-    constexpr size_t find_last_not_of(const char* s, size_t pos = npos) const;
+    constexpr size_type find(string_view14 sv, size_type pos = 0) const noexcept;
+    constexpr size_type find(char c, size_type pos = 0) const noexcept;
+    constexpr size_type find(const char* s, size_type pos, size_type n) const;
+    constexpr size_type find(const char* s, size_type pos = 0) const;
+    constexpr size_type rfind(string_view14 sv, size_type pos = npos) const noexcept;
+    constexpr size_type rfind(char c, size_type pos = npos) const noexcept;
+    constexpr size_type rfind(const char* s, size_type pos, size_type n) const;
+    constexpr size_type rfind(const char* s, size_type pos = npos) const;
+    constexpr size_type find_first_of(string_view14 sv, size_type pos = 0) const noexcept;
+    constexpr size_type find_first_of(char c, size_type pos = 0) const noexcept;
+    constexpr size_type find_first_of(const char* s, size_type pos, size_type n) const;
+    constexpr size_type find_first_of(const char* s, size_type pos = 0) const;
+    constexpr size_type find_last_of(string_view14 sv, size_type pos = npos) const noexcept;
+    constexpr size_type find_last_of(char c, size_type pos = npos) const noexcept;
+    constexpr size_type find_last_of(const char* s, size_type pos, size_type n) const;
+    constexpr size_type find_last_of(const char* s, size_type pos = npos) const;
+    constexpr size_type find_first_not_of(string_view14 sv, size_type pos = 0) const noexcept;
+    constexpr size_type find_first_not_of(char c, size_type pos = 0) const noexcept;
+    constexpr size_type find_first_not_of(const char* s, size_type pos, size_type n) const;
+    constexpr size_type find_first_not_of(const char* s, size_type pos = 0) const;
+    constexpr size_type find_last_not_of(string_view14 sv, size_type pos = npos) const noexcept;
+    constexpr size_type find_last_not_of(char c, size_type pos = npos) const noexcept;
+    constexpr size_type find_last_not_of(const char* s, size_type pos, size_type n) const;
+    constexpr size_type find_last_not_of(const char* s, size_type pos = npos) const;
     /////////////////////////////////////////////////////////////////////////////
 
  private:
     const char* data_ = nullptr;
-    size_t size_ = 0;
+    size_type size_ = 0;
 };
 /////////////////////////////////////////////////////////////////////////////
 
@@ -216,8 +217,12 @@ constexpr string_view14 operator""_sv(const char* str, std::size_t length);
 
 namespace string_view14_helper {
 
-constexpr size_t recursive_strlen(const char* str) {
-    return *str ? 1 + recursive_strlen(str + 1) : 0;
+constexpr string_view14::size_type constexpr_strlen(const char* str) {
+    string_view14::size_type len = 0;
+    while (*str++) {
+        len++;
+    }
+    return len;
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -229,7 +234,7 @@ constexpr void constexpr_swap(T& t1, T& t2) {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-}  // string_view14_helper
+}  // namespace string_view14_helper
 
 constexpr string_view14::const_reverse_iterator::const_reverse_iterator(const char* p) noexcept :
     ptr_(p)
@@ -303,11 +308,11 @@ constexpr string_view14::const_reverse_iterator& string_view14::const_reverse_it
 
 constexpr string_view14::string_view14(const char* str) :
     data_(str),
-    size_(string_view14_helper::recursive_strlen(str))
+    size_(string_view14_helper::constexpr_strlen(str))
 {}
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr string_view14::string_view14(const char* str, size_t len) :
+constexpr string_view14::string_view14(const char* str, size_type len) :
     data_(str),
     size_(len)
 {}
@@ -353,12 +358,12 @@ constexpr string_view14::const_reverse_iterator string_view14::crend() const noe
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr const char& string_view14::operator[](size_t pos) const {
+constexpr const char& string_view14::operator[](size_type pos) const {
     return *(data_ + pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr const char& string_view14::at(size_t pos) const {
+constexpr const char& string_view14::at(size_type pos) const {
     if (pos >= size_) {
         throw std::out_of_range("string_view14::at()");
     }
@@ -381,18 +386,18 @@ constexpr const char* string_view14::data() const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::size() const noexcept {
+constexpr string_view14::size_type string_view14::size() const noexcept {
     return size_;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::length() const noexcept {
+constexpr string_view14::size_type string_view14::length() const noexcept {
     return size_;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::max_size() const noexcept {
-    return std::numeric_limits<size_t>::max();
+constexpr string_view14::size_type string_view14::max_size() const noexcept {
+    return std::numeric_limits<size_type>::max();
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -401,13 +406,13 @@ constexpr bool string_view14::empty() const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr void string_view14::remove_prefix(size_t n) {
+constexpr void string_view14::remove_prefix(size_type n) {
     data_ += n;
     size_ -= n;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr void string_view14::remove_suffix(size_t n) {
+constexpr void string_view14::remove_suffix(size_type n) {
     size_ -= n;
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -418,10 +423,10 @@ constexpr void string_view14::swap(string_view14& s) noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-inline size_t string_view14::copy(char* s, size_t n, size_t pos/* = 0*/) const {
+inline size_t string_view14::copy(char* s, size_type n, size_type pos/* = 0*/) const {
     if (pos < size_) {
-        size_t len = (std::min)(size_ - pos, n);
-        for (size_t i = 0; i < len; i++) {
+        size_type len = (std::min)(size_ - pos, n);
+        for (size_type i = 0; i < len; i++) {
             s[i] = data_[pos + i];
         }
         return len;
@@ -431,18 +436,18 @@ inline size_t string_view14::copy(char* s, size_t n, size_t pos/* = 0*/) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr string_view14 string_view14::substr(size_t pos/* = 0*/, size_t n/* = npos*/) const {
+constexpr string_view14 string_view14::substr(size_type pos/* = 0*/, size_type n/* = npos*/) const {
     if (pos > size_) {
         throw std::out_of_range("string_view14::substr()");
     }
-    size_t len = (std::min)(size_ - pos, n);
+    size_type len = (std::min)(size_ - pos, n);
     return string_view14(data_ + pos, len);
 }
 /////////////////////////////////////////////////////////////////////////////
 
 constexpr int string_view14::compare(string_view14 sv) const noexcept {
-    size_t len = (std::min)(size_, sv.size());
-    for (size_t i = 0; i < len; i++) {
+    size_type len = (std::min)(size_, sv.size());
+    for (size_type i = 0; i < len; i++) {
         if (data_[i] < sv[i]) {
             return -1;
         } else if (data_[i] > sv[i]) {
@@ -459,12 +464,12 @@ constexpr int string_view14::compare(string_view14 sv) const noexcept {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr int string_view14::compare(size_t pos1, size_t n1, string_view14 sv) const {
+constexpr int string_view14::compare(size_type pos1, size_type n1, string_view14 sv) const {
     return substr(pos1, n1).compare(sv);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr int string_view14::compare(size_t pos1, size_t n1, string_view14 sv, size_t pos2, size_t n2) const {
+constexpr int string_view14::compare(size_type pos1, size_type n1, string_view14 sv, size_type pos2, size_type n2) const {
     return substr(pos1, n1).compare(sv.substr(pos2, n2));
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -474,12 +479,12 @@ constexpr int string_view14::compare(const char* s) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr int string_view14::compare(size_t pos1, size_t n1, const char* s) const {
+constexpr int string_view14::compare(size_type pos1, size_type n1, const char* s) const {
     return substr(pos1, n1).compare(string_view14(s));
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr int string_view14::compare(size_t pos1, size_t n1, const char* s, size_t n2) const {
+constexpr int string_view14::compare(size_type pos1, size_type n1, const char* s, size_type n2) const {
     return substr(pos1, n1).compare(string_view14(s, n2));
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -529,12 +534,12 @@ constexpr bool string_view14::contains(const char* x) const {
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find(string_view14 sv, size_t pos/* = 0*/) const noexcept {
+constexpr string_view14::size_type string_view14::find(string_view14 sv, size_type pos/* = 0*/) const noexcept {
     if (pos > size_) {
         return npos;
     }
 
-    for (size_t i = pos; i < size_; i++) {
+    for (size_type i = pos; i < size_; i++) {
         string_view14 sub = substr(i, sv.size());
         if (sub == sv) {
             return i;
@@ -544,26 +549,26 @@ constexpr size_t string_view14::find(string_view14 sv, size_t pos/* = 0*/) const
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find(char c, size_t pos/* = 0*/) const noexcept {
+constexpr string_view14::size_type string_view14::find(char c, size_type pos/* = 0*/) const noexcept {
     return find(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::find(const char* s, size_type pos, size_type n) const {
     return find(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find(const char* s, size_t pos/* = 0*/) const {
+constexpr string_view14::size_type string_view14::find(const char* s, size_type pos/* = 0*/) const {
     return find(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::rfind(string_view14 sv, size_t pos/* = npos*/) const noexcept {
-    size_t target_size = std::min(size_, pos);
+constexpr string_view14::size_type string_view14::rfind(string_view14 sv, size_type pos/* = npos*/) const noexcept {
+    size_type target_size = std::min(size_, pos);
 
-    for (size_t i = 0; i <= target_size; i++) {
-        size_t idx = target_size - i;
+    for (size_type i = 0; i <= target_size; i++) {
+        size_type idx = target_size - i;
         if (substr(idx, sv.size()) == sv) {
             return idx;
         }
@@ -572,23 +577,23 @@ constexpr size_t string_view14::rfind(string_view14 sv, size_t pos/* = npos*/) c
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::rfind(char c, size_t pos/* = npos*/) const noexcept {
+constexpr string_view14::size_type string_view14::rfind(char c, size_type pos/* = npos*/) const noexcept {
     return rfind(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::rfind(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::rfind(const char* s, size_type pos, size_type n) const {
     return rfind(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::rfind(const char* s, size_t pos/* = npos*/) const {
+constexpr string_view14::size_type string_view14::rfind(const char* s, size_type pos/* = npos*/) const {
     return rfind(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_of(string_view14 sv, size_t pos/* = 0*/) const noexcept {
-    for (size_t i = pos; i < size_; i++) {
+constexpr string_view14::size_type string_view14::find_first_of(string_view14 sv, size_type pos/* = 0*/) const noexcept {
+    for (size_type i = pos; i < size_; i++) {
         if (sv.find(data_[i]) != npos) {
             return i;
         }
@@ -597,24 +602,24 @@ constexpr size_t string_view14::find_first_of(string_view14 sv, size_t pos/* = 0
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_of(char c, size_t pos/* = 0*/) const noexcept {
+constexpr string_view14::size_type string_view14::find_first_of(char c, size_type pos/* = 0*/) const noexcept {
     return find_first_of(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_of(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::find_first_of(const char* s, size_type pos, size_type n) const {
     return find_first_of(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_of(const char* s, size_t pos/* = 0*/) const {
+constexpr string_view14::size_type string_view14::find_first_of(const char* s, size_type pos/* = 0*/) const {
     return find_first_of(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_of(string_view14 sv, size_t pos/* = npos*/) const noexcept {
-    size_t target_size = std::min(size_, std::max(pos, pos + 1));
-    for (size_t i = target_size; i > 0; i--) {
+constexpr string_view14::size_type string_view14::find_last_of(string_view14 sv, size_type pos/* = npos*/) const noexcept {
+    size_type target_size = std::min(size_, std::max(pos, pos + 1));
+    for (size_type i = target_size; i > 0; i--) {
         if (sv.find(data_[i - 1]) != npos) {
             return i - 1;
         }
@@ -623,23 +628,23 @@ constexpr size_t string_view14::find_last_of(string_view14 sv, size_t pos/* = np
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_of(char c, size_t pos/* = npos*/) const noexcept {
+constexpr string_view14::size_type string_view14::find_last_of(char c, size_type pos/* = npos*/) const noexcept {
     return find_last_of(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_of(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::find_last_of(const char* s, size_type pos, size_type n) const {
     return find_last_of(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_of(const char* s, size_t pos/* = npos*/) const {
+constexpr string_view14::size_type string_view14::find_last_of(const char* s, size_type pos/* = npos*/) const {
     return find_last_of(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_not_of(string_view14 sv, size_t pos/* = 0*/) const noexcept {
-    for (size_t i = pos; i < size_; i++) {
+constexpr string_view14::size_type string_view14::find_first_not_of(string_view14 sv, size_type pos/* = 0*/) const noexcept {
+    for (size_type i = pos; i < size_; i++) {
         if (sv.find(data_[i]) == npos) {
             return i;
         }
@@ -648,24 +653,24 @@ constexpr size_t string_view14::find_first_not_of(string_view14 sv, size_t pos/*
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_not_of(char c, size_t pos/* = 0*/) const noexcept {
+constexpr string_view14::size_type string_view14::find_first_not_of(char c, size_type pos/* = 0*/) const noexcept {
     return find_first_not_of(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_not_of(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::find_first_not_of(const char* s, size_type pos, size_type n) const {
     return find_first_not_of(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_first_not_of(const char* s, size_t pos/* = 0*/) const {
+constexpr string_view14::size_type string_view14::find_first_not_of(const char* s, size_type pos/* = 0*/) const {
     return find_first_not_of(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_not_of(string_view14 sv, size_t pos/* = npos*/) const noexcept {
-    size_t target_size = std::min(size_, std::max(pos, pos + 1));
-    for (size_t i = target_size; i > 0; i--) {
+constexpr string_view14::size_type string_view14::find_last_not_of(string_view14 sv, size_type pos/* = npos*/) const noexcept {
+    size_type target_size = std::min(size_, std::max(pos, pos + 1));
+    for (size_type i = target_size; i > 0; i--) {
         if (sv.find(data_[i - 1]) == npos) {
             return i - 1;
         }
@@ -674,17 +679,17 @@ constexpr size_t string_view14::find_last_not_of(string_view14 sv, size_t pos/* 
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_not_of(char c, size_t pos/* = npos*/) const noexcept {
+constexpr string_view14::size_type string_view14::find_last_not_of(char c, size_type pos/* = npos*/) const noexcept {
     return find_last_not_of(string_view14(&c, 1), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_not_of(const char* s, size_t pos, size_t n) const {
+constexpr string_view14::size_type string_view14::find_last_not_of(const char* s, size_type pos, size_type n) const {
     return find_last_not_of(string_view14(s, n), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr size_t string_view14::find_last_not_of(const char* s, size_t pos/* = npos*/) const {
+constexpr string_view14::size_type string_view14::find_last_not_of(const char* s, size_type pos/* = npos*/) const {
     return find_last_not_of(string_view14(s), pos);
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -766,4 +771,4 @@ constexpr string_view14 operator""_sv(const char* str, std::size_t length) {
 }  // literals
 /////////////////////////////////////////////////////////////////////////////
 
-#endif // #ifndef STRING_VIEW14_HPP
+#endif  // TOMLOAD_STRING_VIEW14_HPP_
