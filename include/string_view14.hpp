@@ -2,14 +2,14 @@
 // Distributed under the MIT Software License
 
 /**
- * @file    tomload/string_view14.hpp
+ * @file    string_view14.hpp
  * @brief   define string_view14 class.
  *          string_view14 is string_view class for C++14 compiler.
  * @remark  the target is C++14 or more.
  */
 
-#ifndef TOMLOAD_STRING_VIEW14_HPP_
-#define TOMLOAD_STRING_VIEW14_HPP_
+#ifndef STRING_VIEW14_HPP_
+#define STRING_VIEW14_HPP_
 
 #include <algorithm>
 #include <cstddef>
@@ -771,4 +771,4 @@ constexpr string_view14 operator""_sv(const char* str, std::size_t length) {
 }  // literals
 /////////////////////////////////////////////////////////////////////////////
 
-#endif  // TOMLOAD_STRING_VIEW14_HPP_
+#endif  // STRING_VIEW14_HPP_

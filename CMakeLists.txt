@@ -35,7 +35,7 @@ add_executable(unittest
     tomload/parser.h tomload/parser.cpp
     tomload/detail_string.h tomload/detail_string.cpp
     tomload/detail_number.h tomload/detail_number.cpp
-    tomload/view_t.h tomload/view_t.cpp tomload/string_view14.hpp
+    tomload/view_t.h tomload/view_t.cpp
 )
 
 target_include_directories(unittest PUBLIC
