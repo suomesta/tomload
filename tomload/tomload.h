@@ -100,9 +100,20 @@ static_assert(sizeof(long long) == sizeof(integer_t), "sizeof(long long) must be
 struct single_construct_t { explicit single_construct_t() = default; };
 constexpr single_construct_t single_construct;
 
+/**
+ * @class item_t
+ * @brief A versatile container class for representing and manipulating parsed TOML data.
+ *
+ * The `item_t` class serves as a unified data structure for holding values parsed from TOML (Tom's Obvious, Minimal Language) documents.
+ * It supports all TOML data types, including booleans, integers, floats, strings, arrays, and tables.
+ *
+ * This class provides type-safe access to values, type inspection utilities, and structured traversal of arrays and tables.
+ * It is designed to preserve the hierarchical and strongly typed nature of TOML, making it ideal for configuration parsing and structured data handling.
+ */
 class item_t {
  public:
     item_t(void) = delete;  // Default constructor is deleted.
+    /////////////////////////////////////////////////////////////////////////////
 
     /*
      * @brief Constructor that initializes item_t from raw TOML string.
