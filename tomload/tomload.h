@@ -86,7 +86,7 @@ class range_t {
 };
 /////////////////////////////////////////////////////////////////////////////
 
-struct item_t;
+class item_t;
 using boolean_t = bool;
 using integer_t = int64_t;
 using float_t = double;
