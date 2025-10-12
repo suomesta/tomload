@@ -44,8 +44,8 @@ namespace tomload {
  */
 class parse_error : public std::runtime_error {
  public:
-    explicit parse_error(const char* msg) :
-        runtime_error(msg) {
+    explicit parse_error(const std::string& what_arg) :
+        runtime_error(what_arg) {
     }
 };
 /////////////////////////////////////////////////////////////////////////////
@@ -57,8 +57,8 @@ class parse_error : public std::runtime_error {
  */
 class type_error : public std::runtime_error {
  public:
-    explicit type_error(const char* msg) :
-        runtime_error(msg) {
+    explicit type_error(const std::string& what_arg) :
+        runtime_error(what_arg) {
     }
 };
 /////////////////////////////////////////////////////////////////////////////
