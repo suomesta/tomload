@@ -7,6 +7,11 @@
  * @details This file defines the item_t class and its methods for parsing and handling TOML data.
  *          `tomload::item_t` is main class of this library.
  *          typical usage is shown in example.
+ *
+ *          `tomload::item_t` lacks the following three capabilities:
+ *            (1) the ability to output TOML strings,
+ *            (2) the ability to read Date and Time data, and
+ *            (3) the ability to read Array of Tables.
  * @note target version of C++ is C++14. 
  * @example
  *      tomload::item_t item("[root]\r\narray = [1, 2, 3]\r\n");
