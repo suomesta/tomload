@@ -10,10 +10,11 @@
 #include <doctest/doctest.h>
 #include "tomload/tomload.h"
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 
 TEST_CASE("testing boolean item accessors") {
-    item_t item{single_construct, true};
+    item_t item{tomload::single_construct, true};
 
     CHECK(item.is_boolean() == true);
     CHECK(item.is_integer() == false);
@@ -23,35 +24,35 @@ TEST_CASE("testing boolean item accessors") {
     CHECK(item.is_table() == false);
 
     CHECK(item.get_boolean() == true);
-    CHECK_THROWS_AS(item.get_integer(), type_error&);
-    CHECK_THROWS_AS(item.get_float(), type_error&);
-    CHECK_THROWS_AS(item.get_string(), type_error&);
+    CHECK_THROWS_AS(item.get_integer(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_float(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_string(), tomload::type_error&);
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == true);
     CHECK(b == true);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == false);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == false);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == false);
 
-    CHECK_THROWS_AS(item.size(), type_error&);
-    CHECK_THROWS_AS(item.empty(), type_error&);
-    CHECK_THROWS_AS(item[0], type_error&);
-    CHECK_THROWS_AS(item[""], type_error&);
-    CHECK_THROWS_AS(item.contains(""), type_error&);
-    CHECK_THROWS_AS(item.array_begin(), type_error&);
-    CHECK_THROWS_AS(item.array_end(), type_error&);
-    CHECK_THROWS_AS(item.table_begin(), type_error&);
-    CHECK_THROWS_AS(item.table_end(), type_error&);
-    CHECK_THROWS_AS(item.array_range(), type_error&);
-    CHECK_THROWS_AS(item.table_range(), type_error&);
+    CHECK_THROWS_AS(item.size(), tomload::type_error&);
+    CHECK_THROWS_AS(item.empty(), tomload::type_error&);
+    CHECK_THROWS_AS(item[0], tomload::type_error&);
+    CHECK_THROWS_AS(item[""], tomload::type_error&);
+    CHECK_THROWS_AS(item.contains(""), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_range(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_range(), tomload::type_error&);
 }
 
 TEST_CASE("testing integer item accessors") {
-    item_t item{single_construct, static_cast<integer_t>(123)};
+    item_t item{tomload::single_construct, static_cast<tomload::integer_t>(123)};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == true);
@@ -60,37 +61,37 @@ TEST_CASE("testing integer item accessors") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_boolean(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), tomload::type_error&);
     CHECK(item.get_integer() == 123);
-    CHECK_THROWS_AS(item.get_float(), type_error&);
-    CHECK_THROWS_AS(item.get_string(), type_error&);
+    CHECK_THROWS_AS(item.get_float(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_string(), tomload::type_error&);
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == false);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == true);
     CHECK(i == 123);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == true);
     CHECK(d == 123.0);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == false);
 
-    CHECK_THROWS_AS(item.size(), type_error&);
-    CHECK_THROWS_AS(item.empty(), type_error&);
-    CHECK_THROWS_AS(item[0], type_error&);
-    CHECK_THROWS_AS(item[""], type_error&);
-    CHECK_THROWS_AS(item.contains(""), type_error&);
-    CHECK_THROWS_AS(item.array_begin(), type_error&);
-    CHECK_THROWS_AS(item.array_end(), type_error&);
-    CHECK_THROWS_AS(item.table_begin(), type_error&);
-    CHECK_THROWS_AS(item.table_end(), type_error&);
-    CHECK_THROWS_AS(item.array_range(), type_error&);
-    CHECK_THROWS_AS(item.table_range(), type_error&);
+    CHECK_THROWS_AS(item.size(), tomload::type_error&);
+    CHECK_THROWS_AS(item.empty(), tomload::type_error&);
+    CHECK_THROWS_AS(item[0], tomload::type_error&);
+    CHECK_THROWS_AS(item[""], tomload::type_error&);
+    CHECK_THROWS_AS(item.contains(""), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_range(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_range(), tomload::type_error&);
 }
 
 TEST_CASE("testing float item accessors") {
-    item_t item{single_construct, static_cast<float_t>(1.5)};
+    item_t item{tomload::single_construct, static_cast<tomload::float_t>(1.5)};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -99,37 +100,37 @@ TEST_CASE("testing float item accessors") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_boolean(), type_error&);
-    CHECK_THROWS_AS(item.get_integer(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_integer(), tomload::type_error&);
     CHECK(item.get_float() == 1.5);
-    CHECK_THROWS_AS(item.get_string(), type_error&);
+    CHECK_THROWS_AS(item.get_string(), tomload::type_error&);
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == false);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == true);
     CHECK(i == 1);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == true);
     CHECK(d == 1.5);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == false);
 
-    CHECK_THROWS_AS(item.size(), type_error&);
-    CHECK_THROWS_AS(item.empty(), type_error&);
-    CHECK_THROWS_AS(item[0], type_error&);
-    CHECK_THROWS_AS(item[""], type_error&);
-    CHECK_THROWS_AS(item.contains(""), type_error&);
-    CHECK_THROWS_AS(item.array_begin(), type_error&);
-    CHECK_THROWS_AS(item.array_end(), type_error&);
-    CHECK_THROWS_AS(item.table_begin(), type_error&);
-    CHECK_THROWS_AS(item.table_end(), type_error&);
-    CHECK_THROWS_AS(item.array_range(), type_error&);
-    CHECK_THROWS_AS(item.table_range(), type_error&);
+    CHECK_THROWS_AS(item.size(), tomload::type_error&);
+    CHECK_THROWS_AS(item.empty(), tomload::type_error&);
+    CHECK_THROWS_AS(item[0], tomload::type_error&);
+    CHECK_THROWS_AS(item[""], tomload::type_error&);
+    CHECK_THROWS_AS(item.contains(""), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_range(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_range(), tomload::type_error&);
 }
 
 TEST_CASE("testing string item accessors") {
-    item_t item{single_construct, string_t{"abc"}};
+    item_t item{tomload::single_construct, tomload::string_t{"abc"}};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -138,41 +139,41 @@ TEST_CASE("testing string item accessors") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_boolean(), type_error&);
-    CHECK_THROWS_AS(item.get_integer(), type_error&);
-    CHECK_THROWS_AS(item.get_float(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_integer(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_float(), tomload::type_error&);
     CHECK(item.get_string() == "abc");
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == false);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == false);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == false);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == true);
     CHECK(s == "abc");
 
-    CHECK_THROWS_AS(item.size(), type_error&);
-    CHECK_THROWS_AS(item.empty(), type_error&);
-    CHECK_THROWS_AS(item[0], type_error&);
-    CHECK_THROWS_AS(item[""], type_error&);
-    CHECK_THROWS_AS(item.contains(""), type_error&);
-    CHECK_THROWS_AS(item.array_begin(), type_error&);
-    CHECK_THROWS_AS(item.array_end(), type_error&);
-    CHECK_THROWS_AS(item.table_begin(), type_error&);
-    CHECK_THROWS_AS(item.table_end(), type_error&);
-    CHECK_THROWS_AS(item.array_range(), type_error&);
-    CHECK_THROWS_AS(item.table_range(), type_error&);
+    CHECK_THROWS_AS(item.size(), tomload::type_error&);
+    CHECK_THROWS_AS(item.empty(), tomload::type_error&);
+    CHECK_THROWS_AS(item[0], tomload::type_error&);
+    CHECK_THROWS_AS(item[""], tomload::type_error&);
+    CHECK_THROWS_AS(item.contains(""), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_range(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_range(), tomload::type_error&);
 }
 
 TEST_CASE("testing array item accessors") {
     auto ptr = std::make_shared<std::vector<item_t>>();
-    ptr->push_back(item_t{single_construct, true});
-    ptr->push_back(item_t{single_construct, static_cast<integer_t>(1)});
-    ptr->push_back(item_t{single_construct, 1.5});
-    ptr->push_back(item_t{single_construct, string_t("abc")});
-    item_t item{single_construct, ptr};
+    ptr->push_back(item_t{tomload::single_construct, true});
+    ptr->push_back(item_t{tomload::single_construct, static_cast<tomload::integer_t>(1)});
+    ptr->push_back(item_t{tomload::single_construct, 1.5});
+    ptr->push_back(item_t{tomload::single_construct, tomload::string_t("abc")});
+    item_t item{tomload::single_construct, ptr};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -181,18 +182,18 @@ TEST_CASE("testing array item accessors") {
     CHECK(item.is_array() == true);
     CHECK(item.is_table() == false);
 
-    CHECK_THROWS_AS(item.get_boolean(), type_error&);
-    CHECK_THROWS_AS(item.get_integer(), type_error&);
-    CHECK_THROWS_AS(item.get_float(), type_error&);
-    CHECK_THROWS_AS(item.get_string(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_integer(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_float(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_string(), tomload::type_error&);
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == false);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == false);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == false);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == false);
 
     CHECK(item.size() == 4);
@@ -235,20 +236,20 @@ TEST_CASE("testing array item accessors") {
         index++;
     }
 
-    CHECK_THROWS_AS(item[""], type_error&);
-    CHECK_THROWS_AS(item.contains(""), type_error&);
-    CHECK_THROWS_AS(item.table_begin(), type_error&);
-    CHECK_THROWS_AS(item.table_end(), type_error&);
-    CHECK_THROWS_AS(item.table_range(), type_error&);
+    CHECK_THROWS_AS(item[""], tomload::type_error&);
+    CHECK_THROWS_AS(item.contains(""), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.table_range(), tomload::type_error&);
 }
 
 TEST_CASE("testing table item accessors") {
     auto ptr = std::make_shared<std::map<tomload::key_t, item_t>>();
-    ptr->insert({"1st", item_t{single_construct, true}});
-    ptr->insert({"2nd", item_t{single_construct, static_cast<integer_t>(1)}});
-    ptr->insert({"3rd", item_t{single_construct, 1.5}});
-    ptr->insert({"4th", item_t{single_construct, string_t("abc")}});
-    item_t item{single_construct, ptr};
+    ptr->insert({"1st", item_t{tomload::single_construct, true}});
+    ptr->insert({"2nd", item_t{tomload::single_construct, static_cast<tomload::integer_t>(1)}});
+    ptr->insert({"3rd", item_t{tomload::single_construct, 1.5}});
+    ptr->insert({"4th", item_t{tomload::single_construct, tomload::string_t("abc")}});
+    item_t item{tomload::single_construct, ptr};
 
     CHECK(item.is_boolean() == false);
     CHECK(item.is_integer() == false);
@@ -257,18 +258,18 @@ TEST_CASE("testing table item accessors") {
     CHECK(item.is_array() == false);
     CHECK(item.is_table() == true);
 
-    CHECK_THROWS_AS(item.get_boolean(), type_error&);
-    CHECK_THROWS_AS(item.get_integer(), type_error&);
-    CHECK_THROWS_AS(item.get_float(), type_error&);
-    CHECK_THROWS_AS(item.get_string(), type_error&);
+    CHECK_THROWS_AS(item.get_boolean(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_integer(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_float(), tomload::type_error&);
+    CHECK_THROWS_AS(item.get_string(), tomload::type_error&);
 
-    boolean_t b;
+    tomload::boolean_t b;
     CHECK(item.get(b) == false);
-    integer_t i;
+    tomload::integer_t i;
     CHECK(item.get(i) == false);
-    float_t d;
+    tomload::float_t d;
     CHECK(item.get(d) == false);
-    string_t s;
+    tomload::string_t s;
     CHECK(item.get(s) == false);
 
     CHECK(item.size() == 4);
@@ -319,8 +320,8 @@ TEST_CASE("testing table item accessors") {
         index++;
     }
 
-    CHECK_THROWS_AS(item[0], type_error&);
-    CHECK_THROWS_AS(item.array_begin(), type_error&);
-    CHECK_THROWS_AS(item.array_end(), type_error&);
-    CHECK_THROWS_AS(item.array_range(), type_error&);
+    CHECK_THROWS_AS(item[0], tomload::type_error&);
+    CHECK_THROWS_AS(item.array_begin(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_end(), tomload::type_error&);
+    CHECK_THROWS_AS(item.array_range(), tomload::type_error&);
 }

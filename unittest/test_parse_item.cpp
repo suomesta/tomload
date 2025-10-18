@@ -14,22 +14,24 @@
 #include "tomload/parser.h"
 #include "tomload/view_t.h"
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
+using tomload::parse_item;
 
-TEST_CASE("testing parse_item(invalid)") {
+TEST_CASE("testing tomload::parse_item(invalid)") {
     {
         view_t src = "";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "True";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(bool)") {
+TEST_CASE("testing tomload::parse_item(bool)") {
     {
         view_t src = "true";
         item_t result = parse_item(src);
@@ -48,7 +50,7 @@ TEST_CASE("testing parse_item(bool)") {
     }
 }
 
-TEST_CASE("testing parse_item(special_float)") {
+TEST_CASE("testing tomload::parse_item(special_float)") {
     {
         view_t src = "inf";
         item_t result = parse_item(src);
@@ -99,7 +101,7 @@ TEST_CASE("testing parse_item(special_float)") {
     }
 }
 
-TEST_CASE("testing parse_item(radix)") {
+TEST_CASE("testing tomload::parse_item(radix)") {
     {
         view_t src = "0xF_f";
         item_t result = parse_item(src);
@@ -127,41 +129,41 @@ TEST_CASE("testing parse_item(radix)") {
     {
         view_t src = "0xFFFF_FFFF_FFFF_FFFF";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0x_F_F";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0x_F_F";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0xz";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0o99";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0b24";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "0x";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(''')") {
+TEST_CASE("testing tomload::parse_item(''')") {
     {
         view_t src = "''''''";
         item_t result = parse_item(src);
@@ -221,11 +223,11 @@ TEST_CASE("testing parse_item(''')") {
     {
         view_t src = "'''\nA\na''";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(')") {
+TEST_CASE("testing tomload::parse_item(')") {
     {
         view_t src = "''";
         item_t result = parse_item(src);
@@ -245,16 +247,16 @@ TEST_CASE("testing parse_item(')") {
     {
         view_t src = "'a\r\nb'";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "'a\"b";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(\"\"\")") {
+TEST_CASE("testing tomload::parse_item(\"\"\")") {
     {
         view_t src = "\"\"\"\"\"\"";
         item_t result = parse_item(src);
@@ -321,7 +323,7 @@ TEST_CASE("testing parse_item(\"\"\")") {
     }
 }
 
-TEST_CASE("testing parse_item(\")") {
+TEST_CASE("testing tomload::parse_item(\")") {
     {
         view_t src = "\"\"";
         item_t result = parse_item(src);
@@ -373,7 +375,7 @@ TEST_CASE("testing parse_item(\")") {
     {
         view_t src = "\"\\u123\"";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "\"\\U0000001F\"";
@@ -386,26 +388,26 @@ TEST_CASE("testing parse_item(\")") {
     {
         view_t src = "\"\\U1234567\"";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "\"\\\"";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "\"abc\r\ndef\"";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "\"abc";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(integer)") {
+TEST_CASE("testing tomload::parse_item(integer)") {
     {
         view_t src = "123";
         item_t result = parse_item(src);
@@ -457,17 +459,17 @@ TEST_CASE("testing parse_item(integer)") {
     {
         view_t src = "00";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "-0_0";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "+0_0_0";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "+9223372036854775807";  // 0x7FFF_FFFF_FFFF_FFFF
@@ -480,26 +482,26 @@ TEST_CASE("testing parse_item(integer)") {
     {
         view_t src = "+9223372036854775808";  // 0x8000_0000_0000_0000
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "+12__3";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "+12_3_";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
     {
         view_t src = "+_12_3";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
 
-TEST_CASE("testing parse_item(float)") {
+TEST_CASE("testing tomload::parse_item(float)") {
     {
         view_t src = "1.5";
         item_t result = parse_item(src);
@@ -518,7 +520,7 @@ TEST_CASE("testing parse_item(float)") {
     }
 }
 
-TEST_CASE("testing parse_item(array)") {
+TEST_CASE("testing tomload::parse_item(array)") {
     {
         view_t src = "[]";
         item_t result = parse_item(src);
@@ -576,7 +578,7 @@ TEST_CASE("testing parse_item(array)") {
         CHECK(result[1].is_boolean() == true);
         CHECK(result[1].get_boolean() == true);
         CHECK(src.empty());
-        for (array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
+        for (tomload::array_iterator i = result.array_begin(); i != result.array_end(); ++i) {
             if (std::distance(result.array_begin(), i) == 0) {
                 CHECK(i->is_integer() == true);
                 CHECK(i->get_integer() == 255LL);
@@ -611,7 +613,7 @@ TEST_CASE("testing parse_item(array)") {
     }
 }
 
-TEST_CASE("testing parse_item(inline table)") {
+TEST_CASE("testing tomload::parse_item(inline table)") {
     {
         view_t src = "{}";
         item_t result = parse_item(src);
@@ -667,6 +669,6 @@ TEST_CASE("testing parse_item(inline table)") {
     {
         view_t src = "{a=10,}";
 
-        CHECK_THROWS_AS(parse_item(src), parse_error&);
+        CHECK_THROWS_AS(parse_item(src), tomload::parse_error&);
     }
 }
