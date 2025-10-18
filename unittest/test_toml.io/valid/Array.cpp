@@ -35,7 +35,8 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 
 TEST_CASE("valid/Array/Array_1.toml") {
     std::vector<char> content = load_file("valid/Array/Array_1.toml");

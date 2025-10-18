@@ -35,5 +35,6 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 

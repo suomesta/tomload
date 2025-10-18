@@ -35,19 +35,20 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 
 TEST_CASE("invalid/InlineTable/InlineTable_2_invalid.toml") {
     std::vector<char> content = load_file("invalid/InlineTable/InlineTable_2_invalid.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/InlineTable/InlineTable_3_invalid.toml") {
     std::vector<char> content = load_file("invalid/InlineTable/InlineTable_3_invalid.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 

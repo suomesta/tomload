@@ -35,110 +35,111 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 
 TEST_CASE("invalid/bool/almost-false-with-extra.toml") {
     std::vector<char> content = load_file("invalid/bool/almost-false-with-extra.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/almost-false.toml") {
     std::vector<char> content = load_file("invalid/bool/almost-false.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/almost-true-with-extra.toml") {
     std::vector<char> content = load_file("invalid/bool/almost-true-with-extra.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/almost-true.toml") {
     std::vector<char> content = load_file("invalid/bool/almost-true.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/capitalized-false.toml") {
     std::vector<char> content = load_file("invalid/bool/capitalized-false.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/capitalized-true.toml") {
     std::vector<char> content = load_file("invalid/bool/capitalized-true.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/just-f.toml") {
     std::vector<char> content = load_file("invalid/bool/just-f.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/just-t.toml") {
     std::vector<char> content = load_file("invalid/bool/just-t.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/mixed-case-false.toml") {
     std::vector<char> content = load_file("invalid/bool/mixed-case-false.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/mixed-case-true.toml") {
     std::vector<char> content = load_file("invalid/bool/mixed-case-true.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/mixed-case.toml") {
     std::vector<char> content = load_file("invalid/bool/mixed-case.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/starting-same-false.toml") {
     std::vector<char> content = load_file("invalid/bool/starting-same-false.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/starting-same-true.toml") {
     std::vector<char> content = load_file("invalid/bool/starting-same-true.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/wrong-case-false.toml") {
     std::vector<char> content = load_file("invalid/bool/wrong-case-false.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 
 TEST_CASE("invalid/bool/wrong-case-true.toml") {
     std::vector<char> content = load_file("invalid/bool/wrong-case-true.toml");
     view_t view{content.data(), content.size()};
 
-    CHECK_THROWS_AS(item_t{view}, parse_error&);
+    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);
 }
 

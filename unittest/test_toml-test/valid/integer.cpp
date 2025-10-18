@@ -35,7 +35,8 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 
 TEST_CASE("valid/integer/float64-max.toml") {
     std::vector<char> content = load_file("valid/integer/float64-max.toml");

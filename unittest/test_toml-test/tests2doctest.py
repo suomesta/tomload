@@ -42,7 +42,8 @@ bool operator==(tomload::float_t f, rhs_nan) {
 
 }  // namespace
 
-using namespace tomload;
+using tomload::item_t;
+using tomload::view_t;
 """
 
 
@@ -156,7 +157,7 @@ def print_check(path, keys=tuple()):
 
     if invalid:
         print('')
-        print('    CHECK_THROWS_AS(item_t{view}, parse_error&);')
+        print('    CHECK_THROWS_AS(item_t{view}, tomload::parse_error&);')
     else:
         print('    item_t t{view};')
         print('')
