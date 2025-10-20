@@ -45,14 +45,14 @@ TEST_CASE("valid/Keys/Keys_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["key"].is_string() == true);
-    CHECK(t["key"].get_string() == "value");
-    CHECK(t["bare_key"].is_string() == true);
-    CHECK(t["bare_key"].get_string() == "value");
-    CHECK(t["bare-key"].is_string() == true);
-    CHECK(t["bare-key"].get_string() == "value");
-    CHECK(t["1234"].is_string() == true);
-    CHECK(t["1234"].get_string() == "value");
+    CHECK(t[u8"key"].is_string() == true);
+    CHECK(t[u8"key"].get_string() == u8"value");
+    CHECK(t[u8"bare_key"].is_string() == true);
+    CHECK(t[u8"bare_key"].get_string() == u8"value");
+    CHECK(t[u8"bare-key"].is_string() == true);
+    CHECK(t[u8"bare-key"].get_string() == u8"value");
+    CHECK(t[u8"1234"].is_string() == true);
+    CHECK(t[u8"1234"].get_string() == u8"value");
 }
 
 TEST_CASE("valid/Keys/Keys_10.toml") {
@@ -62,22 +62,22 @@ TEST_CASE("valid/Keys/Keys_10.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["apple"].is_table() == true);
-    CHECK(t["apple"].size() == 3);
-    CHECK(t["apple"]["type"].is_string() == true);
-    CHECK(t["apple"]["type"].get_string() == "fruit");
-    CHECK(t["apple"]["skin"].is_string() == true);
-    CHECK(t["apple"]["skin"].get_string() == "thin");
-    CHECK(t["apple"]["color"].is_string() == true);
-    CHECK(t["apple"]["color"].get_string() == "red");
-    CHECK(t["orange"].is_table() == true);
-    CHECK(t["orange"].size() == 3);
-    CHECK(t["orange"]["type"].is_string() == true);
-    CHECK(t["orange"]["type"].get_string() == "fruit");
-    CHECK(t["orange"]["skin"].is_string() == true);
-    CHECK(t["orange"]["skin"].get_string() == "thick");
-    CHECK(t["orange"]["color"].is_string() == true);
-    CHECK(t["orange"]["color"].get_string() == "orange");
+    CHECK(t[u8"apple"].is_table() == true);
+    CHECK(t[u8"apple"].size() == 3);
+    CHECK(t[u8"apple"][u8"type"].is_string() == true);
+    CHECK(t[u8"apple"][u8"type"].get_string() == u8"fruit");
+    CHECK(t[u8"apple"][u8"skin"].is_string() == true);
+    CHECK(t[u8"apple"][u8"skin"].get_string() == u8"thin");
+    CHECK(t[u8"apple"][u8"color"].is_string() == true);
+    CHECK(t[u8"apple"][u8"color"].get_string() == u8"red");
+    CHECK(t[u8"orange"].is_table() == true);
+    CHECK(t[u8"orange"].size() == 3);
+    CHECK(t[u8"orange"][u8"type"].is_string() == true);
+    CHECK(t[u8"orange"][u8"type"].get_string() == u8"fruit");
+    CHECK(t[u8"orange"][u8"skin"].is_string() == true);
+    CHECK(t[u8"orange"][u8"skin"].get_string() == u8"thick");
+    CHECK(t[u8"orange"][u8"color"].is_string() == true);
+    CHECK(t[u8"orange"][u8"color"].get_string() == u8"orange");
 }
 
 TEST_CASE("valid/Keys/Keys_11.toml") {
@@ -87,22 +87,22 @@ TEST_CASE("valid/Keys/Keys_11.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["apple"].is_table() == true);
-    CHECK(t["apple"].size() == 3);
-    CHECK(t["apple"]["type"].is_string() == true);
-    CHECK(t["apple"]["type"].get_string() == "fruit");
-    CHECK(t["apple"]["skin"].is_string() == true);
-    CHECK(t["apple"]["skin"].get_string() == "thin");
-    CHECK(t["apple"]["color"].is_string() == true);
-    CHECK(t["apple"]["color"].get_string() == "red");
-    CHECK(t["orange"].is_table() == true);
-    CHECK(t["orange"].size() == 3);
-    CHECK(t["orange"]["type"].is_string() == true);
-    CHECK(t["orange"]["type"].get_string() == "fruit");
-    CHECK(t["orange"]["skin"].is_string() == true);
-    CHECK(t["orange"]["skin"].get_string() == "thick");
-    CHECK(t["orange"]["color"].is_string() == true);
-    CHECK(t["orange"]["color"].get_string() == "orange");
+    CHECK(t[u8"apple"].is_table() == true);
+    CHECK(t[u8"apple"].size() == 3);
+    CHECK(t[u8"apple"][u8"type"].is_string() == true);
+    CHECK(t[u8"apple"][u8"type"].get_string() == u8"fruit");
+    CHECK(t[u8"apple"][u8"skin"].is_string() == true);
+    CHECK(t[u8"apple"][u8"skin"].get_string() == u8"thin");
+    CHECK(t[u8"apple"][u8"color"].is_string() == true);
+    CHECK(t[u8"apple"][u8"color"].get_string() == u8"red");
+    CHECK(t[u8"orange"].is_table() == true);
+    CHECK(t[u8"orange"].size() == 3);
+    CHECK(t[u8"orange"][u8"type"].is_string() == true);
+    CHECK(t[u8"orange"][u8"type"].get_string() == u8"fruit");
+    CHECK(t[u8"orange"][u8"skin"].is_string() == true);
+    CHECK(t[u8"orange"][u8"skin"].get_string() == u8"thick");
+    CHECK(t[u8"orange"][u8"color"].is_string() == true);
+    CHECK(t[u8"orange"][u8"color"].get_string() == u8"orange");
 }
 
 TEST_CASE("valid/Keys/Keys_12.toml") {
@@ -112,10 +112,10 @@ TEST_CASE("valid/Keys/Keys_12.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["3"].is_table() == true);
-    CHECK(t["3"].size() == 1);
-    CHECK(t["3"]["14159"].is_string() == true);
-    CHECK(t["3"]["14159"].get_string() == "pi");
+    CHECK(t[u8"3"].is_table() == true);
+    CHECK(t[u8"3"].size() == 1);
+    CHECK(t[u8"3"][u8"14159"].is_string() == true);
+    CHECK(t[u8"3"][u8"14159"].get_string() == u8"pi");
 }
 
 TEST_CASE("valid/Keys/Keys_2.toml") {
@@ -125,16 +125,16 @@ TEST_CASE("valid/Keys/Keys_2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
-    CHECK(t["127.0.0.1"].is_string() == true);
-    CHECK(t["127.0.0.1"].get_string() == "value");
-    CHECK(t["character encoding"].is_string() == true);
-    CHECK(t["character encoding"].get_string() == "value");
+    CHECK(t[u8"127.0.0.1"].is_string() == true);
+    CHECK(t[u8"127.0.0.1"].get_string() == u8"value");
+    CHECK(t[u8"character encoding"].is_string() == true);
+    CHECK(t[u8"character encoding"].get_string() == u8"value");
     CHECK(t[u8"ʎǝʞ"].is_string() == true);
-    CHECK(t[u8"ʎǝʞ"].get_string() == "value");
-    CHECK(t["key2"].is_string() == true);
-    CHECK(t["key2"].get_string() == "value");
-    CHECK(t["quoted \"value\""].is_string() == true);
-    CHECK(t["quoted \"value\""].get_string() == "value");
+    CHECK(t[u8"ʎǝʞ"].get_string() == u8"value");
+    CHECK(t[u8"key2"].is_string() == true);
+    CHECK(t[u8"key2"].get_string() == u8"value");
+    CHECK(t[u8"quoted \"value\""].is_string() == true);
+    CHECK(t[u8"quoted \"value\""].get_string() == u8"value");
 }
 
 TEST_CASE("valid/Keys/Keys_3_fix1.toml") {
@@ -144,8 +144,8 @@ TEST_CASE("valid/Keys/Keys_3_fix1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t[""].is_string() == true);
-    CHECK(t[""].get_string() == "blank");
+    CHECK(t[u8""].is_string() == true);
+    CHECK(t[u8""].get_string() == u8"blank");
 }
 
 TEST_CASE("valid/Keys/Keys_3_fix2.toml") {
@@ -155,8 +155,8 @@ TEST_CASE("valid/Keys/Keys_3_fix2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t[""].is_string() == true);
-    CHECK(t[""].get_string() == "blank");
+    CHECK(t[u8""].is_string() == true);
+    CHECK(t[u8""].get_string() == u8"blank");
 }
 
 TEST_CASE("valid/Keys/Keys_4.toml") {
@@ -166,18 +166,18 @@ TEST_CASE("valid/Keys/Keys_4.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
-    CHECK(t["name"].is_string() == true);
-    CHECK(t["name"].get_string() == "Orange");
-    CHECK(t["physical"].is_table() == true);
-    CHECK(t["physical"].size() == 2);
-    CHECK(t["physical"]["color"].is_string() == true);
-    CHECK(t["physical"]["color"].get_string() == "orange");
-    CHECK(t["physical"]["shape"].is_string() == true);
-    CHECK(t["physical"]["shape"].get_string() == "round");
-    CHECK(t["site"].is_table() == true);
-    CHECK(t["site"].size() == 1);
-    CHECK(t["site"]["google.com"].is_boolean() == true);
-    CHECK(t["site"]["google.com"].get_boolean() == true);
+    CHECK(t[u8"name"].is_string() == true);
+    CHECK(t[u8"name"].get_string() == u8"Orange");
+    CHECK(t[u8"physical"].is_table() == true);
+    CHECK(t[u8"physical"].size() == 2);
+    CHECK(t[u8"physical"][u8"color"].is_string() == true);
+    CHECK(t[u8"physical"][u8"color"].get_string() == u8"orange");
+    CHECK(t[u8"physical"][u8"shape"].is_string() == true);
+    CHECK(t[u8"physical"][u8"shape"].get_string() == u8"round");
+    CHECK(t[u8"site"].is_table() == true);
+    CHECK(t[u8"site"].size() == 1);
+    CHECK(t[u8"site"][u8"google.com"].is_boolean() == true);
+    CHECK(t[u8"site"][u8"google.com"].get_boolean() == true);
 }
 
 TEST_CASE("valid/Keys/Keys_5.toml") {
@@ -187,14 +187,14 @@ TEST_CASE("valid/Keys/Keys_5.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 3);
-    CHECK(t["fruit"]["name"].is_string() == true);
-    CHECK(t["fruit"]["name"].get_string() == "banana");
-    CHECK(t["fruit"]["color"].is_string() == true);
-    CHECK(t["fruit"]["color"].get_string() == "yellow");
-    CHECK(t["fruit"]["flavor"].is_string() == true);
-    CHECK(t["fruit"]["flavor"].get_string() == "banana");
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 3);
+    CHECK(t[u8"fruit"][u8"name"].is_string() == true);
+    CHECK(t[u8"fruit"][u8"name"].get_string() == u8"banana");
+    CHECK(t[u8"fruit"][u8"color"].is_string() == true);
+    CHECK(t[u8"fruit"][u8"color"].get_string() == u8"yellow");
+    CHECK(t[u8"fruit"][u8"flavor"].is_string() == true);
+    CHECK(t[u8"fruit"][u8"flavor"].get_string() == u8"banana");
 }
 
 TEST_CASE("valid/Keys/Keys_8.toml") {
@@ -204,13 +204,13 @@ TEST_CASE("valid/Keys/Keys_8.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 2);
-    CHECK(t["fruit"]["apple"].is_table() == true);
-    CHECK(t["fruit"]["apple"].size() == 1);
-    CHECK(t["fruit"]["apple"]["smooth"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["smooth"].get_boolean() == true);
-    CHECK(t["fruit"]["orange"].is_integer() == true);
-    CHECK(t["fruit"]["orange"].get_integer() == 2);
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 2);
+    CHECK(t[u8"fruit"][u8"apple"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"][u8"smooth"].is_boolean() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"smooth"].get_boolean() == true);
+    CHECK(t[u8"fruit"][u8"orange"].is_integer() == true);
+    CHECK(t[u8"fruit"][u8"orange"].get_integer() == 2);
 }
 

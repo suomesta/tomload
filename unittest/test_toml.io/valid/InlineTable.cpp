@@ -45,24 +45,24 @@ TEST_CASE("valid/InlineTable/InlineTable_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
-    CHECK(t["name"].is_table() == true);
-    CHECK(t["name"].size() == 2);
-    CHECK(t["name"]["first"].is_string() == true);
-    CHECK(t["name"]["first"].get_string() == "Tom");
-    CHECK(t["name"]["last"].is_string() == true);
-    CHECK(t["name"]["last"].get_string() == "Preston-Werner");
-    CHECK(t["point"].is_table() == true);
-    CHECK(t["point"].size() == 2);
-    CHECK(t["point"]["x"].is_integer() == true);
-    CHECK(t["point"]["x"].get_integer() == 1);
-    CHECK(t["point"]["y"].is_integer() == true);
-    CHECK(t["point"]["y"].get_integer() == 2);
-    CHECK(t["animal"].is_table() == true);
-    CHECK(t["animal"].size() == 1);
-    CHECK(t["animal"]["type"].is_table() == true);
-    CHECK(t["animal"]["type"].size() == 1);
-    CHECK(t["animal"]["type"]["name"].is_string() == true);
-    CHECK(t["animal"]["type"]["name"].get_string() == "pug");
+    CHECK(t[u8"name"].is_table() == true);
+    CHECK(t[u8"name"].size() == 2);
+    CHECK(t[u8"name"][u8"first"].is_string() == true);
+    CHECK(t[u8"name"][u8"first"].get_string() == u8"Tom");
+    CHECK(t[u8"name"][u8"last"].is_string() == true);
+    CHECK(t[u8"name"][u8"last"].get_string() == u8"Preston-Werner");
+    CHECK(t[u8"point"].is_table() == true);
+    CHECK(t[u8"point"].size() == 2);
+    CHECK(t[u8"point"][u8"x"].is_integer() == true);
+    CHECK(t[u8"point"][u8"x"].get_integer() == 1);
+    CHECK(t[u8"point"][u8"y"].is_integer() == true);
+    CHECK(t[u8"point"][u8"y"].get_integer() == 2);
+    CHECK(t[u8"animal"].is_table() == true);
+    CHECK(t[u8"animal"].size() == 1);
+    CHECK(t[u8"animal"][u8"type"].is_table() == true);
+    CHECK(t[u8"animal"][u8"type"].size() == 1);
+    CHECK(t[u8"animal"][u8"type"][u8"name"].is_string() == true);
+    CHECK(t[u8"animal"][u8"type"][u8"name"].get_string() == u8"pug");
 }
 
 TEST_CASE("valid/InlineTable/InlineTable_2.toml") {
@@ -72,12 +72,12 @@ TEST_CASE("valid/InlineTable/InlineTable_2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["product"].is_table() == true);
-    CHECK(t["product"].size() == 1);
-    CHECK(t["product"]["type"].is_table() == true);
-    CHECK(t["product"]["type"].size() == 1);
-    CHECK(t["product"]["type"]["name"].is_string() == true);
-    CHECK(t["product"]["type"]["name"].get_string() == "Nail");
+    CHECK(t[u8"product"].is_table() == true);
+    CHECK(t[u8"product"].size() == 1);
+    CHECK(t[u8"product"][u8"type"].is_table() == true);
+    CHECK(t[u8"product"][u8"type"].size() == 1);
+    CHECK(t[u8"product"][u8"type"][u8"name"].is_string() == true);
+    CHECK(t[u8"product"][u8"type"][u8"name"].get_string() == u8"Nail");
 }
 
 TEST_CASE("valid/InlineTable/InlineTable_3.toml") {
@@ -87,11 +87,11 @@ TEST_CASE("valid/InlineTable/InlineTable_3.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["product"].is_table() == true);
-    CHECK(t["product"].size() == 1);
-    CHECK(t["product"]["type"].is_table() == true);
-    CHECK(t["product"]["type"].size() == 1);
-    CHECK(t["product"]["type"]["name"].is_string() == true);
-    CHECK(t["product"]["type"]["name"].get_string() == "Nail");
+    CHECK(t[u8"product"].is_table() == true);
+    CHECK(t[u8"product"].size() == 1);
+    CHECK(t[u8"product"][u8"type"].is_table() == true);
+    CHECK(t[u8"product"][u8"type"].size() == 1);
+    CHECK(t[u8"product"][u8"type"][u8"name"].is_string() == true);
+    CHECK(t[u8"product"][u8"type"][u8"name"].get_string() == u8"Nail");
 }
 

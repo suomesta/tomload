@@ -45,8 +45,8 @@ TEST_CASE("valid/Table/Table_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["table"].is_table() == true);
-    CHECK(t["table"].size() == 0);
+    CHECK(t[u8"table"].is_table() == true);
+    CHECK(t[u8"table"].size() == 0);
 }
 
 TEST_CASE("valid/Table/Table_11.toml") {
@@ -56,16 +56,16 @@ TEST_CASE("valid/Table/Table_11.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 1);
-    CHECK(t["fruit"]["apple"].is_table() == true);
-    CHECK(t["fruit"]["apple"].size() == 2);
-    CHECK(t["fruit"]["apple"]["color"].is_string() == true);
-    CHECK(t["fruit"]["apple"]["color"].get_string() == "red");
-    CHECK(t["fruit"]["apple"]["taste"].is_table() == true);
-    CHECK(t["fruit"]["apple"]["taste"].size() == 1);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_boolean() == true);
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"].size() == 2);
+    CHECK(t[u8"fruit"][u8"apple"][u8"color"].is_string() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"color"].get_string() == u8"red");
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"][u8"sweet"].is_boolean() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"][u8"sweet"].get_boolean() == true);
 }
 
 TEST_CASE("valid/Table/Table_12.toml") {
@@ -75,20 +75,20 @@ TEST_CASE("valid/Table/Table_12.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 1);
-    CHECK(t["fruit"]["apple"].is_table() == true);
-    CHECK(t["fruit"]["apple"].size() == 3);
-    CHECK(t["fruit"]["apple"]["color"].is_string() == true);
-    CHECK(t["fruit"]["apple"]["color"].get_string() == "red");
-    CHECK(t["fruit"]["apple"]["taste"].is_table() == true);
-    CHECK(t["fruit"]["apple"]["taste"].size() == 1);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["taste"]["sweet"].get_boolean() == true);
-    CHECK(t["fruit"]["apple"]["texture"].is_table() == true);
-    CHECK(t["fruit"]["apple"]["texture"].size() == 1);
-    CHECK(t["fruit"]["apple"]["texture"]["smooth"].is_boolean() == true);
-    CHECK(t["fruit"]["apple"]["texture"]["smooth"].get_boolean() == true);
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"].size() == 3);
+    CHECK(t[u8"fruit"][u8"apple"][u8"color"].is_string() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"color"].get_string() == u8"red");
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"][u8"sweet"].is_boolean() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"taste"][u8"sweet"].get_boolean() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"texture"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"texture"].size() == 1);
+    CHECK(t[u8"fruit"][u8"apple"][u8"texture"][u8"smooth"].is_boolean() == true);
+    CHECK(t[u8"fruit"][u8"apple"][u8"texture"][u8"smooth"].get_boolean() == true);
 }
 
 TEST_CASE("valid/Table/Table_2.toml") {
@@ -98,18 +98,18 @@ TEST_CASE("valid/Table/Table_2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["table-1"].is_table() == true);
-    CHECK(t["table-1"].size() == 2);
-    CHECK(t["table-1"]["key1"].is_string() == true);
-    CHECK(t["table-1"]["key1"].get_string() == "some string");
-    CHECK(t["table-1"]["key2"].is_integer() == true);
-    CHECK(t["table-1"]["key2"].get_integer() == 123);
-    CHECK(t["table-2"].is_table() == true);
-    CHECK(t["table-2"].size() == 2);
-    CHECK(t["table-2"]["key1"].is_string() == true);
-    CHECK(t["table-2"]["key1"].get_string() == "another string");
-    CHECK(t["table-2"]["key2"].is_integer() == true);
-    CHECK(t["table-2"]["key2"].get_integer() == 456);
+    CHECK(t[u8"table-1"].is_table() == true);
+    CHECK(t[u8"table-1"].size() == 2);
+    CHECK(t[u8"table-1"][u8"key1"].is_string() == true);
+    CHECK(t[u8"table-1"][u8"key1"].get_string() == u8"some string");
+    CHECK(t[u8"table-1"][u8"key2"].is_integer() == true);
+    CHECK(t[u8"table-1"][u8"key2"].get_integer() == 123);
+    CHECK(t[u8"table-2"].is_table() == true);
+    CHECK(t[u8"table-2"].size() == 2);
+    CHECK(t[u8"table-2"][u8"key1"].is_string() == true);
+    CHECK(t[u8"table-2"][u8"key1"].get_string() == u8"another string");
+    CHECK(t[u8"table-2"][u8"key2"].is_integer() == true);
+    CHECK(t[u8"table-2"][u8"key2"].get_integer() == 456);
 }
 
 TEST_CASE("valid/Table/Table_3.toml") {
@@ -119,14 +119,14 @@ TEST_CASE("valid/Table/Table_3.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["dog"].is_table() == true);
-    CHECK(t["dog"].size() == 1);
-    CHECK(t["dog"]["tater.man"].is_table() == true);
-    CHECK(t["dog"]["tater.man"].size() == 1);
-    CHECK(t["dog"]["tater.man"]["type"].is_table() == true);
-    CHECK(t["dog"]["tater.man"]["type"].size() == 1);
-    CHECK(t["dog"]["tater.man"]["type"]["name"].is_string() == true);
-    CHECK(t["dog"]["tater.man"]["type"]["name"].get_string() == "pug");
+    CHECK(t[u8"dog"].is_table() == true);
+    CHECK(t[u8"dog"].size() == 1);
+    CHECK(t[u8"dog"][u8"tater.man"].is_table() == true);
+    CHECK(t[u8"dog"][u8"tater.man"].size() == 1);
+    CHECK(t[u8"dog"][u8"tater.man"][u8"type"].is_table() == true);
+    CHECK(t[u8"dog"][u8"tater.man"][u8"type"].size() == 1);
+    CHECK(t[u8"dog"][u8"tater.man"][u8"type"][u8"name"].is_string() == true);
+    CHECK(t[u8"dog"][u8"tater.man"][u8"type"][u8"name"].get_string() == u8"pug");
 }
 
 TEST_CASE("valid/Table/Table_4.toml") {
@@ -136,30 +136,30 @@ TEST_CASE("valid/Table/Table_4.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 1);
-    CHECK(t["a"]["b"].is_table() == true);
-    CHECK(t["a"]["b"].size() == 1);
-    CHECK(t["a"]["b"]["c"].is_table() == true);
-    CHECK(t["a"]["b"]["c"].size() == 0);
-    CHECK(t["d"].is_table() == true);
-    CHECK(t["d"].size() == 1);
-    CHECK(t["d"]["e"].is_table() == true);
-    CHECK(t["d"]["e"].size() == 1);
-    CHECK(t["d"]["e"]["f"].is_table() == true);
-    CHECK(t["d"]["e"]["f"].size() == 0);
-    CHECK(t["g"].is_table() == true);
-    CHECK(t["g"].size() == 1);
-    CHECK(t["g"]["h"].is_table() == true);
-    CHECK(t["g"]["h"].size() == 1);
-    CHECK(t["g"]["h"]["i"].is_table() == true);
-    CHECK(t["g"]["h"]["i"].size() == 0);
-    CHECK(t["j"].is_table() == true);
-    CHECK(t["j"].size() == 1);
-    CHECK(t["j"][u8"ʞ"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"].size() == 1);
-    CHECK(t["j"][u8"ʞ"]["l"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"]["l"].size() == 0);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 1);
+    CHECK(t[u8"a"][u8"b"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"].size() == 0);
+    CHECK(t[u8"d"].is_table() == true);
+    CHECK(t[u8"d"].size() == 1);
+    CHECK(t[u8"d"][u8"e"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"].size() == 1);
+    CHECK(t[u8"d"][u8"e"][u8"f"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"][u8"f"].size() == 0);
+    CHECK(t[u8"g"].is_table() == true);
+    CHECK(t[u8"g"].size() == 1);
+    CHECK(t[u8"g"][u8"h"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"].size() == 1);
+    CHECK(t[u8"g"][u8"h"][u8"i"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"][u8"i"].size() == 0);
+    CHECK(t[u8"j"].is_table() == true);
+    CHECK(t[u8"j"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].size() == 0);
 }
 
 TEST_CASE("valid/Table/Table_5.toml") {
@@ -169,14 +169,14 @@ TEST_CASE("valid/Table/Table_5.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["x"].is_table() == true);
-    CHECK(t["x"].size() == 1);
-    CHECK(t["x"]["y"].is_table() == true);
-    CHECK(t["x"]["y"].size() == 1);
-    CHECK(t["x"]["y"]["z"].is_table() == true);
-    CHECK(t["x"]["y"]["z"].size() == 1);
-    CHECK(t["x"]["y"]["z"]["w"].is_table() == true);
-    CHECK(t["x"]["y"]["z"]["w"].size() == 0);
+    CHECK(t[u8"x"].is_table() == true);
+    CHECK(t[u8"x"].size() == 1);
+    CHECK(t[u8"x"][u8"y"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].size() == 0);
 }
 
 TEST_CASE("valid/Table/Table_8.toml") {
@@ -186,14 +186,14 @@ TEST_CASE("valid/Table/Table_8.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 2);
-    CHECK(t["fruit"]["apple"].is_table() == true);
-    CHECK(t["fruit"]["apple"].size() == 0);
-    CHECK(t["fruit"]["orange"].is_table() == true);
-    CHECK(t["fruit"]["orange"].size() == 0);
-    CHECK(t["animal"].is_table() == true);
-    CHECK(t["animal"].size() == 0);
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 2);
+    CHECK(t[u8"fruit"][u8"apple"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"].size() == 0);
+    CHECK(t[u8"fruit"][u8"orange"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"orange"].size() == 0);
+    CHECK(t[u8"animal"].is_table() == true);
+    CHECK(t[u8"animal"].size() == 0);
 }
 
 TEST_CASE("valid/Table/Table_9.toml") {
@@ -203,13 +203,13 @@ TEST_CASE("valid/Table/Table_9.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["fruit"].is_table() == true);
-    CHECK(t["fruit"].size() == 2);
-    CHECK(t["fruit"]["apple"].is_table() == true);
-    CHECK(t["fruit"]["apple"].size() == 0);
-    CHECK(t["fruit"]["orange"].is_table() == true);
-    CHECK(t["fruit"]["orange"].size() == 0);
-    CHECK(t["animal"].is_table() == true);
-    CHECK(t["animal"].size() == 0);
+    CHECK(t[u8"fruit"].is_table() == true);
+    CHECK(t[u8"fruit"].size() == 2);
+    CHECK(t[u8"fruit"][u8"apple"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"apple"].size() == 0);
+    CHECK(t[u8"fruit"][u8"orange"].is_table() == true);
+    CHECK(t[u8"fruit"][u8"orange"].size() == 0);
+    CHECK(t[u8"animal"].is_table() == true);
+    CHECK(t[u8"animal"].size() == 0);
 }
 

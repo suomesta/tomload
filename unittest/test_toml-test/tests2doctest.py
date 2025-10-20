@@ -50,12 +50,11 @@ using tomload::view_t;
 C_STR = {
     '"': '\\"', '\\': '\\\\',
     '\r': '\\r', '\n': '\\n', '\t': '\\t', '\b': '\\b',
-    '\0': '" + std::string(1, \'\\0\') + "'}
+    '\0': '" + std::string(1, \'\\0\') + u8"'}
 
 
 def c_str(s):
-    u8 = '' if s.isascii() else 'u8'
-    return u8 + '"' + ''.join(C_STR.get(c, c) for c in s) + '"'
+    return 'u8"' + ''.join(C_STR.get(c, c) for c in s) + '"'
 
 
 def c_bool(b):

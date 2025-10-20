@@ -45,20 +45,20 @@ TEST_CASE("valid/table/empty-name.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t[""].is_table() == true);
-    CHECK(t[""].size() == 2);
-    CHECK(t[""]["x"].is_integer() == true);
-    CHECK(t[""]["x"].get_integer() == 1);
-    CHECK(t[""]["a"].is_table() == true);
-    CHECK(t[""]["a"].size() == 1);
-    CHECK(t[""]["a"]["x"].is_integer() == true);
-    CHECK(t[""]["a"]["x"].get_integer() == 2);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 1);
-    CHECK(t["a"][""].is_table() == true);
-    CHECK(t["a"][""].size() == 1);
-    CHECK(t["a"][""]["x"].is_integer() == true);
-    CHECK(t["a"][""]["x"].get_integer() == 3);
+    CHECK(t[u8""].is_table() == true);
+    CHECK(t[u8""].size() == 2);
+    CHECK(t[u8""][u8"x"].is_integer() == true);
+    CHECK(t[u8""][u8"x"].get_integer() == 1);
+    CHECK(t[u8""][u8"a"].is_table() == true);
+    CHECK(t[u8""][u8"a"].size() == 1);
+    CHECK(t[u8""][u8"a"][u8"x"].is_integer() == true);
+    CHECK(t[u8""][u8"a"][u8"x"].get_integer() == 2);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 1);
+    CHECK(t[u8"a"][u8""].is_table() == true);
+    CHECK(t[u8"a"][u8""].size() == 1);
+    CHECK(t[u8"a"][u8""][u8"x"].is_integer() == true);
+    CHECK(t[u8"a"][u8""][u8"x"].get_integer() == 3);
 }
 
 TEST_CASE("valid/table/empty.toml") {
@@ -68,8 +68,8 @@ TEST_CASE("valid/table/empty.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 0);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 0);
 }
 
 TEST_CASE("valid/table/keyword-with-values.toml") {
@@ -79,22 +79,22 @@ TEST_CASE("valid/table/keyword-with-values.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["true"].is_table() == true);
-    CHECK(t["true"].size() == 1);
-    CHECK(t["true"]["k"].is_integer() == true);
-    CHECK(t["true"]["k"].get_integer() == 1);
-    CHECK(t["false"].is_table() == true);
-    CHECK(t["false"].size() == 1);
-    CHECK(t["false"]["k"].is_integer() == true);
-    CHECK(t["false"]["k"].get_integer() == 2);
-    CHECK(t["inf"].is_table() == true);
-    CHECK(t["inf"].size() == 1);
-    CHECK(t["inf"]["k"].is_integer() == true);
-    CHECK(t["inf"]["k"].get_integer() == 3);
-    CHECK(t["nan"].is_table() == true);
-    CHECK(t["nan"].size() == 1);
-    CHECK(t["nan"]["k"].is_integer() == true);
-    CHECK(t["nan"]["k"].get_integer() == 4);
+    CHECK(t[u8"true"].is_table() == true);
+    CHECK(t[u8"true"].size() == 1);
+    CHECK(t[u8"true"][u8"k"].is_integer() == true);
+    CHECK(t[u8"true"][u8"k"].get_integer() == 1);
+    CHECK(t[u8"false"].is_table() == true);
+    CHECK(t[u8"false"].size() == 1);
+    CHECK(t[u8"false"][u8"k"].is_integer() == true);
+    CHECK(t[u8"false"][u8"k"].get_integer() == 2);
+    CHECK(t[u8"inf"].is_table() == true);
+    CHECK(t[u8"inf"].size() == 1);
+    CHECK(t[u8"inf"][u8"k"].is_integer() == true);
+    CHECK(t[u8"inf"][u8"k"].get_integer() == 3);
+    CHECK(t[u8"nan"].is_table() == true);
+    CHECK(t[u8"nan"].size() == 1);
+    CHECK(t[u8"nan"][u8"k"].is_integer() == true);
+    CHECK(t[u8"nan"][u8"k"].get_integer() == 4);
 }
 
 TEST_CASE("valid/table/keyword.toml") {
@@ -104,14 +104,14 @@ TEST_CASE("valid/table/keyword.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["true"].is_table() == true);
-    CHECK(t["true"].size() == 0);
-    CHECK(t["false"].is_table() == true);
-    CHECK(t["false"].size() == 0);
-    CHECK(t["inf"].is_table() == true);
-    CHECK(t["inf"].size() == 0);
-    CHECK(t["nan"].is_table() == true);
-    CHECK(t["nan"].size() == 0);
+    CHECK(t[u8"true"].is_table() == true);
+    CHECK(t[u8"true"].size() == 0);
+    CHECK(t[u8"false"].is_table() == true);
+    CHECK(t[u8"false"].size() == 0);
+    CHECK(t[u8"inf"].is_table() == true);
+    CHECK(t[u8"inf"].size() == 0);
+    CHECK(t[u8"nan"].is_table() == true);
+    CHECK(t[u8"nan"].size() == 0);
 }
 
 TEST_CASE("valid/table/names-with-values.toml") {
@@ -121,58 +121,58 @@ TEST_CASE("valid/table/names-with-values.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 4);
-    CHECK(t["a"]["b"].is_table() == true);
-    CHECK(t["a"]["b"].size() == 1);
-    CHECK(t["a"]["b"]["c"].is_table() == true);
-    CHECK(t["a"]["b"]["c"].size() == 1);
-    CHECK(t["a"]["b"]["c"]["key"].is_integer() == true);
-    CHECK(t["a"]["b"]["c"]["key"].get_integer() == 1);
-    CHECK(t["a"]["b.c"].is_table() == true);
-    CHECK(t["a"]["b.c"].size() == 1);
-    CHECK(t["a"]["b.c"]["key"].is_integer() == true);
-    CHECK(t["a"]["b.c"]["key"].get_integer() == 2);
-    CHECK(t["a"]["d.e"].is_table() == true);
-    CHECK(t["a"]["d.e"].size() == 1);
-    CHECK(t["a"]["d.e"]["key"].is_integer() == true);
-    CHECK(t["a"]["d.e"]["key"].get_integer() == 3);
-    CHECK(t["a"][" x "].is_table() == true);
-    CHECK(t["a"][" x "].size() == 1);
-    CHECK(t["a"][" x "]["key"].is_integer() == true);
-    CHECK(t["a"][" x "]["key"].get_integer() == 4);
-    CHECK(t["d"].is_table() == true);
-    CHECK(t["d"].size() == 1);
-    CHECK(t["d"]["e"].is_table() == true);
-    CHECK(t["d"]["e"].size() == 1);
-    CHECK(t["d"]["e"]["f"].is_table() == true);
-    CHECK(t["d"]["e"]["f"].size() == 1);
-    CHECK(t["d"]["e"]["f"]["key"].is_integer() == true);
-    CHECK(t["d"]["e"]["f"]["key"].get_integer() == 5);
-    CHECK(t["g"].is_table() == true);
-    CHECK(t["g"].size() == 1);
-    CHECK(t["g"]["h"].is_table() == true);
-    CHECK(t["g"]["h"].size() == 1);
-    CHECK(t["g"]["h"]["i"].is_table() == true);
-    CHECK(t["g"]["h"]["i"].size() == 1);
-    CHECK(t["g"]["h"]["i"]["key"].is_integer() == true);
-    CHECK(t["g"]["h"]["i"]["key"].get_integer() == 6);
-    CHECK(t["j"].is_table() == true);
-    CHECK(t["j"].size() == 1);
-    CHECK(t["j"][u8"ʞ"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"].size() == 1);
-    CHECK(t["j"][u8"ʞ"]["l"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"]["l"].size() == 1);
-    CHECK(t["j"][u8"ʞ"]["l"]["key"].is_integer() == true);
-    CHECK(t["j"][u8"ʞ"]["l"]["key"].get_integer() == 7);
-    CHECK(t["x"].is_table() == true);
-    CHECK(t["x"].size() == 1);
-    CHECK(t["x"]["1"].is_table() == true);
-    CHECK(t["x"]["1"].size() == 1);
-    CHECK(t["x"]["1"]["2"].is_table() == true);
-    CHECK(t["x"]["1"]["2"].size() == 1);
-    CHECK(t["x"]["1"]["2"]["key"].is_integer() == true);
-    CHECK(t["x"]["1"]["2"]["key"].get_integer() == 8);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 4);
+    CHECK(t[u8"a"][u8"b"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"][u8"key"].get_integer() == 1);
+    CHECK(t[u8"a"][u8"b.c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b.c"].size() == 1);
+    CHECK(t[u8"a"][u8"b.c"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"b.c"][u8"key"].get_integer() == 2);
+    CHECK(t[u8"a"][u8"d.e"].is_table() == true);
+    CHECK(t[u8"a"][u8"d.e"].size() == 1);
+    CHECK(t[u8"a"][u8"d.e"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"d.e"][u8"key"].get_integer() == 3);
+    CHECK(t[u8"a"][u8" x "].is_table() == true);
+    CHECK(t[u8"a"][u8" x "].size() == 1);
+    CHECK(t[u8"a"][u8" x "][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8" x "][u8"key"].get_integer() == 4);
+    CHECK(t[u8"d"].is_table() == true);
+    CHECK(t[u8"d"].size() == 1);
+    CHECK(t[u8"d"][u8"e"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"].size() == 1);
+    CHECK(t[u8"d"][u8"e"][u8"f"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"][u8"f"].size() == 1);
+    CHECK(t[u8"d"][u8"e"][u8"f"][u8"key"].is_integer() == true);
+    CHECK(t[u8"d"][u8"e"][u8"f"][u8"key"].get_integer() == 5);
+    CHECK(t[u8"g"].is_table() == true);
+    CHECK(t[u8"g"].size() == 1);
+    CHECK(t[u8"g"][u8"h"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"].size() == 1);
+    CHECK(t[u8"g"][u8"h"][u8"i"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"][u8"i"].size() == 1);
+    CHECK(t[u8"g"][u8"h"][u8"i"][u8"key"].is_integer() == true);
+    CHECK(t[u8"g"][u8"h"][u8"i"][u8"key"].get_integer() == 6);
+    CHECK(t[u8"j"].is_table() == true);
+    CHECK(t[u8"j"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"][u8"key"].is_integer() == true);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"][u8"key"].get_integer() == 7);
+    CHECK(t[u8"x"].is_table() == true);
+    CHECK(t[u8"x"].size() == 1);
+    CHECK(t[u8"x"][u8"1"].is_table() == true);
+    CHECK(t[u8"x"][u8"1"].size() == 1);
+    CHECK(t[u8"x"][u8"1"][u8"2"].is_table() == true);
+    CHECK(t[u8"x"][u8"1"][u8"2"].size() == 1);
+    CHECK(t[u8"x"][u8"1"][u8"2"][u8"key"].is_integer() == true);
+    CHECK(t[u8"x"][u8"1"][u8"2"][u8"key"].get_integer() == 8);
 }
 
 TEST_CASE("valid/table/names.toml") {
@@ -182,42 +182,42 @@ TEST_CASE("valid/table/names.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 4);
-    CHECK(t["a"]["b"].is_table() == true);
-    CHECK(t["a"]["b"].size() == 1);
-    CHECK(t["a"]["b"]["c"].is_table() == true);
-    CHECK(t["a"]["b"]["c"].size() == 0);
-    CHECK(t["a"]["b.c"].is_table() == true);
-    CHECK(t["a"]["b.c"].size() == 0);
-    CHECK(t["a"]["d.e"].is_table() == true);
-    CHECK(t["a"]["d.e"].size() == 0);
-    CHECK(t["a"][" x "].is_table() == true);
-    CHECK(t["a"][" x "].size() == 0);
-    CHECK(t["d"].is_table() == true);
-    CHECK(t["d"].size() == 1);
-    CHECK(t["d"]["e"].is_table() == true);
-    CHECK(t["d"]["e"].size() == 1);
-    CHECK(t["d"]["e"]["f"].is_table() == true);
-    CHECK(t["d"]["e"]["f"].size() == 0);
-    CHECK(t["g"].is_table() == true);
-    CHECK(t["g"].size() == 1);
-    CHECK(t["g"]["h"].is_table() == true);
-    CHECK(t["g"]["h"].size() == 1);
-    CHECK(t["g"]["h"]["i"].is_table() == true);
-    CHECK(t["g"]["h"]["i"].size() == 0);
-    CHECK(t["j"].is_table() == true);
-    CHECK(t["j"].size() == 1);
-    CHECK(t["j"][u8"ʞ"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"].size() == 1);
-    CHECK(t["j"][u8"ʞ"]["l"].is_table() == true);
-    CHECK(t["j"][u8"ʞ"]["l"].size() == 0);
-    CHECK(t["x"].is_table() == true);
-    CHECK(t["x"].size() == 1);
-    CHECK(t["x"]["1"].is_table() == true);
-    CHECK(t["x"]["1"].size() == 1);
-    CHECK(t["x"]["1"]["2"].is_table() == true);
-    CHECK(t["x"]["1"]["2"].size() == 0);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 4);
+    CHECK(t[u8"a"][u8"b"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"].size() == 0);
+    CHECK(t[u8"a"][u8"b.c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b.c"].size() == 0);
+    CHECK(t[u8"a"][u8"d.e"].is_table() == true);
+    CHECK(t[u8"a"][u8"d.e"].size() == 0);
+    CHECK(t[u8"a"][u8" x "].is_table() == true);
+    CHECK(t[u8"a"][u8" x "].size() == 0);
+    CHECK(t[u8"d"].is_table() == true);
+    CHECK(t[u8"d"].size() == 1);
+    CHECK(t[u8"d"][u8"e"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"].size() == 1);
+    CHECK(t[u8"d"][u8"e"][u8"f"].is_table() == true);
+    CHECK(t[u8"d"][u8"e"][u8"f"].size() == 0);
+    CHECK(t[u8"g"].is_table() == true);
+    CHECK(t[u8"g"].size() == 1);
+    CHECK(t[u8"g"][u8"h"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"].size() == 1);
+    CHECK(t[u8"g"][u8"h"][u8"i"].is_table() == true);
+    CHECK(t[u8"g"][u8"h"][u8"i"].size() == 0);
+    CHECK(t[u8"j"].is_table() == true);
+    CHECK(t[u8"j"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"].size() == 1);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].is_table() == true);
+    CHECK(t[u8"j"][u8"ʞ"][u8"l"].size() == 0);
+    CHECK(t[u8"x"].is_table() == true);
+    CHECK(t[u8"x"].size() == 1);
+    CHECK(t[u8"x"][u8"1"].is_table() == true);
+    CHECK(t[u8"x"][u8"1"].size() == 1);
+    CHECK(t[u8"x"][u8"1"][u8"2"].is_table() == true);
+    CHECK(t[u8"x"][u8"1"][u8"2"].size() == 0);
 }
 
 TEST_CASE("valid/table/no-eol.toml") {
@@ -227,8 +227,8 @@ TEST_CASE("valid/table/no-eol.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["table"].is_table() == true);
-    CHECK(t["table"].size() == 0);
+    CHECK(t[u8"table"].is_table() == true);
+    CHECK(t[u8"table"].size() == 0);
 }
 
 TEST_CASE("valid/table/sub-empty.toml") {
@@ -238,10 +238,10 @@ TEST_CASE("valid/table/sub-empty.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 1);
-    CHECK(t["a"]["b"].is_table() == true);
-    CHECK(t["a"]["b"].size() == 0);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 1);
+    CHECK(t[u8"a"][u8"b"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"].size() == 0);
 }
 
 TEST_CASE("valid/table/sub.toml") {
@@ -251,18 +251,18 @@ TEST_CASE("valid/table/sub.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 2);
-    CHECK(t["a"]["key"].is_integer() == true);
-    CHECK(t["a"]["key"].get_integer() == 1);
-    CHECK(t["a"]["extend"].is_table() == true);
-    CHECK(t["a"]["extend"].size() == 2);
-    CHECK(t["a"]["extend"]["key"].is_integer() == true);
-    CHECK(t["a"]["extend"]["key"].get_integer() == 2);
-    CHECK(t["a"]["extend"]["more"].is_table() == true);
-    CHECK(t["a"]["extend"]["more"].size() == 1);
-    CHECK(t["a"]["extend"]["more"]["key"].is_integer() == true);
-    CHECK(t["a"]["extend"]["more"]["key"].get_integer() == 3);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 2);
+    CHECK(t[u8"a"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"key"].get_integer() == 1);
+    CHECK(t[u8"a"][u8"extend"].is_table() == true);
+    CHECK(t[u8"a"][u8"extend"].size() == 2);
+    CHECK(t[u8"a"][u8"extend"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"extend"][u8"key"].get_integer() == 2);
+    CHECK(t[u8"a"][u8"extend"][u8"more"].is_table() == true);
+    CHECK(t[u8"a"][u8"extend"][u8"more"].size() == 1);
+    CHECK(t[u8"a"][u8"extend"][u8"more"][u8"key"].is_integer() == true);
+    CHECK(t[u8"a"][u8"extend"][u8"more"][u8"key"].get_integer() == 3);
 }
 
 TEST_CASE("valid/table/whitespace.toml") {
@@ -272,8 +272,8 @@ TEST_CASE("valid/table/whitespace.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["valid key"].is_table() == true);
-    CHECK(t["valid key"].size() == 0);
+    CHECK(t[u8"valid key"].is_table() == true);
+    CHECK(t[u8"valid key"].size() == 0);
 }
 
 TEST_CASE("valid/table/with-literal-string.toml") {
@@ -283,14 +283,14 @@ TEST_CASE("valid/table/with-literal-string.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 1);
-    CHECK(t["a"]["\"b\""].is_table() == true);
-    CHECK(t["a"]["\"b\""].size() == 1);
-    CHECK(t["a"]["\"b\""]["c"].is_table() == true);
-    CHECK(t["a"]["\"b\""]["c"].size() == 1);
-    CHECK(t["a"]["\"b\""]["c"]["answer"].is_integer() == true);
-    CHECK(t["a"]["\"b\""]["c"]["answer"].get_integer() == 42);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 1);
+    CHECK(t[u8"a"][u8"\"b\""].is_table() == true);
+    CHECK(t[u8"a"][u8"\"b\""].size() == 1);
+    CHECK(t[u8"a"][u8"\"b\""][u8"c"].is_table() == true);
+    CHECK(t[u8"a"][u8"\"b\""][u8"c"].size() == 1);
+    CHECK(t[u8"a"][u8"\"b\""][u8"c"][u8"answer"].is_integer() == true);
+    CHECK(t[u8"a"][u8"\"b\""][u8"c"][u8"answer"].get_integer() == 42);
 }
 
 TEST_CASE("valid/table/with-pound.toml") {
@@ -300,10 +300,10 @@ TEST_CASE("valid/table/with-pound.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["key#group"].is_table() == true);
-    CHECK(t["key#group"].size() == 1);
-    CHECK(t["key#group"]["answer"].is_integer() == true);
-    CHECK(t["key#group"]["answer"].get_integer() == 42);
+    CHECK(t[u8"key#group"].is_table() == true);
+    CHECK(t[u8"key#group"].size() == 1);
+    CHECK(t[u8"key#group"][u8"answer"].is_integer() == true);
+    CHECK(t[u8"key#group"][u8"answer"].get_integer() == 42);
 }
 
 TEST_CASE("valid/table/with-single-quotes.toml") {
@@ -313,14 +313,14 @@ TEST_CASE("valid/table/with-single-quotes.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["a"].is_table() == true);
-    CHECK(t["a"].size() == 1);
-    CHECK(t["a"]["b"].is_table() == true);
-    CHECK(t["a"]["b"].size() == 1);
-    CHECK(t["a"]["b"]["c"].is_table() == true);
-    CHECK(t["a"]["b"]["c"].size() == 1);
-    CHECK(t["a"]["b"]["c"]["answer"].is_integer() == true);
-    CHECK(t["a"]["b"]["c"]["answer"].get_integer() == 42);
+    CHECK(t[u8"a"].is_table() == true);
+    CHECK(t[u8"a"].size() == 1);
+    CHECK(t[u8"a"][u8"b"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"].is_table() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"].size() == 1);
+    CHECK(t[u8"a"][u8"b"][u8"c"][u8"answer"].is_integer() == true);
+    CHECK(t[u8"a"][u8"b"][u8"c"][u8"answer"].get_integer() == 42);
 }
 
 TEST_CASE("valid/table/without-super-with-values.toml") {
@@ -330,22 +330,22 @@ TEST_CASE("valid/table/without-super-with-values.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["x"].is_table() == true);
-    CHECK(t["x"].size() == 3);
-    CHECK(t["x"]["y"].is_table() == true);
-    CHECK(t["x"]["y"].size() == 1);
-    CHECK(t["x"]["y"]["z"].is_table() == true);
-    CHECK(t["x"]["y"]["z"].size() == 1);
-    CHECK(t["x"]["y"]["z"]["w"].is_table() == true);
-    CHECK(t["x"]["y"]["z"]["w"].size() == 2);
-    CHECK(t["x"]["y"]["z"]["w"]["a"].is_integer() == true);
-    CHECK(t["x"]["y"]["z"]["w"]["a"].get_integer() == 1);
-    CHECK(t["x"]["y"]["z"]["w"]["b"].is_integer() == true);
-    CHECK(t["x"]["y"]["z"]["w"]["b"].get_integer() == 2);
-    CHECK(t["x"]["c"].is_integer() == true);
-    CHECK(t["x"]["c"].get_integer() == 3);
-    CHECK(t["x"]["d"].is_integer() == true);
-    CHECK(t["x"]["d"].get_integer() == 4);
+    CHECK(t[u8"x"].is_table() == true);
+    CHECK(t[u8"x"].size() == 3);
+    CHECK(t[u8"x"][u8"y"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].size() == 2);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"][u8"a"].is_integer() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"][u8"a"].get_integer() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"][u8"b"].is_integer() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"][u8"b"].get_integer() == 2);
+    CHECK(t[u8"x"][u8"c"].is_integer() == true);
+    CHECK(t[u8"x"][u8"c"].get_integer() == 3);
+    CHECK(t[u8"x"][u8"d"].is_integer() == true);
+    CHECK(t[u8"x"][u8"d"].get_integer() == 4);
 }
 
 TEST_CASE("valid/table/without-super.toml") {
@@ -355,13 +355,13 @@ TEST_CASE("valid/table/without-super.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["x"].is_table() == true);
-    CHECK(t["x"].size() == 1);
-    CHECK(t["x"]["y"].is_table() == true);
-    CHECK(t["x"]["y"].size() == 1);
-    CHECK(t["x"]["y"]["z"].is_table() == true);
-    CHECK(t["x"]["y"]["z"].size() == 1);
-    CHECK(t["x"]["y"]["z"]["w"].is_table() == true);
-    CHECK(t["x"]["y"]["z"]["w"].size() == 0);
+    CHECK(t[u8"x"].is_table() == true);
+    CHECK(t[u8"x"].size() == 1);
+    CHECK(t[u8"x"][u8"y"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"].size() == 1);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].is_table() == true);
+    CHECK(t[u8"x"][u8"y"][u8"z"][u8"w"].size() == 0);
 }
 

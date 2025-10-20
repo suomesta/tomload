@@ -45,9 +45,9 @@ TEST_CASE("valid/bool/bool.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["t"].is_boolean() == true);
-    CHECK(t["t"].get_boolean() == true);
-    CHECK(t["f"].is_boolean() == true);
-    CHECK(t["f"].get_boolean() == false);
+    CHECK(t[u8"t"].is_boolean() == true);
+    CHECK(t[u8"t"].get_boolean() == true);
+    CHECK(t[u8"f"].is_boolean() == true);
+    CHECK(t[u8"f"].get_boolean() == false);
 }
 

@@ -45,8 +45,8 @@ TEST_CASE("valid/String/String_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["str"].is_string() == true);
-    CHECK(t["str"].get_string() == u8"I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
+    CHECK(t[u8"str"].is_string() == true);
+    CHECK(t[u8"str"].get_string() == u8"I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF.");
 }
 
 TEST_CASE("valid/String/String_2.toml") {
@@ -56,8 +56,8 @@ TEST_CASE("valid/String/String_2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["str1"].is_string() == true);
-    CHECK(t["str1"].get_string() == "Roses are red\nViolets are blue");
+    CHECK(t[u8"str1"].is_string() == true);
+    CHECK(t[u8"str1"].get_string() == u8"Roses are red\nViolets are blue");
 }
 
 TEST_CASE("valid/String/String_3.toml") {
@@ -67,10 +67,10 @@ TEST_CASE("valid/String/String_3.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["str2"].is_string() == true);
-    CHECK(t["str2"].get_string() == "Roses are red\nViolets are blue");
-    CHECK(t["str3"].is_string() == true);
-    CHECK(t["str3"].get_string() == "Roses are red\r\nViolets are blue");
+    CHECK(t[u8"str2"].is_string() == true);
+    CHECK(t[u8"str2"].get_string() == u8"Roses are red\nViolets are blue");
+    CHECK(t[u8"str3"].is_string() == true);
+    CHECK(t[u8"str3"].get_string() == u8"Roses are red\r\nViolets are blue");
 }
 
 TEST_CASE("valid/String/String_4.toml") {
@@ -80,12 +80,12 @@ TEST_CASE("valid/String/String_4.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
-    CHECK(t["str1"].is_string() == true);
-    CHECK(t["str1"].get_string() == "The quick brown fox jumps over the lazy dog.");
-    CHECK(t["str2"].is_string() == true);
-    CHECK(t["str2"].get_string() == "The quick brown fox jumps over the lazy dog.");
-    CHECK(t["str3"].is_string() == true);
-    CHECK(t["str3"].get_string() == "The quick brown fox jumps over the lazy dog.");
+    CHECK(t[u8"str1"].is_string() == true);
+    CHECK(t[u8"str1"].get_string() == u8"The quick brown fox jumps over the lazy dog.");
+    CHECK(t[u8"str2"].is_string() == true);
+    CHECK(t[u8"str2"].get_string() == u8"The quick brown fox jumps over the lazy dog.");
+    CHECK(t[u8"str3"].is_string() == true);
+    CHECK(t[u8"str3"].get_string() == u8"The quick brown fox jumps over the lazy dog.");
 }
 
 TEST_CASE("valid/String/String_5.toml") {
@@ -95,14 +95,14 @@ TEST_CASE("valid/String/String_5.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["str4"].is_string() == true);
-    CHECK(t["str4"].get_string() == "Here are two quotation marks: \"\". Simple enough.");
-    CHECK(t["str5"].is_string() == true);
-    CHECK(t["str5"].get_string() == "Here are three quotation marks: \"\"\".");
-    CHECK(t["str6"].is_string() == true);
-    CHECK(t["str6"].get_string() == "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\".");
-    CHECK(t["str7"].is_string() == true);
-    CHECK(t["str7"].get_string() == "\"This,\" she said, \"is just a pointless statement.\"");
+    CHECK(t[u8"str4"].is_string() == true);
+    CHECK(t[u8"str4"].get_string() == u8"Here are two quotation marks: \"\". Simple enough.");
+    CHECK(t[u8"str5"].is_string() == true);
+    CHECK(t[u8"str5"].get_string() == u8"Here are three quotation marks: \"\"\".");
+    CHECK(t[u8"str6"].is_string() == true);
+    CHECK(t[u8"str6"].get_string() == u8"Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\".");
+    CHECK(t[u8"str7"].is_string() == true);
+    CHECK(t[u8"str7"].get_string() == u8"\"This,\" she said, \"is just a pointless statement.\"");
 }
 
 TEST_CASE("valid/String/String_6.toml") {
@@ -112,14 +112,14 @@ TEST_CASE("valid/String/String_6.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["winpath"].is_string() == true);
-    CHECK(t["winpath"].get_string() == "C:\\Users\\nodejs\\templates");
-    CHECK(t["winpath2"].is_string() == true);
-    CHECK(t["winpath2"].get_string() == "\\\\ServerX\\admin$\\system32\\");
-    CHECK(t["quoted"].is_string() == true);
-    CHECK(t["quoted"].get_string() == "Tom \"Dubs\" Preston-Werner");
-    CHECK(t["regex"].is_string() == true);
-    CHECK(t["regex"].get_string() == "<\\i\\c*\\s*>");
+    CHECK(t[u8"winpath"].is_string() == true);
+    CHECK(t[u8"winpath"].get_string() == u8"C:\\Users\\nodejs\\templates");
+    CHECK(t[u8"winpath2"].is_string() == true);
+    CHECK(t[u8"winpath2"].get_string() == u8"\\\\ServerX\\admin$\\system32\\");
+    CHECK(t[u8"quoted"].is_string() == true);
+    CHECK(t[u8"quoted"].get_string() == u8"Tom \"Dubs\" Preston-Werner");
+    CHECK(t[u8"regex"].is_string() == true);
+    CHECK(t[u8"regex"].get_string() == u8"<\\i\\c*\\s*>");
 }
 
 TEST_CASE("valid/String/String_7.toml") {
@@ -129,10 +129,10 @@ TEST_CASE("valid/String/String_7.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["regex2"].is_string() == true);
-    CHECK(t["regex2"].get_string() == "I [dw]on't need \\d{2} apples");
-    CHECK(t["lines"].is_string() == true);
-    CHECK(t["lines"].get_string() == "The first newline is\ntrimmed in raw strings.\n   All other whitespace\n   is preserved.\n");
+    CHECK(t[u8"regex2"].is_string() == true);
+    CHECK(t[u8"regex2"].get_string() == u8"I [dw]on't need \\d{2} apples");
+    CHECK(t[u8"lines"].is_string() == true);
+    CHECK(t[u8"lines"].get_string() == u8"The first newline is\ntrimmed in raw strings.\n   All other whitespace\n   is preserved.\n");
 }
 
 TEST_CASE("valid/String/String_8.toml") {
@@ -142,11 +142,11 @@ TEST_CASE("valid/String/String_8.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
-    CHECK(t["quot15"].is_string() == true);
-    CHECK(t["quot15"].get_string() == "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\"");
-    CHECK(t["apos15"].is_string() == true);
-    CHECK(t["apos15"].get_string() == "Here are fifteen apostrophes: '''''''''''''''");
-    CHECK(t["str"].is_string() == true);
-    CHECK(t["str"].get_string() == "'That,' she said, 'is still pointless.'");
+    CHECK(t[u8"quot15"].is_string() == true);
+    CHECK(t[u8"quot15"].get_string() == u8"Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\"");
+    CHECK(t[u8"apos15"].is_string() == true);
+    CHECK(t[u8"apos15"].get_string() == u8"Here are fifteen apostrophes: '''''''''''''''");
+    CHECK(t[u8"str"].is_string() == true);
+    CHECK(t[u8"str"].get_string() == u8"'That,' she said, 'is still pointless.'");
 }
 

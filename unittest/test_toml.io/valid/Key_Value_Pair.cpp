@@ -45,7 +45,7 @@ TEST_CASE("valid/Key_Value_Pair/Key_Value_Pair_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["key"].is_string() == true);
-    CHECK(t["key"].get_string() == "value");
+    CHECK(t[u8"key"].is_string() == true);
+    CHECK(t[u8"key"].get_string() == u8"value");
 }
 

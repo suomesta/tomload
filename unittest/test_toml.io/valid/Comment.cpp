@@ -45,9 +45,9 @@ TEST_CASE("valid/Comment/Comment_1.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["key"].is_string() == true);
-    CHECK(t["key"].get_string() == "value");
-    CHECK(t["another"].is_string() == true);
-    CHECK(t["another"].get_string() == "# This is not a comment");
+    CHECK(t[u8"key"].is_string() == true);
+    CHECK(t[u8"key"].get_string() == u8"value");
+    CHECK(t[u8"another"].is_string() == true);
+    CHECK(t[u8"another"].get_string() == u8"# This is not a comment");
 }
 

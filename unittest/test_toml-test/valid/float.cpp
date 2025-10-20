@@ -45,22 +45,22 @@ TEST_CASE("valid/float/exponent.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 8);
-    CHECK(t["lower"].is_float() == true);
-    CHECK(t["lower"].get_float() == 300.0);
-    CHECK(t["upper"].is_float() == true);
-    CHECK(t["upper"].get_float() == 300.0);
-    CHECK(t["neg"].is_float() == true);
-    CHECK(t["neg"].get_float() == 0.03);
-    CHECK(t["pos"].is_float() == true);
-    CHECK(t["pos"].get_float() == 300.0);
-    CHECK(t["zero"].is_float() == true);
-    CHECK(t["zero"].get_float() == 3.0);
-    CHECK(t["pointlower"].is_float() == true);
-    CHECK(t["pointlower"].get_float() == 310.0);
-    CHECK(t["pointupper"].is_float() == true);
-    CHECK(t["pointupper"].get_float() == 310.0);
-    CHECK(t["minustenth"].is_float() == true);
-    CHECK(t["minustenth"].get_float() == -0.1);
+    CHECK(t[u8"lower"].is_float() == true);
+    CHECK(t[u8"lower"].get_float() == 300.0);
+    CHECK(t[u8"upper"].is_float() == true);
+    CHECK(t[u8"upper"].get_float() == 300.0);
+    CHECK(t[u8"neg"].is_float() == true);
+    CHECK(t[u8"neg"].get_float() == 0.03);
+    CHECK(t[u8"pos"].is_float() == true);
+    CHECK(t[u8"pos"].get_float() == 300.0);
+    CHECK(t[u8"zero"].is_float() == true);
+    CHECK(t[u8"zero"].get_float() == 3.0);
+    CHECK(t[u8"pointlower"].is_float() == true);
+    CHECK(t[u8"pointlower"].get_float() == 310.0);
+    CHECK(t[u8"pointupper"].is_float() == true);
+    CHECK(t[u8"pointupper"].get_float() == 310.0);
+    CHECK(t[u8"minustenth"].is_float() == true);
+    CHECK(t[u8"minustenth"].get_float() == -0.1);
 }
 
 TEST_CASE("valid/float/float.toml") {
@@ -70,16 +70,16 @@ TEST_CASE("valid/float/float.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 5);
-    CHECK(t["pi"].is_float() == true);
-    CHECK(t["pi"].get_float() == 3.14);
-    CHECK(t["pospi"].is_float() == true);
-    CHECK(t["pospi"].get_float() == 3.14);
-    CHECK(t["negpi"].is_float() == true);
-    CHECK(t["negpi"].get_float() == -3.14);
-    CHECK(t["zero-intpart"].is_float() == true);
-    CHECK(t["zero-intpart"].get_float() == 0.123);
-    CHECK(t["leading-zero-fractional"].is_float() == true);
-    CHECK(t["leading-zero-fractional"].get_float() == 0.0123);
+    CHECK(t[u8"pi"].is_float() == true);
+    CHECK(t[u8"pi"].get_float() == 3.14);
+    CHECK(t[u8"pospi"].is_float() == true);
+    CHECK(t[u8"pospi"].get_float() == 3.14);
+    CHECK(t[u8"negpi"].is_float() == true);
+    CHECK(t[u8"negpi"].get_float() == -3.14);
+    CHECK(t[u8"zero-intpart"].is_float() == true);
+    CHECK(t[u8"zero-intpart"].get_float() == 0.123);
+    CHECK(t[u8"leading-zero-fractional"].is_float() == true);
+    CHECK(t[u8"leading-zero-fractional"].get_float() == 0.0123);
 }
 
 TEST_CASE("valid/float/inf-and-nan.toml") {
@@ -89,18 +89,18 @@ TEST_CASE("valid/float/inf-and-nan.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 6);
-    CHECK(t["nan"].is_float() == true);
-    CHECK(t["nan"].get_float() == rhs_nan{});
-    CHECK(t["nan_neg"].is_float() == true);
-    CHECK(t["nan_neg"].get_float() == rhs_nan{});
-    CHECK(t["nan_plus"].is_float() == true);
-    CHECK(t["nan_plus"].get_float() == rhs_nan{});
-    CHECK(t["infinity"].is_float() == true);
-    CHECK(t["infinity"].get_float() == std::numeric_limits<double>::infinity());
-    CHECK(t["infinity_neg"].is_float() == true);
-    CHECK(t["infinity_neg"].get_float() == -std::numeric_limits<double>::infinity());
-    CHECK(t["infinity_plus"].is_float() == true);
-    CHECK(t["infinity_plus"].get_float() == std::numeric_limits<double>::infinity());
+    CHECK(t[u8"nan"].is_float() == true);
+    CHECK(t[u8"nan"].get_float() == rhs_nan{});
+    CHECK(t[u8"nan_neg"].is_float() == true);
+    CHECK(t[u8"nan_neg"].get_float() == rhs_nan{});
+    CHECK(t[u8"nan_plus"].is_float() == true);
+    CHECK(t[u8"nan_plus"].get_float() == rhs_nan{});
+    CHECK(t[u8"infinity"].is_float() == true);
+    CHECK(t[u8"infinity"].get_float() == std::numeric_limits<double>::infinity());
+    CHECK(t[u8"infinity_neg"].is_float() == true);
+    CHECK(t[u8"infinity_neg"].get_float() == -std::numeric_limits<double>::infinity());
+    CHECK(t[u8"infinity_plus"].is_float() == true);
+    CHECK(t[u8"infinity_plus"].get_float() == std::numeric_limits<double>::infinity());
 }
 
 TEST_CASE("valid/float/long.toml") {
@@ -110,10 +110,10 @@ TEST_CASE("valid/float/long.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["longpi"].is_float() == true);
-    CHECK(t["longpi"].get_float() == 3.141592653589793);
-    CHECK(t["neglongpi"].is_float() == true);
-    CHECK(t["neglongpi"].get_float() == -3.141592653589793);
+    CHECK(t[u8"longpi"].is_float() == true);
+    CHECK(t[u8"longpi"].get_float() == 3.141592653589793);
+    CHECK(t[u8"neglongpi"].is_float() == true);
+    CHECK(t[u8"neglongpi"].get_float() == -3.141592653589793);
 }
 
 TEST_CASE("valid/float/max-int.toml") {
@@ -123,10 +123,10 @@ TEST_CASE("valid/float/max-int.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["max_float"].is_float() == true);
-    CHECK(t["max_float"].get_float() == 9007199254740991.0);
-    CHECK(t["min_float"].is_float() == true);
-    CHECK(t["min_float"].get_float() == -9007199254740991.0);
+    CHECK(t[u8"max_float"].is_float() == true);
+    CHECK(t[u8"max_float"].get_float() == 9007199254740991.0);
+    CHECK(t[u8"min_float"].is_float() == true);
+    CHECK(t[u8"min_float"].get_float() == -9007199254740991.0);
 }
 
 TEST_CASE("valid/float/underscore.toml") {
@@ -136,12 +136,12 @@ TEST_CASE("valid/float/underscore.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 3);
-    CHECK(t["before"].is_float() == true);
-    CHECK(t["before"].get_float() == 3141.5927);
-    CHECK(t["after"].is_float() == true);
-    CHECK(t["after"].get_float() == 3141.5927);
-    CHECK(t["exponent"].is_float() == true);
-    CHECK(t["exponent"].get_float() == 300000000000000.0);
+    CHECK(t[u8"before"].is_float() == true);
+    CHECK(t[u8"before"].get_float() == 3141.5927);
+    CHECK(t[u8"after"].is_float() == true);
+    CHECK(t[u8"after"].get_float() == 3141.5927);
+    CHECK(t[u8"exponent"].is_float() == true);
+    CHECK(t[u8"exponent"].get_float() == 300000000000000.0);
 }
 
 TEST_CASE("valid/float/zero.toml") {
@@ -151,19 +151,19 @@ TEST_CASE("valid/float/zero.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 7);
-    CHECK(t["zero"].is_float() == true);
-    CHECK(t["zero"].get_float() == 0.0);
-    CHECK(t["signed-pos"].is_float() == true);
-    CHECK(t["signed-pos"].get_float() == 0.0);
-    CHECK(t["signed-neg"].is_float() == true);
-    CHECK(t["signed-neg"].get_float() == -0.0);
-    CHECK(t["exponent"].is_float() == true);
-    CHECK(t["exponent"].get_float() == 0.0);
-    CHECK(t["exponent-two-0"].is_float() == true);
-    CHECK(t["exponent-two-0"].get_float() == 0.0);
-    CHECK(t["exponent-signed-pos"].is_float() == true);
-    CHECK(t["exponent-signed-pos"].get_float() == 0.0);
-    CHECK(t["exponent-signed-neg"].is_float() == true);
-    CHECK(t["exponent-signed-neg"].get_float() == -0.0);
+    CHECK(t[u8"zero"].is_float() == true);
+    CHECK(t[u8"zero"].get_float() == 0.0);
+    CHECK(t[u8"signed-pos"].is_float() == true);
+    CHECK(t[u8"signed-pos"].get_float() == 0.0);
+    CHECK(t[u8"signed-neg"].is_float() == true);
+    CHECK(t[u8"signed-neg"].get_float() == -0.0);
+    CHECK(t[u8"exponent"].is_float() == true);
+    CHECK(t[u8"exponent"].get_float() == 0.0);
+    CHECK(t[u8"exponent-two-0"].is_float() == true);
+    CHECK(t[u8"exponent-two-0"].get_float() == 0.0);
+    CHECK(t[u8"exponent-signed-pos"].is_float() == true);
+    CHECK(t[u8"exponent-signed-pos"].get_float() == 0.0);
+    CHECK(t[u8"exponent-signed-neg"].is_float() == true);
+    CHECK(t[u8"exponent-signed-neg"].get_float() == -0.0);
 }
 

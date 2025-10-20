@@ -45,10 +45,10 @@ TEST_CASE("valid/integer/float64-max.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["max_int"].is_integer() == true);
-    CHECK(t["max_int"].get_integer() == 9007199254740991);
-    CHECK(t["min_int"].is_integer() == true);
-    CHECK(t["min_int"].get_integer() == -9007199254740991);
+    CHECK(t[u8"max_int"].is_integer() == true);
+    CHECK(t[u8"max_int"].get_integer() == 9007199254740991);
+    CHECK(t[u8"min_int"].is_integer() == true);
+    CHECK(t[u8"min_int"].get_integer() == -9007199254740991);
 }
 
 TEST_CASE("valid/integer/integer.toml") {
@@ -58,14 +58,14 @@ TEST_CASE("valid/integer/integer.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["answer"].is_integer() == true);
-    CHECK(t["answer"].get_integer() == 42);
-    CHECK(t["posanswer"].is_integer() == true);
-    CHECK(t["posanswer"].get_integer() == 42);
-    CHECK(t["neganswer"].is_integer() == true);
-    CHECK(t["neganswer"].get_integer() == -42);
-    CHECK(t["zero"].is_integer() == true);
-    CHECK(t["zero"].get_integer() == 0);
+    CHECK(t[u8"answer"].is_integer() == true);
+    CHECK(t[u8"answer"].get_integer() == 42);
+    CHECK(t[u8"posanswer"].is_integer() == true);
+    CHECK(t[u8"posanswer"].get_integer() == 42);
+    CHECK(t[u8"neganswer"].is_integer() == true);
+    CHECK(t[u8"neganswer"].get_integer() == -42);
+    CHECK(t[u8"zero"].is_integer() == true);
+    CHECK(t[u8"zero"].get_integer() == 0);
 }
 
 TEST_CASE("valid/integer/literals.toml") {
@@ -75,24 +75,24 @@ TEST_CASE("valid/integer/literals.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 9);
-    CHECK(t["bin1"].is_integer() == true);
-    CHECK(t["bin1"].get_integer() == 214);
-    CHECK(t["bin2"].is_integer() == true);
-    CHECK(t["bin2"].get_integer() == 5);
-    CHECK(t["oct1"].is_integer() == true);
-    CHECK(t["oct1"].get_integer() == 342391);
-    CHECK(t["oct2"].is_integer() == true);
-    CHECK(t["oct2"].get_integer() == 493);
-    CHECK(t["oct3"].is_integer() == true);
-    CHECK(t["oct3"].get_integer() == 501);
-    CHECK(t["hex1"].is_integer() == true);
-    CHECK(t["hex1"].get_integer() == 3735928559);
-    CHECK(t["hex2"].is_integer() == true);
-    CHECK(t["hex2"].get_integer() == 3735928559);
-    CHECK(t["hex3"].is_integer() == true);
-    CHECK(t["hex3"].get_integer() == 3735928559);
-    CHECK(t["hex4"].is_integer() == true);
-    CHECK(t["hex4"].get_integer() == 2439);
+    CHECK(t[u8"bin1"].is_integer() == true);
+    CHECK(t[u8"bin1"].get_integer() == 214);
+    CHECK(t[u8"bin2"].is_integer() == true);
+    CHECK(t[u8"bin2"].get_integer() == 5);
+    CHECK(t[u8"oct1"].is_integer() == true);
+    CHECK(t[u8"oct1"].get_integer() == 342391);
+    CHECK(t[u8"oct2"].is_integer() == true);
+    CHECK(t[u8"oct2"].get_integer() == 493);
+    CHECK(t[u8"oct3"].is_integer() == true);
+    CHECK(t[u8"oct3"].get_integer() == 501);
+    CHECK(t[u8"hex1"].is_integer() == true);
+    CHECK(t[u8"hex1"].get_integer() == 3735928559);
+    CHECK(t[u8"hex2"].is_integer() == true);
+    CHECK(t[u8"hex2"].get_integer() == 3735928559);
+    CHECK(t[u8"hex3"].is_integer() == true);
+    CHECK(t[u8"hex3"].get_integer() == 3735928559);
+    CHECK(t[u8"hex4"].is_integer() == true);
+    CHECK(t[u8"hex4"].get_integer() == 2439);
 }
 
 TEST_CASE("valid/integer/long.toml") {
@@ -102,10 +102,10 @@ TEST_CASE("valid/integer/long.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["int64-max"].is_integer() == true);
-    CHECK(t["int64-max"].get_integer() == 9223372036854775807);
-    CHECK(t["int64-max-neg"].is_integer() == true);
-    CHECK(t["int64-max-neg"].get_integer() == -9223372036854775808);
+    CHECK(t[u8"int64-max"].is_integer() == true);
+    CHECK(t[u8"int64-max"].get_integer() == 9223372036854775807);
+    CHECK(t[u8"int64-max-neg"].is_integer() == true);
+    CHECK(t[u8"int64-max-neg"].get_integer() == -9223372036854775808);
 }
 
 TEST_CASE("valid/integer/underscore.toml") {
@@ -115,10 +115,10 @@ TEST_CASE("valid/integer/underscore.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 2);
-    CHECK(t["kilo"].is_integer() == true);
-    CHECK(t["kilo"].get_integer() == 1000);
-    CHECK(t["x"].is_integer() == true);
-    CHECK(t["x"].get_integer() == 1111);
+    CHECK(t[u8"kilo"].is_integer() == true);
+    CHECK(t[u8"kilo"].get_integer() == 1000);
+    CHECK(t[u8"x"].is_integer() == true);
+    CHECK(t[u8"x"].get_integer() == 1111);
 }
 
 TEST_CASE("valid/integer/zero.toml") {
@@ -128,29 +128,29 @@ TEST_CASE("valid/integer/zero.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 12);
-    CHECK(t["d1"].is_integer() == true);
-    CHECK(t["d1"].get_integer() == 0);
-    CHECK(t["d2"].is_integer() == true);
-    CHECK(t["d2"].get_integer() == 0);
-    CHECK(t["d3"].is_integer() == true);
-    CHECK(t["d3"].get_integer() == 0);
-    CHECK(t["h1"].is_integer() == true);
-    CHECK(t["h1"].get_integer() == 0);
-    CHECK(t["h2"].is_integer() == true);
-    CHECK(t["h2"].get_integer() == 0);
-    CHECK(t["h3"].is_integer() == true);
-    CHECK(t["h3"].get_integer() == 0);
-    CHECK(t["o1"].is_integer() == true);
-    CHECK(t["o1"].get_integer() == 0);
-    CHECK(t["a2"].is_integer() == true);
-    CHECK(t["a2"].get_integer() == 0);
-    CHECK(t["a3"].is_integer() == true);
-    CHECK(t["a3"].get_integer() == 0);
-    CHECK(t["b1"].is_integer() == true);
-    CHECK(t["b1"].get_integer() == 0);
-    CHECK(t["b2"].is_integer() == true);
-    CHECK(t["b2"].get_integer() == 0);
-    CHECK(t["b3"].is_integer() == true);
-    CHECK(t["b3"].get_integer() == 0);
+    CHECK(t[u8"d1"].is_integer() == true);
+    CHECK(t[u8"d1"].get_integer() == 0);
+    CHECK(t[u8"d2"].is_integer() == true);
+    CHECK(t[u8"d2"].get_integer() == 0);
+    CHECK(t[u8"d3"].is_integer() == true);
+    CHECK(t[u8"d3"].get_integer() == 0);
+    CHECK(t[u8"h1"].is_integer() == true);
+    CHECK(t[u8"h1"].get_integer() == 0);
+    CHECK(t[u8"h2"].is_integer() == true);
+    CHECK(t[u8"h2"].get_integer() == 0);
+    CHECK(t[u8"h3"].is_integer() == true);
+    CHECK(t[u8"h3"].get_integer() == 0);
+    CHECK(t[u8"o1"].is_integer() == true);
+    CHECK(t[u8"o1"].get_integer() == 0);
+    CHECK(t[u8"a2"].is_integer() == true);
+    CHECK(t[u8"a2"].get_integer() == 0);
+    CHECK(t[u8"a3"].is_integer() == true);
+    CHECK(t[u8"a3"].get_integer() == 0);
+    CHECK(t[u8"b1"].is_integer() == true);
+    CHECK(t[u8"b1"].get_integer() == 0);
+    CHECK(t[u8"b2"].is_integer() == true);
+    CHECK(t[u8"b2"].get_integer() == 0);
+    CHECK(t[u8"b3"].is_integer() == true);
+    CHECK(t[u8"b3"].get_integer() == 0);
 }
 

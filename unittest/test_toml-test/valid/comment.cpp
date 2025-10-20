@@ -45,14 +45,14 @@ TEST_CASE("valid/comment/after-literal-no-ws.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 4);
-    CHECK(t["inf"].is_float() == true);
-    CHECK(t["inf"].get_float() == std::numeric_limits<double>::infinity());
-    CHECK(t["nan"].is_float() == true);
-    CHECK(t["nan"].get_float() == rhs_nan{});
-    CHECK(t["true"].is_boolean() == true);
-    CHECK(t["true"].get_boolean() == true);
-    CHECK(t["false"].is_boolean() == true);
-    CHECK(t["false"].get_boolean() == false);
+    CHECK(t[u8"inf"].is_float() == true);
+    CHECK(t[u8"inf"].get_float() == std::numeric_limits<double>::infinity());
+    CHECK(t[u8"nan"].is_float() == true);
+    CHECK(t[u8"nan"].get_float() == rhs_nan{});
+    CHECK(t[u8"true"].is_boolean() == true);
+    CHECK(t[u8"true"].get_boolean() == true);
+    CHECK(t[u8"false"].is_boolean() == true);
+    CHECK(t[u8"false"].get_boolean() == false);
 }
 
 TEST_CASE("valid/comment/at-eof.toml") {
@@ -62,8 +62,8 @@ TEST_CASE("valid/comment/at-eof.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["key"].is_string() == true);
-    CHECK(t["key"].get_string() == "value");
+    CHECK(t[u8"key"].is_string() == true);
+    CHECK(t[u8"key"].get_string() == u8"value");
 }
 
 TEST_CASE("valid/comment/at-eof2.toml") {
@@ -73,8 +73,8 @@ TEST_CASE("valid/comment/at-eof2.toml") {
 
     CHECK(t.is_table() == true);
     CHECK(t.size() == 1);
-    CHECK(t["key"].is_string() == true);
-    CHECK(t["key"].get_string() == "value");
+    CHECK(t[u8"key"].is_string() == true);
+    CHECK(t[u8"key"].get_string() == u8"value");
 }
 
 TEST_CASE("valid/comment/noeol.toml") {
