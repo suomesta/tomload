@@ -47,3 +47,9 @@ target_compile_definitions(unittest PRIVATE
     TOML_IO_DIR="${CMAKE_SOURCE_DIR}/unittest/toml.io/"
     TOML_TEST_DIR="${CMAKE_SOURCE_DIR}/unittest/toml-test/tests/"
 )
+
+if(MSVC)
+    target_compile_options(unittest PRIVATE
+        /permissive-
+    )
+endif()
