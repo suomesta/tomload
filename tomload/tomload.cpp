@@ -8,7 +8,6 @@
  */
 
 #include "tomload/tomload.h"
-#include <utility>
 #include "tomload/parser.h"
 
 namespace tomload {
@@ -389,7 +388,7 @@ const table_range_t item_t::table_range(void) const {
 
 /*
  * @brief Construct inline table from multiple keys-value pairs.
- * @param key_vals[in]: keys-value pairs..
+ * @param key_vals[in]: keys-value pairs.
  * @throw parse_error: type is not table, or [keys] spot is inappropreate.
  * @note this method is intended to be used in parsing process.
  */

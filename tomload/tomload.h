@@ -37,6 +37,7 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include "tomload/view_t.h"
 
@@ -408,7 +409,7 @@ class item_t {
 
     /*
      * @brief Construct inline table from multiple keys-value pairs.
-     * @param key_vals[in]: keys-value pairs..
+     * @param key_vals[in]: keys-value pairs.
      * @throw parse_error: type is not table, or [keys] spot is inappropreate.
      * @note this method is intended to be used in parsing process.
      */
