@@ -15,11 +15,11 @@
  * @note target version of C++ is C++14. 
  * @example
  *      tomload::item_t item("[root]\r\narray = [1, 2, 3]\r\n");
- *      for (auto i : item) {
+ *      for (auto& i : item.table_range()) {
  *          std::cout << i.first;  // => "root"
- *          for (auto j : i.second) {
+ *          for (auto& j : i.second.table_range()) {
  *              std::cout << j.first;  // => "array"
- *              for (auto k : j.second) {
+ *              for (auto& k : j.second.array_range()) {
  *                  std::cout << k.get_integer();  // => 1, 2, 3 
  *              }
  *          }
@@ -392,6 +392,7 @@ class item_t {
     /*
      * @brief Get a range of the array.
      * @return array_range_t: a range object containing iterators to the beginning and end of the array.
+     *         good to assign return value to auto&.
      * @throw type_error: if the type is not array.
      * @pre To prevent throwing exceptions, call `is_array()` and confirm its return value.
      */
@@ -401,6 +402,7 @@ class item_t {
     /*
      * @brief Get a range of the table.
      * @return table_range_t: a range object containing iterators to the beginning and end of the table.
+     *         good to assign return value to auto&.
      * @throw type_error: if the type is not table.
      * @pre To prevent throwing exceptions, call `is_table()` and confirm its return value.
      */
