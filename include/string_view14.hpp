@@ -30,6 +30,7 @@
  *            - only char is supported as element type.
  *            - is independent from std::char_traits.
  *            - const_reverse_iterator is not 100% complied with standard requirements (but no actual disadvantages in normal use).
+ *            - has constructor with const std::string& argument, because no conversion method from std::string.
  *            - literal definition is not ""sv but ""_sv, because user literal definition should starts with "_".
  *            - no functions for std::hash.
  *            - bonus. starts_with()/ends_with() in C++20 and contains() in C++23 are supported.
@@ -97,6 +98,7 @@ class string_view14 {
     constexpr string_view14(const string_view14&) noexcept = default;
     constexpr string_view14(const char* str);
     constexpr string_view14(const char* str, size_type len);
+    constexpr string_view14(const std::string& str);
     string_view14& operator=(const string_view14&) = default;
     /////////////////////////////////////////////////////////////////////////////
 
@@ -315,6 +317,12 @@ constexpr string_view14::string_view14(const char* str) :
 constexpr string_view14::string_view14(const char* str, size_type len) :
     data_(str),
     size_(len)
+{}
+/////////////////////////////////////////////////////////////////////////////
+
+constexpr string_view14::string_view14(const std::string& str) :
+    data_(str.data()),
+    size_(str.size())
 {}
 /////////////////////////////////////////////////////////////////////////////
 

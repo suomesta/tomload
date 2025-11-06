@@ -11,7 +11,6 @@
 #include "tomload/tomload.h"
 
 using tomload::item_t;
-using tomload::view_t;
 
 TEST_CASE("testing boolean item accessors") {
     item_t item{tomload::single_construct, true};
