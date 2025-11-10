@@ -98,7 +98,7 @@ class string_view14 {
     constexpr string_view14(const string_view14&) noexcept = default;
     constexpr string_view14(const char* str);
     constexpr string_view14(const char* str, size_type len);
-    constexpr string_view14(const std::string& str);
+    string_view14(const std::string& str);
     string_view14& operator=(const string_view14&) = default;
     /////////////////////////////////////////////////////////////////////////////
 
@@ -320,7 +320,7 @@ constexpr string_view14::string_view14(const char* str, size_type len) :
 {}
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr string_view14::string_view14(const std::string& str) :
+inline string_view14::string_view14(const std::string& str) :
     data_(str.data()),
     size_(str.size())
 {}
